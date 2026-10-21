@@ -18,6 +18,8 @@ import { GoldenRulesSection } from '../components/GoldenRulesSection';
 import { PlateCalculatorModal } from '../components/PlateCalculatorModal';
 import { WorkoutHistoryModal } from '../components/WorkoutHistoryModal';
 import { CelebrationModal } from '../components/CelebrationModal';
+import { AuthModal } from '../components/AuthModal';
+import { ProfileModal } from '../components/ProfileModal';
 import { Search, Filter, RotateCcw, ChevronRight, Sparkles } from 'lucide-react';
 
 export default function PplTrackerHome() {
@@ -44,6 +46,9 @@ export default function PplTrackerHome() {
 
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isCelebrationOpen, setIsCelebrationOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [celebrationData, setCelebrationData] = useState<{
     dayTitle: string;
     totalVolume: number;
@@ -275,6 +280,11 @@ export default function PplTrackerHome() {
         onFinishWorkout={handleFinishWorkout}
         onResetSession={handleResetSession}
         onOpenHistory={() => setIsHistoryOpen(true)}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
+        onOpenAuth={() => {
+          setAuthMode('login');
+          setIsAuthModalOpen(true);
+        }}
         sessionStartTime={sessionStartTime}
       />
 
@@ -469,6 +479,17 @@ export default function PplTrackerHome() {
         durationMinutes={celebrationData.durationMinutes}
         doubleProgressions={celebrationData.doubleProgressions}
         soundEnabled={soundEnabled}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authMode}
+      />
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
       />
     </div>
   );

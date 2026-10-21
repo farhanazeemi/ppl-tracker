@@ -9,10 +9,13 @@ import {
   RotateCcw,
   Sparkles,
   Trophy,
+  User,
+  LogIn,
 } from 'lucide-react';
 import { SplitDayId } from '../types/workout';
 import { WORKOUT_DAYS } from '../data/workouts';
 import { formatTime } from '../utils/helpers';
+import { useAuth } from '../context/AuthContext';
 
 interface WorkoutSummaryHeaderProps {
   activeDayId: SplitDayId | 'all';
@@ -23,6 +26,8 @@ interface WorkoutSummaryHeaderProps {
   onFinishWorkout: () => void;
   onResetSession: () => void;
   onOpenHistory: () => void;
+  onOpenProfile: () => void;
+  onOpenAuth: () => void;
   sessionStartTime: number | null;
 }
 
@@ -35,8 +40,11 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
   onFinishWorkout,
   onResetSession,
   onOpenHistory,
+  onOpenProfile,
+  onOpenAuth,
   sessionStartTime,
 }) => {
+  const { user, isAuthenticated } = useAuth();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
@@ -55,6 +63,13 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
 
   const progressPercent =
     totalSetsCount > 0 ? Math.round((completedSetsCount / totalSetsCount) * 100) : 0;
+
+  const getInitials = (name: string) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80 px-4 py-3 sm:py-4">
@@ -79,8 +94,8 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             </h1>
           </div>
 
-          {/* Quick Metrics Bar & Finish Workout CTA */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          {/* Quick Metrics Bar & CTAs */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             {/* Volume Pill */}
             <div className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-2">
               <Flame className="w-4 h-4 text-amber-400" />
@@ -89,7 +104,10 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
                   Session Volume
                 </span>
                 <span className="font-mono text-xs sm:text-sm font-extrabold text-white">
-                  {totalVolume.toLocaleString()} <span className="text-zinc-400 text-[10px]">KG</span>
+                  {totalVolume.toLocaleString()}{' '}
+                  <span className="text-zinc-400 text-[10px]">
+                    {user?.preferredUnit ? user.preferredUnit.toUpperCase() : 'KG'}
+                  </span>
                 </span>
               </div>
             </div>
@@ -134,11 +152,41 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             {/* Finish Workout CTA */}
             <button
               onClick={onFinishWorkout}
-              className="px-3 sm:px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/10 flex items-center gap-1.5 transition active:scale-95"
+              className="px-3 sm:px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/10 flex items-center gap-1.5 transition active:scale-95"
             >
               <Trophy className="w-4 h-4" />
               <span>Finish</span>
             </button>
+
+            {/* Profile / Auth Button */}
+            {isAuthenticated && user ? (
+              <button
+                onClick={onOpenProfile}
+                className="flex items-center gap-2 px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 rounded-xl transition active:scale-95 group"
+                title="View & Edit Profile"
+                aria-label="View & Edit Profile"
+              >
+                <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-zinc-950 font-black text-[11px] shadow">
+                  {getInitials(user.name)}
+                </div>
+                <div className="text-left hidden xl:block">
+                  <span className="text-xs font-bold text-white block leading-tight truncate max-w-[100px]">
+                    {user.name.split(' ')[0]}
+                  </span>
+                  <span className="text-[9px] text-zinc-400 font-mono block">
+                    {user.weight ? `${user.weight}kg` : 'Profile'}
+                  </span>
+                </div>
+              </button>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition active:scale-95"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Sign In</span>
+              </button>
+            )}
           </div>
         </div>
 
