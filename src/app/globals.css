@@ -8,8 +8,8 @@
   --font-barlow: 'Barlow', system-ui, -apple-system, sans-serif;
   --font-barlow-condensed: 'Barlow Condensed', sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', monospace;
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  --background: #fafafa;
+  --foreground: #09090b;
 }
 
 body {
@@ -31,20 +31,20 @@ h1, h2, h3, .font-display {
   font-feature-settings: "tnum" 1;
 }
 
-/* Custom Minimalist Scrollbar */
+/* Minimalist Clean Light Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #fafafa;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #d4d4d8;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #a1a1aa;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -56,7 +56,7 @@ h1, h2, h3, .font-display {
 }
 
 /* Accessibility focus styles */
-button:focus-visible, input:focus-visible {
+button:focus-visible, input:focus-visible, select:focus-visible {
   outline: 2px solid #f97316;
   outline-offset: 2px;
 }

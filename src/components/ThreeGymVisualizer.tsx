@@ -49,28 +49,28 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.15;
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // LIGHTING
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    // LIGHTING FOR MINIMALIST LIGHT STUDIO
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.4);
-    dirLight1.position.set(5, 8, 5);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.6);
+    dirLight1.position.set(6, 10, 6);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.6);
-    dirLight2.position.set(-5, -4, -2);
+    const dirLight2 = new THREE.DirectionalLight(0xf1f5f9, 0.9);
+    dirLight2.position.set(-6, -2, -3);
     scene.add(dirLight2);
 
     // Dynamic Colored Point Lights for the Active Split Glow
-    const pointLight1 = new THREE.PointLight(new THREE.Color(themeColorHex), 3, 6);
+    const pointLight1 = new THREE.PointLight(new THREE.Color(themeColorHex), 2.8, 6);
     pointLight1.position.set(0, 0, 1.2);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(new THREE.Color(themeColorHex), 2.5, 6);
+    const pointLight2 = new THREE.PointLight(new THREE.Color(themeColorHex), 2.2, 6);
     pointLight2.position.set(0, 0, -1.2);
     scene.add(pointLight2);
 
@@ -83,27 +83,27 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
 
     // --- PROCEDURAL OLYMPIC BARBELL / DUMBBELL ASSEMBLY ---
     const metalMat = new THREE.MeshStandardMaterial({
-      color: 0x222429,
-      metalness: 0.88,
-      roughness: 0.22,
+      color: 0x334155,
+      metalness: 0.9,
+      roughness: 0.2,
     });
 
     const chromeMat = new THREE.MeshStandardMaterial({
-      color: 0xd4d4d8,
-      metalness: 0.95,
-      roughness: 0.12,
+      color: 0xe2e8f0,
+      metalness: 0.96,
+      roughness: 0.1,
     });
 
     const plateMat = new THREE.MeshStandardMaterial({
-      color: 0x18181b,
-      metalness: 0.5,
-      roughness: 0.35,
+      color: 0x1e293b,
+      metalness: 0.65,
+      roughness: 0.3,
     });
 
     const glowMat = new THREE.MeshStandardMaterial({
       color: new THREE.Color(themeColorHex),
       emissive: new THREE.Color(themeColorHex),
-      emissiveIntensity: 1.8,
+      emissiveIntensity: 1.6,
       roughness: 0.1,
       metalness: 0.1,
     });
@@ -120,7 +120,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     const gripMesh = new THREE.Mesh(gripGeo, metalMat);
     mainGroup.add(gripMesh);
 
-    // Collars / Collars stops
+    // Collars
     [-0.45, 0.45].forEach((pos) => {
       const collarGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.08, 32);
       collarGeo.rotateZ(Math.PI / 2);
@@ -132,7 +132,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     // Plates on Left and Right sides
     const glowRings: THREE.Mesh[] = [];
     [-1, 1].forEach((dir) => {
-      // Big outer 20kg plate
+      // Big outer plate
       const bigPlateGeo = new THREE.CylinderGeometry(0.42, 0.42, 0.09, 48);
       bigPlateGeo.rotateZ(Math.PI / 2);
       const bigPlate = new THREE.Mesh(bigPlateGeo, plateMat);
@@ -147,14 +147,14 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
       mainGroup.add(ringMesh);
       glowRings.push(ringMesh);
 
-      // Secondary medium 10kg plate
+      // Secondary medium plate
       const medPlateGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.07, 48);
       medPlateGeo.rotateZ(Math.PI / 2);
       const medPlate = new THREE.Mesh(medPlateGeo, metalMat);
       medPlate.position.x = dir * 0.69;
       mainGroup.add(medPlate);
 
-      // Small 5kg outer bumper
+      // Small outer bumper
       const smallPlateGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.06, 32);
       smallPlateGeo.rotateZ(Math.PI / 2);
       const smallPlate = new THREE.Mesh(smallPlateGeo, plateMat);
@@ -170,8 +170,8 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     });
     glowRingsRef.current = glowRings;
 
-    // Floating Kinetic Particles
-    const particleCount = 65;
+    // Floating subtle particles
+    const particleCount = 45;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -182,10 +182,9 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const particleMat = new THREE.PointsMaterial({
       color: new THREE.Color(themeColorHex),
-      size: 0.04,
+      size: 0.035,
       transparent: true,
-      opacity: 0.65,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.5,
     });
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
@@ -225,7 +224,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
 
-    // TOUCH SUPPORT
+    // TOUCH SUPPORT FOR MOBILE
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
         isDragging = true;
@@ -265,7 +264,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
         mainGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.04;
       }
 
-      particles.rotation.y = elapsedTime * 0.04;
+      particles.rotation.y = elapsedTime * 0.03;
 
       renderer.render(scene, camera);
     };
@@ -334,8 +333,8 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
     if (groupRef.current) {
       gsap.fromTo(
         groupRef.current.scale,
-        { x: 0.9, y: 0.9, z: 0.9 },
-        { x: 1, y: 1, z: 1, duration: 0.5, ease: 'back.out(1.7)' }
+        { x: 0.92, y: 0.92, z: 0.92 },
+        { x: 1, y: 1, z: 1, duration: 0.45, ease: 'back.out(1.7)' }
       );
     }
   }, [themeColorHex, splitType]);
@@ -368,7 +367,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[260px] sm:h-[300px] bg-gradient-to-b from-zinc-900/90 to-zinc-950/95 border border-zinc-800/80 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl group">
+    <div className="relative w-full h-[250px] sm:h-[280px] bg-gradient-to-b from-white to-zinc-50 border border-zinc-200/90 rounded-3xl overflow-hidden shadow-sm group">
       {/* 3D Canvas Container */}
       <div
         ref={containerRef}
@@ -382,11 +381,11 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
             className="w-2.5 h-2.5 rounded-full animate-ping"
             style={{ backgroundColor: themeColorHex }}
           />
-          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-400 font-semibold">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-600 font-bold">
             3D Hypertrophy Rig
           </span>
           <span
-            className="text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider border"
+            className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border shadow-sm"
             style={{
               borderColor: `${themeColorHex}40`,
               backgroundColor: `${themeColorHex}15`,
@@ -402,7 +401,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
           <button
             onClick={resetView}
             title="Reset 3D Angle"
-            className="p-1.5 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700/60 rounded-lg transition active:scale-95"
+            className="p-2 bg-white/90 hover:bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-xl transition shadow-sm active:scale-95"
             aria-label="Reset 3D camera angle"
           >
             <RotateCw className="w-3.5 h-3.5" />
@@ -410,10 +409,10 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
           <button
             onClick={toggleHologramMode}
             title={isHologram ? 'Solid Shading' : 'Hologram Wireframe'}
-            className={`p-1.5 border rounded-lg transition active:scale-95 ${
+            className={`p-2 border rounded-xl transition shadow-sm active:scale-95 ${
               isHologram
-                ? 'bg-amber-500/20 border-amber-500/50 text-amber-400'
-                : 'bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border-zinc-700/60'
+                ? 'bg-amber-500 text-white border-amber-600'
+                : 'bg-white/90 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
             }`}
             aria-label="Toggle wireframe mode"
           >
@@ -423,15 +422,15 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
       </div>
 
       {/* Bottom Focus Spec Overlay */}
-      <div className="absolute bottom-3 left-4 right-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pointer-events-none bg-zinc-950/75 border border-zinc-800/80 backdrop-blur-md px-3.5 py-2 rounded-xl">
+      <div className="absolute bottom-3 left-4 right-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pointer-events-none bg-white/90 border border-zinc-200/90 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-sm">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-          <span className="text-xs text-zinc-300 font-medium truncate">
-            Target Focus: <strong className="text-white">{focusText}</strong>
+          <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+          <span className="text-xs text-zinc-600 font-medium truncate">
+            Target Focus: <strong className="text-zinc-900 font-bold">{focusText}</strong>
           </span>
         </div>
         <span className="text-[10px] font-mono text-zinc-500 self-end sm:self-auto">
-          Drag to rotate • Realtime WebGL
+          Drag to rotate 3D
         </span>
       </div>
     </div>

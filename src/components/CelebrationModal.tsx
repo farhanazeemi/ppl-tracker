@@ -64,49 +64,49 @@ export const CelebrationModal: React.FC<CelebrationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="relative w-full max-w-md bg-zinc-900 border border-zinc-700/80 rounded-3xl p-6 shadow-2xl text-center overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="relative w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-6 shadow-2xl text-center overflow-hidden">
         {/* Glow ambient background */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Trophy icon */}
-        <div className="w-16 h-16 mx-auto bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-400 mb-4 shadow-lg shadow-amber-500/10">
+        <div className="w-16 h-16 mx-auto bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center text-amber-600 mb-4 shadow-sm">
           <Trophy className="w-8 h-8 animate-bounce" />
         </div>
 
-        <h3 className="text-xl font-black text-white tracking-tight">Workout Crushed!</h3>
-        <p className="text-xs text-zinc-400 mt-1">
+        <h3 className="text-xl font-black text-zinc-900 tracking-tight">Workout Crushed!</h3>
+        <p className="text-xs text-zinc-500 mt-1">
           {dayTitle} logged to your training history.
         </p>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-2.5 my-5 text-left">
-          <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-            <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-bold block">
+          <div className="bg-zinc-50 p-3 rounded-2xl border border-zinc-200/80">
+            <span className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">
               Volume
             </span>
-            <span className="font-mono text-sm font-extrabold text-white flex items-center gap-1 mt-0.5">
-              <Flame className="w-3.5 h-3.5 text-amber-400" />
+            <span className="font-mono text-sm font-black text-zinc-900 flex items-center gap-1 mt-0.5">
+              <Flame className="w-3.5 h-3.5 text-amber-500" />
               {totalVolume.toLocaleString()} <span className="text-[10px] text-zinc-500">KG</span>
             </span>
           </div>
 
-          <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-            <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-bold block">
+          <div className="bg-zinc-50 p-3 rounded-2xl border border-zinc-200/80">
+            <span className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">
               Sets
             </span>
-            <span className="font-mono text-sm font-extrabold text-white flex items-center gap-1 mt-0.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="font-mono text-sm font-black text-zinc-900 flex items-center gap-1 mt-0.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
               {totalSets}
             </span>
           </div>
 
-          <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-            <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-bold block">
+          <div className="bg-zinc-50 p-3 rounded-2xl border border-zinc-200/80">
+            <span className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block">
               Time
             </span>
-            <span className="font-mono text-sm font-extrabold text-white flex items-center gap-1 mt-0.5">
-              <Clock className="w-3.5 h-3.5 text-sky-400" />
+            <span className="font-mono text-sm font-black text-zinc-900 flex items-center gap-1 mt-0.5">
+              <Clock className="w-3.5 h-3.5 text-sky-600" />
               {durationMinutes}m
             </span>
           </div>
@@ -114,14 +114,14 @@ export const CelebrationModal: React.FC<CelebrationModalProps> = ({
 
         {/* Double Progression Callouts */}
         {doubleProgressions.length > 0 && (
-          <div className="mb-5 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-left">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 mb-1">
+          <div className="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-2xl text-left">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 mb-1">
               <Award className="w-4 h-4" />
               Double Progression Earned!
             </div>
-            <p className="text-[11px] text-zinc-300">
+            <p className="text-[11px] text-zinc-700 font-medium">
               You topped the rep ranges on:{' '}
-              <strong className="text-white">{doubleProgressions.join(', ')}</strong>.
+              <strong className="text-zinc-950 font-bold">{doubleProgressions.join(', ')}</strong>.
               Increase weight by 2.5kg–5kg on these movements next session!
             </p>
           </div>
@@ -129,7 +129,7 @@ export const CelebrationModal: React.FC<CelebrationModalProps> = ({
 
         <button
           onClick={onClose}
-          className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition active:scale-95"
+          className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-sm flex items-center justify-center gap-2 transition active:scale-95"
         >
           <span>Continue Tracking</span>
           <ArrowRight className="w-4 h-4" />

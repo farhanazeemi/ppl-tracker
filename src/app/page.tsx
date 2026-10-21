@@ -20,9 +20,22 @@ import { WorkoutHistoryModal } from '../components/WorkoutHistoryModal';
 import { CelebrationModal } from '../components/CelebrationModal';
 import { AuthModal } from '../components/AuthModal';
 import { ProfileModal } from '../components/ProfileModal';
-import { Search, Filter, RotateCcw, ChevronRight, Sparkles } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import {
+  Search,
+  Filter,
+  RotateCcw,
+  ChevronRight,
+  Dumbbell,
+  Timer,
+  Boxes,
+  History,
+  User,
+  Sparkles,
+} from 'lucide-react';
 
 export default function PplTrackerHome() {
+  const { user, isAuthenticated } = useAuth();
   const [activeDayId, setActiveDayId] = useState<SplitDayId | 'all'>('push-a');
   const [setsState, setSetsState] = useState<Record<string, ExerciseSet[]>>({});
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -49,6 +62,7 @@ export default function PplTrackerHome() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+
   const [celebrationData, setCelebrationData] = useState<{
     dayTitle: string;
     totalVolume: number;
@@ -64,6 +78,8 @@ export default function PplTrackerHome() {
   });
 
   const cardsContainerRef = useRef<HTMLDivElement>(null);
+  const timerSectionRef = useRef<HTMLDivElement>(null);
+  const rigSectionRef = useRef<HTMLDivElement>(null);
 
   // Initialize data from localStorage (including legacy ppl-tracker.html support!)
   useEffect(() => {
@@ -259,8 +275,8 @@ export default function PplTrackerHome() {
     if (cardsContainerRef.current) {
       gsap.fromTo(
         cardsContainerRef.current,
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
       );
     }
   }, [activeDayId]);
@@ -268,9 +284,15 @@ export default function PplTrackerHome() {
   // Muscle filter categories
   const muscleGroups = ['All', 'Chest', 'Delts', 'Back', 'Triceps', 'Biceps', 'Quads', 'Hamstrings', 'Calves', 'Abs'];
 
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 pb-24 selection:bg-amber-500 selection:text-black">
-      {/* Sticky Top Header Navigation */}
+    <div className="min-h-screen bg-[#fafafa] text-zinc-900 pb-32 selection:bg-amber-500 selection:text-white">
+      {/* Sticky App Header */}
       <WorkoutSummaryHeader
         activeDayId={activeDayId}
         onSelectDay={setActiveDayId}
@@ -288,11 +310,11 @@ export default function PplTrackerHome() {
         sessionStartTime={sessionStartTime}
       />
 
-      <main className="max-w-6xl mx-auto px-4 mt-6 space-y-7">
+      <main className="max-w-6xl mx-auto px-4 mt-5 space-y-6">
         {/* Top Interactive Row: 3D Rig & Rest Timer */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           {/* Three.js 3D Visualizer */}
-          <div className="lg:col-span-7">
+          <div ref={rigSectionRef} className="lg:col-span-7">
             <ThreeGymVisualizer
               splitType={activeDayObject.splitType}
               focusText={activeDayObject.focus}
@@ -301,7 +323,7 @@ export default function PplTrackerHome() {
           </div>
 
           {/* Rest Timer Widget */}
-          <div className="lg:col-span-5 flex flex-col justify-between">
+          <div ref={timerSectionRef} className="lg:col-span-5 flex flex-col justify-between">
             <RestTimer
               initialSeconds={90}
               soundEnabled={soundEnabled}
@@ -311,14 +333,14 @@ export default function PplTrackerHome() {
             />
 
             {/* Quick Split Insight Pill */}
-            <div className="mt-3 bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-4 backdrop-blur-md">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
-                <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-                  {activeDayObject.title} Protocol
+            <div className="mt-3 bg-white border border-zinc-200/90 rounded-3xl p-4 shadow-xs">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900">
+                  {activeDayObject.title} Focus
                 </h4>
               </div>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <p className="text-xs text-zinc-600 leading-relaxed font-medium">
                 {activeDayObject.subtitle}
               </p>
             </div>
@@ -329,7 +351,7 @@ export default function PplTrackerHome() {
         <GoldenRulesSection />
 
         {/* Search & Muscle Filters Bar */}
-        <section className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-md">
+        <section className="bg-white border border-zinc-200/90 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
           {/* Search Input */}
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -338,21 +360,21 @@ export default function PplTrackerHome() {
               placeholder="Search exercise, target muscle, or cue..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition"
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl pl-10 pr-4 py-2 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-amber-500 transition font-medium"
             />
           </div>
 
           {/* Muscle Chips Filter */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            <Filter className="w-3.5 h-3.5 text-zinc-500 shrink-0 ml-1 mr-0.5" />
+            <Filter className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-1 mr-0.5" />
             {muscleGroups.map((mg) => (
               <button
                 key={mg}
                 onClick={() => setMuscleFilter(mg)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap transition active:scale-95 border ${
+                className={`px-3 py-1 rounded-xl text-[11px] font-bold whitespace-nowrap transition active:scale-95 border ${
                   muscleFilter === mg
-                    ? 'bg-amber-500 text-zinc-950 border-amber-400 font-bold'
-                    : 'bg-zinc-950 text-zinc-400 hover:text-white border-zinc-800'
+                    ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs'
+                    : 'bg-zinc-50 text-zinc-600 hover:text-zinc-900 border-zinc-200'
                 }`}
               >
                 {mg}
@@ -364,7 +386,6 @@ export default function PplTrackerHome() {
         {/* Workout Days & Exercises Container */}
         <div ref={cardsContainerRef} className="space-y-8">
           {activeDaysList.map((day) => {
-            // Apply search & muscle filter to exercises
             const filteredExercises = day.exercises.filter((ex) => {
               const matchesSearch =
                 searchQuery === '' ||
@@ -385,22 +406,22 @@ export default function PplTrackerHome() {
             return (
               <section key={day.id} className="space-y-4">
                 {/* Day Header Banner */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-zinc-800/80 gap-1">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-zinc-200 gap-1">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-amber-400 uppercase">
+                      <span className="font-mono text-xs font-bold text-amber-600 uppercase">
                         Day {day.dayNumber}
                       </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-zinc-600" />
-                      <h2 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                      <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+                      <h2 className="text-lg sm:text-xl font-black text-zinc-900 tracking-tight">
                         {day.title}
                       </h2>
                     </div>
-                    <p className="text-xs text-zinc-400 mt-0.5">{day.subtitle}</p>
+                    <p className="text-xs text-zinc-500 font-medium mt-0.5">{day.subtitle}</p>
                   </div>
 
-                  <span className="text-xs font-mono text-zinc-500 uppercase self-start sm:self-auto">
-                    {filteredExercises.length} Exercises Prescribed
+                  <span className="text-xs font-mono font-bold text-zinc-500 uppercase self-start sm:self-auto">
+                    {filteredExercises.length} Movements
                   </span>
                 </div>
 
@@ -429,20 +450,74 @@ export default function PplTrackerHome() {
         </div>
 
         {/* Bottom Actions: Reset Checkmarks & Clear */}
-        <div className="pt-6 border-t border-zinc-800/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
-          <span className="text-zinc-500">
+        <div className="pt-6 border-t border-zinc-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+          <span className="text-zinc-500 font-medium">
             Progress is automatically saved to your browser&apos;s local storage.
           </span>
 
           <button
             onClick={handleResetSession}
-            className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 rounded-xl transition active:scale-95"
+            className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-2xl shadow-xs transition active:scale-95 font-bold"
           >
             <RotateCcw className="w-4 h-4" />
             Reset Current Sets
           </button>
         </div>
       </main>
+
+      {/* Native App-Style Mobile Bottom Navigation Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-zinc-200 px-4 py-2 sm:hidden shadow-lg">
+        <div className="max-w-md mx-auto grid grid-cols-5 gap-1">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex flex-col items-center justify-center py-1 text-zinc-700 hover:text-amber-600 transition"
+          >
+            <Dumbbell className="w-5 h-5" />
+            <span className="text-[10px] font-bold mt-0.5">Workout</span>
+          </button>
+
+          <button
+            onClick={() => scrollToSection(timerSectionRef)}
+            className="flex flex-col items-center justify-center py-1 text-zinc-700 hover:text-amber-600 transition"
+          >
+            <Timer className="w-5 h-5 text-amber-500" />
+            <span className="text-[10px] font-bold mt-0.5">Timer</span>
+          </button>
+
+          <button
+            onClick={() => scrollToSection(rigSectionRef)}
+            className="flex flex-col items-center justify-center py-1 text-zinc-700 hover:text-amber-600 transition"
+          >
+            <Boxes className="w-5 h-5" />
+            <span className="text-[10px] font-bold mt-0.5">3D Rig</span>
+          </button>
+
+          <button
+            onClick={() => setIsHistoryOpen(true)}
+            className="flex flex-col items-center justify-center py-1 text-zinc-700 hover:text-amber-600 transition"
+          >
+            <History className="w-5 h-5" />
+            <span className="text-[10px] font-bold mt-0.5">Logs</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (isAuthenticated && user) {
+                setIsProfileModalOpen(true);
+              } else {
+                setAuthMode('login');
+                setIsAuthModalOpen(true);
+              }
+            }}
+            className="flex flex-col items-center justify-center py-1 text-zinc-700 hover:text-amber-600 transition"
+          >
+            <User className="w-5 h-5" />
+            <span className="text-[10px] font-bold mt-0.5">
+              {isAuthenticated ? 'Profile' : 'Sign In'}
+            </span>
+          </button>
+        </div>
+      </nav>
 
       {/* Modals */}
       <PlateCalculatorModal

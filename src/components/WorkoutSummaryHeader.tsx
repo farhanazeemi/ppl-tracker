@@ -72,40 +72,40 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80 px-4 py-3 sm:py-4">
-      <div className="max-w-6xl mx-auto space-y-3.5">
+    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-zinc-200/90 px-4 py-3 sm:py-3.5">
+      <div className="max-w-6xl mx-auto space-y-3">
         {/* Main Title Row */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5">
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/25 rounded-md">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 rounded-md">
                 6-Day PPL Hypertrophy
               </span>
-              <span className="px-2 py-0.5 text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 rounded-md">
-                Upper Chest & 3D Delts Priority
+              <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md">
+                Upper Chest & 3D Delts
               </span>
-              <span className="hidden sm:inline-flex text-[11px] font-mono text-zinc-500">
-                Double Progression Protocol
+              <span className="hidden sm:inline-flex text-[10px] font-mono text-zinc-400">
+                Double Progression
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white mt-1 flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-900 mt-0.5 flex items-center gap-2">
               Push • Pull • Legs Tracker
-              <Sparkles className="w-5 h-5 text-amber-400 shrink-0 hidden sm:inline" />
+              <Sparkles className="w-4 h-4 text-amber-500 shrink-0 hidden sm:inline" />
             </h1>
           </div>
 
           {/* Quick Metrics Bar & CTAs */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
             {/* Volume Pill */}
-            <div className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-2">
-              <Flame className="w-4 h-4 text-amber-400" />
+            <div className="px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-2xl flex items-center gap-2 shadow-xs">
+              <Flame className="w-4 h-4 text-amber-500" />
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-500 block font-bold">
-                  Session Volume
+                <span className="text-[9px] uppercase tracking-wider text-zinc-400 block font-bold">
+                  Volume
                 </span>
-                <span className="font-mono text-xs sm:text-sm font-extrabold text-white">
+                <span className="font-mono text-xs sm:text-sm font-extrabold text-zinc-900">
                   {totalVolume.toLocaleString()}{' '}
-                  <span className="text-zinc-400 text-[10px]">
+                  <span className="text-zinc-500 text-[10px]">
                     {user?.preferredUnit ? user.preferredUnit.toUpperCase() : 'KG'}
                   </span>
                 </span>
@@ -113,26 +113,26 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             </div>
 
             {/* Sets Done Pill */}
-            <div className="px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <div className="px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-2xl flex items-center gap-2 shadow-xs">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-500 block font-bold">
+                <span className="text-[9px] uppercase tracking-wider text-zinc-400 block font-bold">
                   Sets Done
                 </span>
-                <span className="font-mono text-xs sm:text-sm font-extrabold text-white">
+                <span className="font-mono text-xs sm:text-sm font-extrabold text-zinc-900">
                   {completedSetsCount}/{totalSetsCount} ({progressPercent}%)
                 </span>
               </div>
             </div>
 
             {/* Duration Timer */}
-            <div className="hidden lg:flex px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-xl items-center gap-2">
-              <Clock className="w-4 h-4 text-sky-400" />
+            <div className="hidden lg:flex px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-2xl items-center gap-2 shadow-xs">
+              <Clock className="w-4 h-4 text-sky-600" />
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-500 block font-bold">
+                <span className="text-[9px] uppercase tracking-wider text-zinc-400 block font-bold">
                   Duration
                 </span>
-                <span className="font-mono text-xs sm:text-sm font-extrabold text-white">
+                <span className="font-mono text-xs sm:text-sm font-extrabold text-zinc-900">
                   {formatTime(elapsedSeconds)}
                 </span>
               </div>
@@ -141,18 +141,18 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             {/* History Button */}
             <button
               onClick={onOpenHistory}
-              className="p-2 sm:px-3 sm:py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition active:scale-95"
+              className="p-2 sm:px-3 sm:py-1.5 bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs active:scale-95"
               title="Workout History & PRs"
               aria-label="Workout History & PRs"
             >
-              <History className="w-4 h-4 text-zinc-400" />
+              <History className="w-4 h-4 text-zinc-500" />
               <span className="hidden sm:inline">Logs</span>
             </button>
 
             {/* Finish Workout CTA */}
             <button
               onClick={onFinishWorkout}
-              className="px-3 sm:px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/10 flex items-center gap-1.5 transition active:scale-95"
+              className="px-3.5 sm:px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-sm flex items-center gap-1.5 transition active:scale-95"
             >
               <Trophy className="w-4 h-4" />
               <span>Finish</span>
@@ -162,18 +162,18 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             {isAuthenticated && user ? (
               <button
                 onClick={onOpenProfile}
-                className="flex items-center gap-2 px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 rounded-xl transition active:scale-95 group"
+                className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-2xl transition shadow-xs active:scale-95 group"
                 title="View & Edit Profile"
                 aria-label="View & Edit Profile"
               >
-                <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-zinc-950 font-black text-[11px] shadow">
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-black text-xs shadow-xs">
                   {getInitials(user.name)}
                 </div>
-                <div className="text-left hidden xl:block">
-                  <span className="text-xs font-bold text-white block leading-tight truncate max-w-[100px]">
+                <div className="text-left hidden xl:block pr-1">
+                  <span className="text-xs font-bold text-zinc-900 block leading-tight truncate max-w-[90px]">
                     {user.name.split(' ')[0]}
                   </span>
-                  <span className="text-[9px] text-zinc-400 font-mono block">
+                  <span className="text-[9px] text-zinc-500 font-mono block">
                     {user.weight ? `${user.weight}kg` : 'Profile'}
                   </span>
                 </div>
@@ -181,7 +181,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             ) : (
               <button
                 onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-2xl text-xs font-bold transition shadow-xs active:scale-95"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Sign In</span>
@@ -190,14 +190,14 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        {/* Native Segmented Controls for Days */}
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar p-1 bg-zinc-100/80 rounded-2xl border border-zinc-200/60">
           <button
             onClick={() => onSelectDay('all')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition active:scale-95 border ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition active:scale-95 ${
               activeDayId === 'all'
-                ? 'bg-amber-500 text-zinc-950 border-amber-400 shadow-md shadow-amber-500/20'
-                : 'bg-zinc-900/90 text-zinc-400 hover:text-white border-zinc-800/80 hover:bg-zinc-800'
+                ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/80'
+                : 'text-zinc-600 hover:text-zinc-900'
             }`}
           >
             All 6 Days
@@ -205,23 +205,21 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
 
           {WORKOUT_DAYS.map((day) => {
             const isActive = activeDayId === day.id;
-            const splitBadgeStyles = {
-              push: isActive
-                ? 'bg-amber-500 text-zinc-950 border-amber-400 shadow-md shadow-amber-500/20'
-                : 'bg-zinc-900/90 text-zinc-400 hover:text-amber-400 border-zinc-800/80',
-              pull: isActive
-                ? 'bg-sky-500 text-zinc-950 border-sky-400 shadow-md shadow-sky-500/20'
-                : 'bg-zinc-900/90 text-zinc-400 hover:text-sky-400 border-zinc-800/80',
-              legs: isActive
-                ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/20'
-                : 'bg-zinc-900/90 text-zinc-400 hover:text-emerald-400 border-zinc-800/80',
+            const activeStyle = {
+              push: 'bg-amber-500 text-white shadow-xs',
+              pull: 'bg-sky-500 text-white shadow-xs',
+              legs: 'bg-emerald-500 text-white shadow-xs',
             }[day.splitType];
 
             return (
               <button
                 key={day.id}
                 onClick={() => onSelectDay(day.id)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition active:scale-95 border ${splitBadgeStyles}`}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition active:scale-95 ${
+                  isActive
+                    ? activeStyle
+                    : 'text-zinc-600 hover:text-zinc-900 hover:bg-white/50'
+                }`}
               >
                 {day.title}
               </button>

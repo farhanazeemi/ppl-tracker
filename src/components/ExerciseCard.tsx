@@ -38,25 +38,25 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 }) => {
   const [showCues, setShowCues] = useState(false);
 
-  // Split themes
+  // Split themes for Minimalist Light mood
   const colorStyles = {
     push: {
-      badge: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
-      accent: 'border-amber-500/40',
-      activeRow: 'bg-amber-500/5',
-      btn: 'bg-amber-500 text-zinc-950',
+      badge: 'bg-amber-50 text-amber-700 border-amber-200',
+      accent: 'border-amber-400',
+      activeRow: 'bg-amber-50/40',
+      btn: 'bg-amber-500 text-white',
     },
     pull: {
-      badge: 'bg-sky-500/10 text-sky-400 border-sky-500/25',
-      accent: 'border-sky-500/40',
-      activeRow: 'bg-sky-500/5',
-      btn: 'bg-sky-500 text-zinc-950',
+      badge: 'bg-sky-50 text-sky-700 border-sky-200',
+      accent: 'border-sky-400',
+      activeRow: 'bg-sky-50/40',
+      btn: 'bg-sky-500 text-white',
     },
     legs: {
-      badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
-      accent: 'border-emerald-500/40',
-      activeRow: 'bg-emerald-500/5',
-      btn: 'bg-emerald-500 text-zinc-950',
+      badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      accent: 'border-emerald-400',
+      activeRow: 'bg-emerald-50/40',
+      btn: 'bg-emerald-500 text-white',
     },
   }[themeColor];
 
@@ -112,7 +112,6 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
     onUpdateSets(exercise.id, nextSets);
   };
 
-  // Find max 1RM achieved in this exercise
   const highest1RM = sets.reduce((max, s) => {
     if (s.completed && typeof s.weight === 'number' && typeof s.reps === 'number') {
       const e1rm = calculateEstimated1RM(s.weight, s.reps);
@@ -124,46 +123,46 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
   const completedCount = sets.filter((s) => s.completed).length;
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-lg transition-all hover:border-zinc-700/80">
+    <div className="bg-white border border-zinc-200/90 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all">
       {/* Exercise Header */}
-      <div className="p-4 sm:p-5 border-b border-zinc-800/80 bg-zinc-900/90 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="p-4 sm:p-5 border-b border-zinc-100 bg-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`px-2 py-0.5 text-[11px] font-semibold rounded-md border ${colorStyles.badge}`}
+              className={`px-2.5 py-0.5 text-[11px] font-bold rounded-lg border shadow-xs ${colorStyles.badge}`}
             >
               {exercise.target}
             </span>
-            <span className="px-2 py-0.5 text-[11px] font-medium bg-zinc-800 text-zinc-400 border border-zinc-700/60 rounded-md uppercase">
+            <span className="px-2 py-0.5 text-[11px] font-semibold bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-lg uppercase">
               {exercise.equipment}
             </span>
             {isDoubleProgressionReady && (
-              <span className="flex items-center gap-1 px-2 py-0.5 text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-md animate-pulse">
+              <span className="flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300 rounded-lg animate-pulse">
                 <Award className="w-3.5 h-3.5" />
                 Double Progression Earned!
               </span>
             )}
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+          <h3 className="text-base sm:text-lg font-black text-zinc-900 tracking-tight">
             {exercise.name}
           </h3>
         </div>
 
         {/* Target Scheme Badges */}
         <div className="flex items-center gap-2 text-xs self-start sm:self-auto">
-          <div className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-center">
-            <span className="text-[10px] text-zinc-500 block uppercase font-mono">Sets</span>
-            <span className="font-mono font-bold text-white">
+          <div className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 rounded-xl text-center">
+            <span className="text-[10px] text-zinc-500 block uppercase font-mono font-semibold">Sets</span>
+            <span className="font-mono font-bold text-zinc-900">
               {completedCount}/{sets.length}
             </span>
           </div>
-          <div className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-center">
-            <span className="text-[10px] text-zinc-500 block uppercase font-mono">Target</span>
-            <span className="font-mono font-bold text-amber-400">{exercise.targetReps} reps</span>
+          <div className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 rounded-xl text-center">
+            <span className="text-[10px] text-zinc-500 block uppercase font-mono font-semibold">Target</span>
+            <span className="font-mono font-bold text-amber-600">{exercise.targetReps} reps</span>
           </div>
-          <div className="px-2.5 py-1 bg-zinc-950 border border-zinc-800 rounded-lg text-center">
-            <span className="text-[10px] text-zinc-500 block uppercase font-mono">Rest</span>
-            <span className="font-mono text-zinc-400">{exercise.restDisplay}</span>
+          <div className="px-2.5 py-1 bg-zinc-50 border border-zinc-200 rounded-xl text-center">
+            <span className="text-[10px] text-zinc-500 block uppercase font-mono font-semibold">Rest</span>
+            <span className="font-mono font-bold text-zinc-600">{exercise.restDisplay}</span>
           </div>
         </div>
       </div>
@@ -172,12 +171,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-zinc-800 text-[10px] uppercase tracking-wider text-zinc-400 bg-zinc-950/40">
-              <th className="py-2.5 pl-4 pr-2 text-center w-12">Set</th>
-              <th className="py-2.5 px-3 min-w-[90px]">Weight (kg)</th>
-              <th className="py-2.5 px-3 min-w-[80px]">Reps</th>
-              <th className="py-2.5 px-3 hidden md:table-cell">Est. 1RM</th>
-              <th className="py-2.5 px-3 text-center w-20">Done</th>
+            <tr className="border-b border-zinc-100 text-[10px] uppercase tracking-wider text-zinc-400 bg-zinc-50/70">
+              <th className="py-2.5 pl-4 pr-2 text-center w-12 font-bold">Set</th>
+              <th className="py-2.5 px-3 min-w-[90px] font-bold">Weight (kg)</th>
+              <th className="py-2.5 px-3 min-w-[80px] font-bold">Reps</th>
+              <th className="py-2.5 px-3 hidden md:table-cell font-bold">Est. 1RM</th>
+              <th className="py-2.5 px-3 text-center w-20 font-bold">Done</th>
               <th className="py-2.5 pr-4 pl-2 w-10"></th>
             </tr>
           </thead>
@@ -191,12 +190,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
               return (
                 <tr
                   key={set.id}
-                  className={`border-b border-zinc-800/60 transition ${
-                    set.completed ? 'bg-zinc-950/60 opacity-80' : 'hover:bg-zinc-800/30'
+                  className={`border-b border-zinc-100 transition ${
+                    set.completed ? 'bg-zinc-50/90 opacity-75' : 'hover:bg-zinc-50/50'
                   }`}
                 >
                   {/* Set number */}
-                  <td className="py-3 pl-4 pr-2 text-center font-mono font-bold text-xs text-zinc-400">
+                  <td className="py-3 pl-4 pr-2 text-center font-mono font-bold text-xs text-zinc-500">
                     {idx + 1}
                   </td>
 
@@ -210,8 +209,8 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                         min="0"
                         value={set.weight}
                         onChange={(e) => handleUpdateField(set.id, 'weight', e.target.value)}
-                        className={`w-24 sm:w-28 bg-zinc-950 border rounded-lg px-2.5 py-1.5 font-mono text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-amber-500 ${
-                          set.completed ? 'border-zinc-800 text-zinc-400' : 'border-zinc-700'
+                        className={`w-24 sm:w-28 bg-zinc-50 border rounded-xl px-2.5 py-1.5 font-mono text-sm font-bold text-zinc-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition ${
+                          set.completed ? 'border-zinc-200 text-zinc-500' : 'border-zinc-200'
                         }`}
                       />
                     </div>
@@ -226,18 +225,18 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                         min="0"
                         value={set.reps}
                         onChange={(e) => handleUpdateField(set.id, 'reps', e.target.value)}
-                        className={`w-20 sm:w-24 bg-zinc-950 border rounded-lg px-2.5 py-1.5 font-mono text-sm font-semibold text-white focus:outline-none focus:ring-1 focus:ring-amber-500 ${
-                          set.completed ? 'border-zinc-800 text-zinc-400' : 'border-zinc-700'
+                        className={`w-20 sm:w-24 bg-zinc-50 border rounded-xl px-2.5 py-1.5 font-mono text-sm font-bold text-zinc-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition ${
+                          set.completed ? 'border-zinc-200 text-zinc-500' : 'border-zinc-200'
                         }`}
                       />
                     </div>
                   </td>
 
                   {/* 1RM calculation */}
-                  <td className="py-3 px-3 hidden md:table-cell font-mono text-xs text-zinc-400">
+                  <td className="py-3 px-3 hidden md:table-cell font-mono text-xs text-zinc-500">
                     {est1RM > 0 ? (
-                      <span className="flex items-center gap-1 text-zinc-300">
-                        <Flame className="w-3.5 h-3.5 text-amber-400" />
+                      <span className="flex items-center gap-1 font-bold text-zinc-800">
+                        <Flame className="w-3.5 h-3.5 text-amber-500" />
                         {est1RM} kg
                       </span>
                     ) : (
@@ -249,10 +248,10 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                   <td className="py-3 px-3 text-center">
                     <button
                       onClick={() => handleToggleSetComplete(set.id)}
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center transition active:scale-95 mx-auto border ${
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition active:scale-90 mx-auto border ${
                         set.completed
-                          ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md'
-                          : 'bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 border-zinc-700'
+                          ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm'
+                          : 'bg-white hover:bg-zinc-100 text-zinc-400 border-zinc-200'
                       }`}
                       aria-label={`Mark set ${idx + 1} done`}
                     >
@@ -265,7 +264,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                     {sets.length > 1 && (
                       <button
                         onClick={() => handleRemoveSet(set.id)}
-                        className="p-1 text-zinc-600 hover:text-red-400 rounded transition"
+                        className="p-1 text-zinc-400 hover:text-red-500 rounded transition"
                         title="Delete Set"
                         aria-label="Delete set"
                       >
@@ -281,11 +280,11 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       </div>
 
       {/* Card Actions Footer */}
-      <div className="p-3 sm:p-4 bg-zinc-950/60 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-2.5">
+      <div className="p-3 sm:p-4 bg-zinc-50/50 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex items-center gap-2">
           <button
             onClick={handleAddSet}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 rounded-lg text-xs font-semibold transition active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-xl text-xs font-bold transition shadow-xs active:scale-95"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Set
@@ -298,7 +297,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                   typeof sets[0]?.weight === 'number' ? sets[0].weight : 60;
                 onOpenPlateCalc(currentWeight, exercise.name);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-amber-400 border border-zinc-800 rounded-lg text-xs font-semibold transition active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-xl text-xs font-bold transition shadow-xs active:scale-95"
             >
               <Calculator className="w-3.5 h-3.5" />
               Plate Math
@@ -306,9 +305,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           )}
 
           {highest1RM > 0 && (
-            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono text-zinc-400 pl-2">
-              <Zap className="w-3 h-3 text-amber-400" />
-              Peak 1RM: <strong className="text-white">{highest1RM} kg</strong>
+            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono text-zinc-500 pl-2">
+              <Zap className="w-3 h-3 text-amber-500" />
+              Peak 1RM: <strong className="text-zinc-900 font-bold">{highest1RM} kg</strong>
             </span>
           )}
         </div>
@@ -316,29 +315,29 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
         {/* Collapsible Form & Biomechanics Cues Toggle */}
         <button
           onClick={() => setShowCues(!showCues)}
-          className="flex items-center gap-1 text-xs font-semibold text-zinc-400 hover:text-white transition"
+          className="flex items-center gap-1 text-xs font-bold text-zinc-500 hover:text-zinc-900 transition"
         >
-          <span>Biomechanics & Form Cues</span>
+          <span>Biomechanics & Cues</span>
           {showCues ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
       </div>
 
       {/* Collapsible Form Cues Section */}
       {showCues && (
-        <div className="p-4 bg-zinc-950/90 border-t border-zinc-800 space-y-2.5 animate-in slide-in-from-top-2 duration-200">
-          <div className="bg-zinc-900/80 border border-zinc-800/90 rounded-xl p-3">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-1">
+        <div className="p-4 bg-zinc-50 border-t border-zinc-100 space-y-2.5 animate-in slide-in-from-top-2 duration-200">
+          <div className="bg-white border border-zinc-200 rounded-2xl p-3 shadow-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 block mb-1">
               Execution Cue
             </span>
-            <p className="text-xs text-zinc-300 leading-relaxed">{exercise.cue}</p>
+            <p className="text-xs text-zinc-700 leading-relaxed font-medium">{exercise.cue}</p>
           </div>
 
           {exercise.biomechanicsTip && (
-            <div className="bg-zinc-900/80 border border-zinc-800/90 rounded-xl p-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 block mb-1">
+            <div className="bg-white border border-zinc-200 rounded-2xl p-3 shadow-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-sky-600 block mb-1">
                 Hypertrophy Biomechanics
               </span>
-              <p className="text-xs text-zinc-300 leading-relaxed">
+              <p className="text-xs text-zinc-700 leading-relaxed font-medium">
                 {exercise.biomechanicsTip}
               </p>
             </div>

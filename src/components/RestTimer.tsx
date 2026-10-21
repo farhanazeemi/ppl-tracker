@@ -91,17 +91,17 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   const percent = totalSeconds > 0 ? ((totalSeconds - remaining) / totalSeconds) * 100 : 0;
 
   return (
-    <div className="bg-zinc-900/95 border border-zinc-800 rounded-2xl p-3 sm:p-4 shadow-xl backdrop-blur-md transition-all">
+    <div className="bg-white border border-zinc-200/90 rounded-3xl p-4 shadow-sm transition-all">
       <div className="flex items-center justify-between gap-3 mb-2.5">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg border border-amber-500/20">
+          <div className="p-2 bg-amber-50 text-amber-600 rounded-xl border border-amber-200/60">
             <Timer className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">
+            <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold block">
               Auto Rest Timer
             </span>
-            <span className="text-xs text-zinc-500 hidden sm:inline">
+            <span className="text-xs text-zinc-600 hidden sm:inline">
               Triggers automatically on set completion
             </span>
           </div>
@@ -110,30 +110,34 @@ export const RestTimer: React.FC<RestTimerProps> = ({
         {/* Audio Toggle */}
         <button
           onClick={onToggleSound}
-          className={`p-1.5 rounded-lg border text-xs flex items-center gap-1 transition ${
+          className={`p-1.5 px-2 rounded-xl border text-xs flex items-center gap-1.5 transition ${
             soundEnabled
-              ? 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:text-white'
-              : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-400'
+              ? 'bg-zinc-50 border-zinc-200 text-zinc-800 hover:bg-zinc-100'
+              : 'bg-zinc-100 border-zinc-200 text-zinc-400 hover:text-zinc-600'
           }`}
-          title={soundEnabled ? 'Mute Audio Cues' : 'Enable Audio Cues'}
-          aria-label={soundEnabled ? 'Mute Audio Cues' : 'Enable Audio Cues'}
+          title={soundEnabled ? 'Mute Audio Cues' : 'Enable Louder Audio Cues'}
+          aria-label={soundEnabled ? 'Mute Audio Cues' : 'Enable Louder Audio Cues'}
         >
-          {soundEnabled ? <Volume2 className="w-3.5 h-3.5 text-amber-400" /> : <VolumeX className="w-3.5 h-3.5" />}
-          <span className="text-[10px] font-mono">{soundEnabled ? 'ON' : 'OFF'}</span>
+          {soundEnabled ? (
+            <Volume2 className="w-3.5 h-3.5 text-amber-500" />
+          ) : (
+            <VolumeX className="w-3.5 h-3.5" />
+          )}
+          <span className="text-[10px] font-mono font-bold">{soundEnabled ? 'LOUD' : 'OFF'}</span>
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-zinc-950/70 border border-zinc-800/80 rounded-xl p-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-zinc-50 border border-zinc-200/70 rounded-2xl p-3">
         {/* Digital Display & Controls */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <div
-              className={`font-mono text-2xl sm:text-3xl font-extrabold tracking-tight px-3 py-1 rounded-lg border ${
+              className={`font-mono text-2xl sm:text-3xl font-black tracking-tight px-3 py-1 rounded-xl border ${
                 isDone
-                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 animate-pulse'
+                  ? 'bg-emerald-50 text-emerald-600 border-emerald-300 animate-pulse'
                   : isRunning
-                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                  : 'bg-zinc-900 text-zinc-300 border-zinc-800'
+                  ? 'bg-amber-50 text-amber-600 border-amber-300'
+                  : 'bg-white text-zinc-900 border-zinc-200 shadow-sm'
               }`}
             >
               {isDone ? 'READY!' : formatTime(remaining)}
@@ -143,10 +147,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={togglePause}
-              className={`p-2 rounded-xl font-semibold text-xs border transition active:scale-95 flex items-center justify-center ${
+              className={`p-2.5 rounded-xl font-bold text-xs border transition active:scale-95 flex items-center justify-center ${
                 isRunning
-                  ? 'bg-amber-500 text-zinc-950 border-amber-400 hover:bg-amber-400'
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700'
+                  ? 'bg-amber-500 text-white border-amber-600 hover:bg-amber-600'
+                  : 'bg-zinc-900 hover:bg-black text-white border-zinc-900 shadow-sm'
               }`}
               title={isRunning ? 'Pause' : 'Play'}
               aria-label={isRunning ? 'Pause rest timer' : 'Start rest timer'}
@@ -155,7 +159,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={handleReset}
-              className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 rounded-xl transition active:scale-95"
+              className="p-2.5 bg-white hover:bg-zinc-100 text-zinc-600 hover:text-zinc-900 border border-zinc-200 rounded-xl transition shadow-sm active:scale-95"
               title="Reset"
               aria-label="Reset rest timer"
             >
@@ -163,19 +167,19 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={() => adjustTime(-15)}
-              className="p-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 rounded-lg text-xs"
+              className="p-2 bg-white hover:bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-xl text-xs shadow-sm transition active:scale-95"
               title="Subtract 15 seconds"
               aria-label="Subtract 15 seconds"
             >
-              <Minus className="w-3 h-3" />
+              <Minus className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => adjustTime(15)}
-              className="p-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 rounded-lg text-xs"
+              className="p-2 bg-white hover:bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-xl text-xs shadow-sm transition active:scale-95"
               title="Add 15 seconds"
               aria-label="Add 15 seconds"
             >
-              <Plus className="w-3 h-3" />
+              <Plus className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -192,10 +196,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             <button
               key={preset.sec}
               onClick={() => handleStart(preset.sec)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-mono font-semibold transition active:scale-95 border ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition active:scale-95 border ${
                 totalSeconds === preset.sec && isRunning
-                  ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                  : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
+                  ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
+                  : 'bg-white hover:bg-zinc-100 text-zinc-700 border-zinc-200 shadow-sm'
               }`}
             >
               {preset.label}
@@ -205,10 +209,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-zinc-950 h-1.5 rounded-full mt-2.5 overflow-hidden border border-zinc-800/50">
+      <div className="w-full bg-zinc-100 h-2 rounded-full mt-2.5 overflow-hidden border border-zinc-200/80">
         <div
           className={`h-full transition-all duration-300 ${
-            isDone ? 'bg-emerald-400' : 'bg-gradient-to-r from-amber-500 to-orange-500'
+            isDone ? 'bg-emerald-500' : 'bg-gradient-to-r from-amber-500 to-orange-500'
           }`}
           style={{ width: `${percent}%` }}
         />

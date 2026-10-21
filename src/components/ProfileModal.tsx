@@ -173,31 +173,28 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
-        {/* Glow ambient background */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xl bg-white border border-zinc-200 rounded-3xl p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
         {/* Modal Header with User Card */}
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-800 shrink-0 relative z-10">
+        <div className="flex items-center justify-between pb-4 border-b border-zinc-100 shrink-0 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-zinc-950 font-black text-lg shadow-lg shadow-amber-500/20 border border-amber-400/40">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-black text-lg shadow-sm">
               {getInitials(user.name)}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-white tracking-tight">{user.name}</h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <h3 className="text-base font-black text-zinc-900 tracking-tight">{user.name}</h3>
+                <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase bg-amber-50 text-amber-700 border border-amber-200">
                   {user.fitnessGoal}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 mt-0.5">{user.email}</p>
+              <p className="text-xs text-zinc-500 font-medium mt-0.5">{user.email}</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+            className="p-2 rounded-xl text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition"
             aria-label="Close profile modal"
           >
             <X className="w-5 h-5" />
@@ -205,7 +202,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
         </div>
 
         {/* Tab Selection */}
-        <div className="grid grid-cols-2 p-1 bg-zinc-950 rounded-xl border border-zinc-800 mt-4 shrink-0 relative z-10">
+        <div className="grid grid-cols-2 p-1 bg-zinc-100 rounded-2xl border border-zinc-200/80 mt-4 shrink-0 relative z-10">
           <button
             type="button"
             onClick={() => {
@@ -213,10 +210,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
               setErrorMsg('');
               setSuccessMsg('');
             }}
-            className={`py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-2 ${
+            className={`py-2 text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 ${
               activeTab === 'info'
-                ? 'bg-amber-500 text-zinc-950 shadow-md font-black'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-white text-zinc-900 shadow-sm font-black'
+                : 'text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -230,10 +227,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
               setErrorMsg('');
               setSuccessMsg('');
             }}
-            className={`py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-2 ${
+            className={`py-2 text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 ${
               activeTab === 'security'
-                ? 'bg-amber-500 text-zinc-950 shadow-md font-black'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-white text-zinc-900 shadow-sm font-black'
+                : 'text-zinc-500 hover:text-zinc-900'
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
@@ -243,14 +240,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
         {/* Feedback alerts */}
         {successMsg && (
-          <div className="mt-3 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs text-emerald-400 flex items-center gap-2 animate-in fade-in">
+          <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-700 font-medium flex items-center gap-2 animate-in fade-in">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
         )}
 
         {errorMsg && (
-          <div className="mt-3 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400 flex items-center gap-2 animate-in fade-in">
+          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-600 font-medium flex items-center gap-2 animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -262,17 +259,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
             /* Personal Information Form */
             <form onSubmit={handleSavePersonalInfo} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                <label className="block text-xs font-bold text-zinc-700 mb-1">
                   Full Name
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <User className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-9 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 transition"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl pl-9 pr-3 py-2.5 text-xs text-zinc-900 focus:outline-none focus:bg-white focus:border-amber-500 transition font-medium"
                   />
                 </div>
               </div>
@@ -281,8 +278,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* Age */}
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1 flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                  <label className="block text-xs font-bold text-zinc-700 mb-1 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-amber-500" />
                     <span>Age</span>
                   </label>
                   <input
@@ -292,14 +289,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     max="110"
                     value={age}
                     onChange={(e) => setAge(e.target.value === '' ? '' : parseInt(e.target.value))}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-amber-500"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 font-mono focus:outline-none focus:bg-white focus:border-amber-500"
                   />
                 </div>
 
                 {/* Height */}
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1 flex items-center gap-1">
-                    <Ruler className="w-3.5 h-3.5 text-sky-400" />
+                  <label className="block text-xs font-bold text-zinc-700 mb-1 flex items-center gap-1">
+                    <Ruler className="w-3.5 h-3.5 text-sky-500" />
                     <span>Height (cm)</span>
                   </label>
                   <input
@@ -309,25 +306,25 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     max="260"
                     value={height}
                     onChange={(e) => setHeight(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-amber-500"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 font-mono focus:outline-none focus:bg-white focus:border-amber-500"
                   />
                 </div>
 
                 {/* Weight */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
-                      <Scale className="w-3.5 h-3.5 text-emerald-400" />
+                    <label className="text-xs font-bold text-zinc-700 flex items-center gap-1">
+                      <Scale className="w-3.5 h-3.5 text-emerald-500" />
                       <span>Weight</span>
                     </label>
                     <div className="flex gap-1 text-[10px] font-bold">
                       <button
                         type="button"
                         onClick={() => setPreferredUnit('kg')}
-                        className={`px-1.5 py-0.5 rounded ${
+                        className={`px-1.5 py-0.5 rounded-md ${
                           preferredUnit === 'kg'
-                            ? 'bg-amber-500 text-zinc-950'
-                            : 'text-zinc-500 hover:text-white'
+                            ? 'bg-amber-500 text-white shadow-2xs'
+                            : 'text-zinc-500 hover:text-zinc-900'
                         }`}
                       >
                         KG
@@ -335,10 +332,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                       <button
                         type="button"
                         onClick={() => setPreferredUnit('lbs')}
-                        className={`px-1.5 py-0.5 rounded ${
+                        className={`px-1.5 py-0.5 rounded-md ${
                           preferredUnit === 'lbs'
-                            ? 'bg-amber-500 text-zinc-950'
-                            : 'text-zinc-500 hover:text-white'
+                            ? 'bg-amber-500 text-white shadow-2xs'
+                            : 'text-zinc-500 hover:text-zinc-900'
                         }`}
                       >
                         LBS
@@ -353,21 +350,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     max="400"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-amber-500"
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl px-3 py-2.5 text-xs text-zinc-900 font-mono focus:outline-none focus:bg-white focus:border-amber-500"
                   />
                 </div>
               </div>
 
               {/* Fitness Goal */}
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 mb-1 flex items-center gap-1">
-                  <Dumbbell className="w-3.5 h-3.5 text-amber-400" />
+                <label className="block text-xs font-bold text-zinc-700 mb-1 flex items-center gap-1">
+                  <Dumbbell className="w-3.5 h-3.5 text-amber-500" />
                   <span>Primary Training Goal</span>
                 </label>
                 <select
                   value={fitnessGoal}
                   onChange={(e) => setFitnessGoal(e.target.value as any)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-200 focus:outline-none focus:border-amber-500"
+                  className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl px-3 py-2.5 text-xs text-zinc-800 focus:outline-none focus:bg-white focus:border-amber-500"
                 >
                   <option value="Hypertrophy">Hypertrophy (Upper Chest & Delts Priority)</option>
                   <option value="Strength">Strength & Power Overload</option>
@@ -380,7 +377,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-500/20 flex items-center gap-2 transition active:scale-95 disabled:opacity-50"
+                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-sm flex items-center gap-2 transition active:scale-95 disabled:opacity-50"
                 >
                   <Save className="w-4 h-4" />
                   <span>Save Personal Details</span>
@@ -389,18 +386,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
             </form>
           ) : (
             /* Security (Email & Password Update) Forms */
-            <div className="space-y-6">
+            <div className="space-y-5">
               {/* 1. Update Email Form */}
-              <form onSubmit={handleUpdateEmail} className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4 space-y-3">
-                <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
-                  <Mail className="w-4 h-4 text-sky-400" />
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+              <form onSubmit={handleUpdateEmail} className="bg-zinc-50 border border-zinc-200 rounded-3xl p-4 space-y-3">
+                <div className="flex items-center gap-2 border-b border-zinc-200/80 pb-2">
+                  <Mail className="w-4 h-4 text-sky-600" />
+                  <h4 className="text-xs font-black text-zinc-900 uppercase tracking-wider">
                     Update Email Address
                   </h4>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                  <label className="block text-[11px] font-bold text-zinc-600 mb-1">
                     New Email Address
                   </label>
                   <input
@@ -409,12 +406,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     placeholder="new-email@domain.com"
-                    className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition"
+                    className="w-full bg-white border border-zinc-200 rounded-2xl px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                  <label className="block text-[11px] font-bold text-zinc-600 mb-1">
                     Current Password (for verification)
                   </label>
                   <input
@@ -423,7 +420,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                     value={emailCurrentPassword}
                     onChange={(e) => setEmailCurrentPassword(e.target.value)}
                     placeholder="Enter current password"
-                    className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition font-mono"
+                    className="w-full bg-white border border-zinc-200 rounded-2xl px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition font-mono"
                   />
                 </div>
 
@@ -431,7 +428,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   <button
                     type="submit"
                     disabled={isSaving || !newEmail || !emailCurrentPassword}
-                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-xl border border-zinc-700 transition active:scale-95 disabled:opacity-40"
+                    className="px-4 py-2 bg-zinc-900 hover:bg-black text-white font-bold text-xs rounded-2xl transition active:scale-95 disabled:opacity-40"
                   >
                     Update Email
                   </button>
@@ -439,16 +436,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
               </form>
 
               {/* 2. Update Password Form */}
-              <form onSubmit={handleUpdatePassword} className="bg-zinc-950/70 border border-zinc-800/80 rounded-2xl p-4 space-y-3">
-                <div className="flex items-center gap-2 border-b border-zinc-800 pb-2">
-                  <Lock className="w-4 h-4 text-amber-400" />
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+              <form onSubmit={handleUpdatePassword} className="bg-zinc-50 border border-zinc-200 rounded-3xl p-4 space-y-3">
+                <div className="flex items-center gap-2 border-b border-zinc-200/80 pb-2">
+                  <Lock className="w-4 h-4 text-amber-600" />
+                  <h4 className="text-xs font-black text-zinc-900 uppercase tracking-wider">
                     Change Password
                   </h4>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                  <label className="block text-[11px] font-bold text-zinc-600 mb-1">
                     Current Password
                   </label>
                   <div className="relative">
@@ -458,12 +455,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Current password"
-                      className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl pl-3 pr-10 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition font-mono"
+                      className="w-full bg-white border border-zinc-200 rounded-2xl pl-3 pr-10 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition font-mono"
                     />
                     <button
                       type="button"
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                     >
                       {showCurrentPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -472,7 +469,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                    <label className="block text-[11px] font-bold text-zinc-600 mb-1">
                       New Password
                     </label>
                     <div className="relative">
@@ -482,12 +479,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="Min. 6 characters"
-                        className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl pl-3 pr-10 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition font-mono"
+                        className="w-full bg-white border border-zinc-200 rounded-2xl pl-3 pr-10 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition font-mono"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
                       >
                         {showNewPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       </button>
@@ -495,7 +492,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                    <label className="block text-[11px] font-bold text-zinc-600 mb-1">
                       Confirm New Password
                     </label>
                     <input
@@ -504,7 +501,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Re-type new password"
-                      className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition font-mono"
+                      className="w-full bg-white border border-zinc-200 rounded-2xl px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition font-mono"
                     />
                   </div>
                 </div>
@@ -513,7 +510,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   <button
                     type="submit"
                     disabled={isSaving || !currentPassword || !newPassword || !confirmPassword}
-                    className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs rounded-xl transition active:scale-95 disabled:opacity-40"
+                    className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-2xl transition active:scale-95 disabled:opacity-40"
                   >
                     Save New Password
                   </button>
@@ -524,7 +521,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
         </div>
 
         {/* Modal Footer with Sign Out */}
-        <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between shrink-0 relative z-10">
+        <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between shrink-0 relative z-10">
           <button
             type="button"
             onClick={() => {
@@ -533,7 +530,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                 onClose();
               }
             }}
-            className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 transition"
+            className="flex items-center gap-1.5 text-xs text-red-500 hover:text-red-600 font-bold transition"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
@@ -542,7 +539,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-semibold transition"
+            className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 rounded-2xl text-xs font-bold transition"
           >
             Close
           </button>
