@@ -69,11 +69,32 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   const handleDemoFill = async () => {
-    setEmail('farhanazeemi.dev@gmail.com');
-    setPassword('password123');
-    const res = await login('farhanazeemi.dev@gmail.com', 'password123');
-    if (res.success) {
-      onClose();
+    const demoEmail = 'athlete.demo@ppltracker.com';
+    const demoPass = 'password123';
+    setEmail(demoEmail);
+    setPassword(demoPass);
+    setIsSubmitting(true);
+    setErrorMsg('');
+    try {
+      let res = await login(demoEmail, demoPass);
+      if (!res.success) {
+        res = await signup('Demo Athlete', demoEmail, demoPass, {
+          age: 24,
+          height: 178,
+          weight: 78.5,
+          preferredUnit: 'kg',
+          fitnessGoal: 'Hypertrophy',
+        });
+      }
+      if (res.success) {
+        onClose();
+      } else {
+        setErrorMsg(res.error || 'Demo login failed.');
+      }
+    } catch {
+      setErrorMsg('Demo login failed.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

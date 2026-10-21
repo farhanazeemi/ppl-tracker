@@ -41,13 +41,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
   // Email update form
   const [newEmail, setNewEmail] = useState('');
-  const [emailCurrentPassword, setEmailCurrentPassword] = useState('');
 
   // Password update form
-  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
   // Status feedback
@@ -115,12 +112,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
     try {
       const res = await updateEmail({
         newEmail,
-        currentPassword: emailCurrentPassword,
       });
 
       if (res.success) {
-        setEmailCurrentPassword('');
-        showNotification('Email address updated successfully!');
+        showNotification('Email address updated in database!');
       } else {
         setErrorMsg(res.error || 'Failed to update email.');
       }
@@ -145,16 +140,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
 
     try {
       const res = await updatePassword({
-        currentPassword,
         newPassword,
         confirmPassword,
       });
 
       if (res.success) {
-        setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
-        showNotification('Password updated securely!');
+        showNotification('Password updated securely in database!');
       } else {
         setErrorMsg(res.error || 'Failed to update password.');
       }
@@ -410,27 +403,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   />
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-zinc-600 mb-1">
-                    Current Password (for verification)
-                  </label>
-                  <input
-                    type="password"
-                    required
-                    value={emailCurrentPassword}
-                    onChange={(e) => setEmailCurrentPassword(e.target.value)}
-                    placeholder="Enter current password"
-                    className="w-full bg-white border border-zinc-200 rounded-2xl px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition font-mono"
-                  />
-                </div>
-
                 <div className="flex justify-end pt-1">
                   <button
                     type="submit"
-                    disabled={isSaving || !newEmail || !emailCurrentPassword}
+                    disabled={isSaving || !newEmail || newEmail === user.email}
                     className="px-4 py-2 bg-zinc-900 hover:bg-black text-white font-bold text-xs rounded-2xl transition active:scale-95 disabled:opacity-40"
                   >
-                    Update Email
+                    Save Email to Database
                   </button>
                 </div>
               </form>
@@ -442,29 +421,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                   <h4 className="text-xs font-black text-zinc-900 uppercase tracking-wider">
                     Change Password
                   </h4>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-zinc-600 mb-1">
-                    Current Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showCurrentPassword ? 'text' : 'password'}
-                      required
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      placeholder="Current password"
-                      className="w-full bg-white border border-zinc-200 rounded-2xl pl-3 pr-10 py-2 text-xs text-zinc-900 focus:outline-none focus:border-amber-500 transition font-mono"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                    >
-                      {showCurrentPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -509,7 +465,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
                 <div className="flex justify-end pt-1">
                   <button
                     type="submit"
-                    disabled={isSaving || !currentPassword || !newPassword || !confirmPassword}
+                    disabled={isSaving || !newPassword || !confirmPassword}
                     className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-2xl transition active:scale-95 disabled:opacity-40"
                   >
                     Save New Password

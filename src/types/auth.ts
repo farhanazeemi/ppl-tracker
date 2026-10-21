@@ -2,7 +2,6 @@ export interface UserProfile {
   id: string;
   name: string;
   email: string;
-  password: string; // Stored securely in client storage
   age?: number;
   height?: number; // in cm
   weight?: number; // in kg
@@ -22,11 +21,9 @@ export interface UpdateProfileInput {
 
 export interface UpdateEmailInput {
   newEmail: string;
-  currentPassword: string;
 }
 
 export interface UpdatePasswordInput {
-  currentPassword: string;
   newPassword: string;
   confirmPassword: string;
 }

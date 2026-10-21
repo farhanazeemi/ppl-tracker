@@ -21,6 +21,7 @@ import { CelebrationModal } from '../components/CelebrationModal';
 import { AuthModal } from '../components/AuthModal';
 import { ProfileModal } from '../components/ProfileModal';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import {
   Search,
   Filter,
@@ -129,6 +130,45 @@ export default function PplTrackerHome() {
     setSessionStartTime(Date.now());
   }, []);
 
+  // Sync workout history with Supabase when user logs in
+  useEffect(() => {
+    if (!user?.id) return;
+
+    async function syncCloudWorkouts() {
+      try {
+        const { data, error } = await supabase
+          .from('workout_sessions')
+          .select('*')
+          .eq('user_id', user!.id)
+          .order('created_at', { ascending: false });
+
+        if (!error && data && data.length > 0) {
+          const cloudLogs: LoggedWorkoutSession[] = data.map((row: any) => ({
+            id: row.id,
+            dayId: row.day_id,
+            date: row.date,
+            startTime: Date.now() - (row.duration_minutes || 30) * 60000,
+            endTime: Date.now(),
+            durationMinutes: row.duration_minutes || 0,
+            totalVolumeKg: Number(row.total_volume_kg) || 0,
+            totalSetsCompleted: row.total_sets_completed || 0,
+            totalRepsCompleted: 0,
+            exercisesLogged: row.exercises_logged || {},
+            doubleProgressionsEarned: row.double_progressions || [],
+          }));
+          setHistoryLogs(cloudLogs);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('ppl_history_v2', JSON.stringify(cloudLogs));
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching workout sessions from Supabase:', err);
+      }
+    }
+
+    syncCloudWorkouts();
+  }, [user?.id]);
+
   // Save sets state to localStorage
   const handleUpdateSets = (exerciseId: string, nextSets: ExerciseSet[]) => {
     setSetsState((prev) => {
@@ -236,6 +276,25 @@ export default function PplTrackerHome() {
     setHistoryLogs(nextHistory);
     if (typeof window !== 'undefined') {
       localStorage.setItem('ppl_history_v2', JSON.stringify(nextHistory));
+    }
+
+    // Persist workout to Supabase if authenticated
+    if (user?.id) {
+      supabase
+        .from('workout_sessions')
+        .insert({
+          user_id: user.id,
+          day_id: newLog.dayId,
+          date: newLog.date,
+          duration_minutes: newLog.durationMinutes,
+          total_volume_kg: newLog.totalVolumeKg,
+          total_sets_completed: newLog.totalSetsCompleted,
+          double_progressions: newLog.doubleProgressionsEarned,
+          exercises_logged: newLog.exercisesLogged,
+        })
+        .then(({ error }) => {
+          if (error) console.error('Failed to sync workout to Supabase:', error);
+        });
     }
 
     setCelebrationData({
@@ -531,10 +590,13 @@ export default function PplTrackerHome() {
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         historyLogs={historyLogs}
-        onClearHistory={() => {
+        onClearHistory={async () => {
           setHistoryLogs([]);
           if (typeof window !== 'undefined') {
             localStorage.removeItem('ppl_history_v2');
+          }
+          if (user?.id) {
+            await supabase.from('workout_sessions').delete().eq('user_id', user.id);
           }
         }}
         onImportData={(imported) => {
