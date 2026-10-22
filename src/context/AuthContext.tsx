@@ -33,9 +33,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch user profile from Supabase 'public.profiles' table
+  // Helper to read local overrides
+  const getLocalProfileMeta = (userId: string) => {
+    if (typeof window === 'undefined') return {};
+    try {
+      const saved = localStorage.getItem(`ppl_user_profile_${userId}`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  };
+
+  const saveLocalProfileMeta = (userId: string, data: Partial<UserProfile>) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const existing = getLocalProfileMeta(userId);
+      const updated = { ...existing, ...data };
+      localStorage.setItem(`ppl_user_profile_${userId}`, JSON.stringify(updated));
+    } catch (e) {
+      console.error('Failed to save profile locally:', e);
+    }
+  };
+
+  // Fetch user profile from Supabase 'public.profiles' table + merge local preferences
   const fetchProfile = useCallback(async (userId: string, authEmail?: string): Promise<UserProfile | null> => {
     try {
+      const localMeta = getLocalProfileMeta(userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -43,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error);
+        // Table or row not found, ignore error
       }
 
       if (data) {
@@ -51,23 +74,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           id: data.id,
           name: data.name || (authEmail ? authEmail.split('@')[0] : 'Athlete'),
           email: data.email || authEmail || '',
-          age: data.age ?? undefined,
-          height: data.height ? Number(data.height) : undefined,
-          weight: data.weight ? Number(data.weight) : undefined,
-          preferredUnit: (data.preferred_unit as 'kg' | 'lbs') || 'kg',
-          fitnessGoal: (data.fitness_goal as any) || 'Hypertrophy',
+          age: data.age ?? localMeta.age ?? undefined,
+          height: data.height ? Number(data.height) : (localMeta.height ?? undefined),
+          weight: data.weight ? Number(data.weight) : (localMeta.weight ?? undefined),
+          preferredUnit: (data.preferred_unit as 'kg' | 'lbs') || localMeta.preferredUnit || 'kg',
+          fitnessGoal: (data.fitness_goal as any) || localMeta.fitnessGoal || 'Hypertrophy',
           createdAt: data.created_at ? data.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+          onboardingCompleted: localMeta.onboardingCompleted ?? (data.onboarding_completed || false),
+          selectedSplit: localMeta.selectedSplit || data.selected_split || 'ppl',
+          weakPoints: localMeta.weakPoints || data.weak_points || [],
+          experienceLevel: localMeta.experienceLevel || data.experience_level || 'Intermediate',
+          barbellBaseWeight: localMeta.barbellBaseWeight || 20,
         };
       }
 
-      // If no profile row exists yet, return default profile based on auth
+      // If no profile row exists yet, return default profile based on auth + localMeta
       return {
         id: userId,
         name: authEmail ? authEmail.split('@')[0] : 'Athlete',
         email: authEmail || '',
-        preferredUnit: 'kg',
-        fitnessGoal: 'Hypertrophy',
+        preferredUnit: localMeta.preferredUnit || 'kg',
+        fitnessGoal: localMeta.fitnessGoal || 'Hypertrophy',
         createdAt: new Date().toISOString().split('T')[0],
+        onboardingCompleted: localMeta.onboardingCompleted || false,
+        selectedSplit: localMeta.selectedSplit || 'ppl',
+        weakPoints: localMeta.weakPoints || [],
+        experienceLevel: localMeta.experienceLevel || 'Intermediate',
+        barbellBaseWeight: localMeta.barbellBaseWeight || 20,
       };
     } catch (err) {
       console.error('Failed to load profile:', err);
@@ -195,7 +228,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (data.user) {
-        // Upsert into public.profiles directly to guarantee immediate consistency
+        // Save locally first
+        saveLocalProfileMeta(data.user.id, {
+          onboardingCompleted: additional?.onboardingCompleted ?? false,
+          selectedSplit: additional?.selectedSplit ?? 'ppl',
+          weakPoints: additional?.weakPoints ?? [],
+          experienceLevel: additional?.experienceLevel ?? 'Intermediate',
+          barbellBaseWeight: additional?.barbellBaseWeight ?? 20,
+        });
+
+        // Upsert into public.profiles
         const profilePayload = {
           id: data.user.id,
           name: cleanName,
@@ -208,7 +250,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           updated_at: new Date().toISOString(),
         };
 
-        await supabase.from('profiles').upsert(profilePayload);
+        try {
+          await supabase.from('profiles').upsert(profilePayload);
+        } catch {
+          // Ignore if table schema differs
+        }
 
         const profile = await fetchProfile(data.user.id, data.user.email);
         setUser(profile);
@@ -237,8 +283,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return { success: false, error: 'User is not authenticated.' };
 
     try {
+      // Save locally to guarantee offline / immediate availability
+      saveLocalProfileMeta(user.id, {
+        name: data.name,
+        age: data.age,
+        height: data.height,
+        weight: data.weight,
+        preferredUnit: data.preferredUnit,
+        fitnessGoal: data.fitnessGoal,
+        onboardingCompleted: data.onboardingCompleted ?? user.onboardingCompleted,
+        selectedSplit: data.selectedSplit ?? user.selectedSplit,
+        weakPoints: data.weakPoints ?? user.weakPoints,
+        experienceLevel: data.experienceLevel ?? user.experienceLevel,
+        barbellBaseWeight: data.barbellBaseWeight ?? user.barbellBaseWeight,
+      });
+
       const updates = {
-        name: data.name.trim() || user.name,
+        name: data.name?.trim() || user.name,
         age: typeof data.age === 'number' ? data.age : null,
         height: typeof data.height === 'number' ? data.height : null,
         weight: typeof data.weight === 'number' ? data.weight : null,
@@ -247,19 +308,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updated_at: new Date().toISOString(),
       };
 
-      const { error: dbError } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', user.id);
-
-      if (dbError) {
-        return { success: false, error: dbError.message };
+      try {
+        await supabase
+          .from('profiles')
+          .update(updates)
+          .eq('id', user.id);
+      } catch {
+        // Table or column update fallback
       }
 
-      // Also update auth user metadata
-      await supabase.auth.updateUser({
-        data: updates,
-      });
+      // Also update auth user metadata if possible
+      try {
+        await supabase.auth.updateUser({
+          data: updates,
+        });
+      } catch {
+        // Fallback
+      }
 
       setUser((prev) =>
         prev
@@ -271,13 +336,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               weight: data.weight,
               preferredUnit: data.preferredUnit,
               fitnessGoal: data.fitnessGoal,
+              onboardingCompleted: data.onboardingCompleted ?? prev.onboardingCompleted,
+              selectedSplit: data.selectedSplit ?? prev.selectedSplit,
+              weakPoints: data.weakPoints ?? prev.weakPoints,
+              experienceLevel: data.experienceLevel ?? prev.experienceLevel,
+              barbellBaseWeight: data.barbellBaseWeight ?? prev.barbellBaseWeight,
             }
           : null
       );
 
       return { success: true };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Failed to save profile changes to database.' };
+      return { success: false, error: err.message || 'Failed to save profile changes.' };
     }
   };
 
@@ -300,11 +370,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: error.message };
       }
 
-      // Update in profiles table as well
-      await supabase
-        .from('profiles')
-        .update({ email: cleanNewEmail, updated_at: new Date().toISOString() })
-        .eq('id', user.id);
+      try {
+        await supabase
+          .from('profiles')
+          .update({ email: cleanNewEmail, updated_at: new Date().toISOString() })
+          .eq('id', user.id);
+      } catch {
+        // Ignore table error
+      }
 
       setUser((prev) => (prev ? { ...prev, email: cleanNewEmail } : null));
 

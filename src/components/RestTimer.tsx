@@ -91,17 +91,17 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   const percent = totalSeconds > 0 ? ((totalSeconds - remaining) / totalSeconds) * 100 : 0;
 
   return (
-    <div className="bg-white border border-zinc-200/90 rounded-3xl p-4 shadow-sm transition-all">
+    <div className="bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-sm transition-all">
       <div className="flex items-center justify-between gap-3 mb-2.5">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-amber-50 text-amber-600 rounded-xl border border-amber-200/60">
+          <div className="p-2 bg-amber-500/10 text-amber-500 rounded-xl border border-amber-500/20">
             <Timer className="w-4 h-4" />
           </div>
           <div>
-            <span className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold block">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 dark:text-zinc-400 font-bold block">
               Auto Rest Timer
             </span>
-            <span className="text-xs text-zinc-600 hidden sm:inline">
+            <span className="text-xs text-zinc-600 dark:text-zinc-400 hidden sm:inline">
               Triggers automatically on set completion
             </span>
           </div>
@@ -110,10 +110,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
         {/* Audio Toggle */}
         <button
           onClick={onToggleSound}
-          className={`p-1.5 px-2 rounded-xl border text-xs flex items-center gap-1.5 transition ${
+          className={`p-1.5 px-2 rounded-xl border text-xs flex items-center gap-1.5 transition cursor-pointer ${
             soundEnabled
-              ? 'bg-zinc-50 border-zinc-200 text-zinc-800 hover:bg-zinc-100'
-              : 'bg-zinc-100 border-zinc-200 text-zinc-400 hover:text-zinc-600'
+              ? 'bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100'
+              : 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-400 hover:text-zinc-600'
           }`}
           title={soundEnabled ? 'Mute Audio Cues' : 'Enable Louder Audio Cues'}
           aria-label={soundEnabled ? 'Mute Audio Cues' : 'Enable Louder Audio Cues'}
@@ -127,17 +127,17 @@ export const RestTimer: React.FC<RestTimerProps> = ({
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-zinc-50 border border-zinc-200/70 rounded-2xl p-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3">
         {/* Digital Display & Controls */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <div
               className={`font-mono text-2xl sm:text-3xl font-black tracking-tight px-3 py-1 rounded-xl border ${
                 isDone
-                  ? 'bg-emerald-50 text-emerald-600 border-emerald-300 animate-pulse'
+                  ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/40 animate-pulse'
                   : isRunning
-                  ? 'bg-amber-50 text-amber-600 border-amber-300'
-                  : 'bg-white text-zinc-900 border-zinc-200 shadow-sm'
+                  ? 'bg-amber-500/20 text-amber-500 border-amber-500/40'
+                  : 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border-zinc-200 dark:border-zinc-700 shadow-sm'
               }`}
             >
               {isDone ? 'READY!' : formatTime(remaining)}
@@ -147,10 +147,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={togglePause}
-              className={`p-2.5 rounded-xl font-bold text-xs border transition active:scale-95 flex items-center justify-center ${
+              className={`p-2.5 rounded-xl font-bold text-xs border transition active:scale-95 flex items-center justify-center cursor-pointer ${
                 isRunning
-                  ? 'bg-amber-500 text-white border-amber-600 hover:bg-amber-600'
-                  : 'bg-zinc-900 hover:bg-black text-white border-zinc-900 shadow-sm'
+                  ? 'bg-amber-500 text-black border-amber-500 hover:bg-amber-600'
+                  : 'bg-zinc-900 dark:bg-zinc-100 hover:bg-black text-white dark:text-black border-zinc-900 dark:border-zinc-100 shadow-sm'
               }`}
               title={isRunning ? 'Pause' : 'Play'}
               aria-label={isRunning ? 'Pause rest timer' : 'Start rest timer'}
@@ -159,7 +159,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={handleReset}
-              className="p-2.5 bg-white hover:bg-zinc-100 text-zinc-600 hover:text-zinc-900 border border-zinc-200 rounded-xl transition shadow-sm active:scale-95"
+              className="p-2.5 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-700 rounded-xl transition shadow-sm active:scale-95 cursor-pointer"
               title="Reset"
               aria-label="Reset rest timer"
             >
@@ -167,7 +167,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={() => adjustTime(-15)}
-              className="p-2 bg-white hover:bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-xl text-xs shadow-sm transition active:scale-95"
+              className="p-2 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-xl text-xs shadow-sm transition active:scale-95 cursor-pointer"
               title="Subtract 15 seconds"
               aria-label="Subtract 15 seconds"
             >
@@ -175,7 +175,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={() => adjustTime(15)}
-              className="p-2 bg-white hover:bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-xl text-xs shadow-sm transition active:scale-95"
+              className="p-2 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-xl text-xs shadow-sm transition active:scale-95 cursor-pointer"
               title="Add 15 seconds"
               aria-label="Add 15 seconds"
             >
@@ -196,10 +196,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             <button
               key={preset.sec}
               onClick={() => handleStart(preset.sec)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition active:scale-95 border ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition active:scale-95 border cursor-pointer ${
                 totalSeconds === preset.sec && isRunning
-                  ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
-                  : 'bg-white hover:bg-zinc-100 text-zinc-700 border-zinc-200 shadow-sm'
+                  ? 'bg-amber-500 text-black border-amber-500 shadow-sm'
+                  : 'bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 shadow-sm'
               }`}
             >
               {preset.label}
@@ -209,7 +209,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-zinc-100 h-2 rounded-full mt-2.5 overflow-hidden border border-zinc-200/80">
+      <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full mt-2.5 overflow-hidden border border-zinc-200/80 dark:border-zinc-700">
         <div
           className={`h-full transition-all duration-300 ${
             isDone ? 'bg-emerald-500' : 'bg-gradient-to-r from-amber-500 to-orange-500'

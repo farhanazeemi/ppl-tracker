@@ -1,4 +1,11 @@
-export type SplitDayId = 'push-a' | 'pull-a' | 'legs-a' | 'push-b' | 'pull-b' | 'legs-b';
+export type SplitDayId = 
+  | 'push-a' | 'pull-a' | 'legs-a' | 'push-b' | 'pull-b' | 'legs-b'
+  | 'bro-chest' | 'bro-back' | 'bro-shoulders' | 'bro-arms' | 'bro-legs'
+  | 'upper-1' | 'lower-1' | 'upper-2' | 'lower-2'
+  | 'full-body-1' | 'full-body-2' | 'full-body-3'
+  | string;
+
+export type TrainingSplitType = 'ppl' | 'bro-split' | 'upper-lower' | 'full-body';
 
 export type MuscleGroup = 
   | 'Upper Chest'
@@ -44,18 +51,30 @@ export interface ExerciseDefinition {
   cue: string;
   biomechanicsTip?: string;
   equipment: 'barbell' | 'dumbbell' | 'cable' | 'machine' | 'bodyweight';
+  isPriorityWeakPoint?: boolean;
+  weakPointBadge?: string;
 }
 
 export interface DayWorkout {
   id: SplitDayId;
   dayNumber: number;
   title: string;
-  splitType: 'push' | 'pull' | 'legs';
+  splitType: 'push' | 'pull' | 'legs' | 'chest' | 'back' | 'shoulders' | 'arms' | 'upper' | 'lower' | 'fullbody';
   subtitle: string;
   focus: string;
-  themeColor: 'push' | 'pull' | 'legs';
+  themeColor: 'push' | 'pull' | 'legs' | 'gold' | 'sky';
   accentHex: string;
+  dayOfWeekTarget?: number; // 0 = Sun, 1 = Mon, ..., 6 = Sat
   exercises: ExerciseDefinition[];
+}
+
+export interface SplitProgram {
+  id: TrainingSplitType;
+  name: string;
+  daysPerWeek: number;
+  description: string;
+  idealFor: string;
+  days: DayWorkout[];
 }
 
 export interface LoggedWorkoutSession {

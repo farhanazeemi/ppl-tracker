@@ -1,8 +1,13 @@
 'use client';
 
 import React from 'react';
+import { ThemeProvider } from '../context/ThemeContext';
 import { AuthProvider } from '../context/AuthContext';
 
 export const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <AuthProvider>{children}</AuthProvider>;
+  return (
+    <ThemeProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </ThemeProvider>
+  );
 };

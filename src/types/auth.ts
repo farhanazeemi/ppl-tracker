@@ -1,3 +1,5 @@
+export type TrainingSplitId = 'ppl' | 'bro-split' | 'upper-lower' | 'full-body';
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -8,6 +10,11 @@ export interface UserProfile {
   preferredUnit: 'kg' | 'lbs';
   fitnessGoal: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
   createdAt: string;
+  onboardingCompleted?: boolean;
+  selectedSplit?: TrainingSplitId;
+  weakPoints?: string[];
+  experienceLevel?: 'Beginner' | 'Intermediate' | 'Advanced';
+  barbellBaseWeight?: number;
 }
 
 export interface UpdateProfileInput {
@@ -17,6 +24,11 @@ export interface UpdateProfileInput {
   weight?: number;
   preferredUnit: 'kg' | 'lbs';
   fitnessGoal: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
+  onboardingCompleted?: boolean;
+  selectedSplit?: TrainingSplitId;
+  weakPoints?: string[];
+  experienceLevel?: 'Beginner' | 'Intermediate' | 'Advanced';
+  barbellBaseWeight?: number;
 }
 
 export interface UpdateEmailInput {

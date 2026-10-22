@@ -8,8 +8,17 @@
   --font-barlow: 'Barlow', system-ui, -apple-system, sans-serif;
   --font-barlow-condensed: 'Barlow Condensed', sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', monospace;
-  --background: #fafafa;
+  --background: #f8fafc;
   --foreground: #09090b;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+}
+
+html.dark {
+  --background: #090a0f;
+  --foreground: #f8fafc;
+  --card-bg: #12141c;
+  --border-color: #27272a;
 }
 
 body {
@@ -19,6 +28,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, .font-display {
@@ -31,20 +41,26 @@ h1, h2, h3, .font-display {
   font-feature-settings: "tnum" 1;
 }
 
-/* Minimalist Clean Light Scrollbar */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fafafa;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -56,7 +72,7 @@ h1, h2, h3, .font-display {
 }
 
 /* Accessibility focus styles */
-button:focus-visible, input:focus-visible, select:focus-visible {
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
   outline: 2px solid #f97316;
   outline-offset: 2px;
 }
