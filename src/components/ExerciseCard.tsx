@@ -165,9 +165,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
             )}
 
             {isDoubleProgressionReady && (
-              <span className="flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded-lg animate-pulse font-mono">
+              <span className="flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded-lg font-mono">
                 <Award className="w-3.5 h-3.5" />
-                Double Progression Earned!
+                Double Progression Earned
               </span>
             )}
           </div>
@@ -175,6 +175,18 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           <h3 className="text-base sm:text-lg font-display font-black text-zinc-900 dark:text-white uppercase tracking-tight">
             {exercise.name}
           </h3>
+
+          {/* Double Progression Callout Banner */}
+          {isDoubleProgressionReady && (
+            <div className="p-2 sm:px-3 sm:py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-300">
+                  Target Rep Ceiling Hit! Increase weight by +2.5kg next session.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Target Scheme Badges */}
@@ -232,20 +244,47 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
                   {/* Weight Input */}
                   <td className="py-3 px-3">
-                    <div className="relative flex items-center">
+                    <div className="relative flex items-center gap-1.5">
                       <input
                         type="number"
                         placeholder="kg"
                         step="0.5"
                         min="0"
+                        aria-label={`${exercise.name} Set ${idx + 1} weight in kg`}
                         value={set.weight}
                         onChange={(e) => handleUpdateField(set.id, 'weight', e.target.value)}
-                        className={`w-24 sm:w-28 bg-zinc-50 dark:bg-zinc-900 border rounded-xl px-2.5 py-1.5 font-mono text-sm font-bold text-zinc-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-zinc-850 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition ${
+                        className={`w-20 sm:w-24 bg-zinc-50 dark:bg-zinc-900 border rounded-xl px-2.5 py-2 font-mono text-sm font-bold text-zinc-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-zinc-850 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition ${
                           set.completed
-                            ? 'border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                            ? 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5'
                             : 'border-zinc-200 dark:border-zinc-700'
                         }`}
                       />
+                      <div className="hidden sm:flex flex-col gap-0.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cur = typeof set.weight === 'number' ? set.weight : 0;
+                            handleUpdateField(set.id, 'weight', String(Math.max(0, cur + 2.5)));
+                          }}
+                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-zinc-100 dark:bg-zinc-800 hover:bg-amber-500 hover:text-black text-zinc-600 dark:text-zinc-400 rounded border border-zinc-200 dark:border-zinc-700 transition"
+                          title="Add 2.5kg"
+                          aria-label={`Add 2.5kg to set ${idx + 1}`}
+                        >
+                          +2.5
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cur = typeof set.weight === 'number' ? set.weight : 0;
+                            handleUpdateField(set.id, 'weight', String(Math.max(0, cur - 2.5)));
+                          }}
+                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 rounded border border-zinc-200 dark:border-zinc-700 transition"
+                          title="Subtract 2.5kg"
+                          aria-label={`Subtract 2.5kg from set ${idx + 1}`}
+                        >
+                          -2.5
+                        </button>
+                      </div>
                     </div>
                   </td>
 
@@ -256,11 +295,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                         type="number"
                         placeholder={exercise.targetReps}
                         min="0"
+                        aria-label={`${exercise.name} Set ${idx + 1} completed reps`}
                         value={set.reps}
                         onChange={(e) => handleUpdateField(set.id, 'reps', e.target.value)}
-                        className={`w-20 sm:w-24 bg-zinc-50 dark:bg-zinc-900 border rounded-xl px-2.5 py-1.5 font-mono text-sm font-bold text-zinc-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-zinc-850 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition ${
+                        className={`w-18 sm:w-20 bg-zinc-50 dark:bg-zinc-900 border rounded-xl px-2.5 py-2 font-mono text-sm font-bold text-zinc-900 dark:text-white focus:outline-none focus:bg-white dark:focus:bg-zinc-850 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition ${
                           set.completed
-                            ? 'border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                            ? 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5'
                             : 'border-zinc-200 dark:border-zinc-700'
                         }`}
                       />
@@ -279,18 +319,18 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                     )}
                   </td>
 
-                  {/* Done Checkbox Button */}
+                  {/* Done Checkbox Button (Touch Target >= 44px) */}
                   <td className="py-3 px-3 text-center">
                     <button
                       onClick={() => handleToggleSetComplete(set.id)}
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition active:scale-90 mx-auto border cursor-pointer ${
+                      className={`w-11 h-11 rounded-2xl flex items-center justify-center transition active:scale-90 mx-auto border cursor-pointer ${
                         set.completed
-                          ? 'bg-emerald-500 text-black border-emerald-500 shadow-sm'
-                          : 'bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-400 border-zinc-200 dark:border-zinc-700'
+                          ? 'bg-emerald-500 text-black border-emerald-500 shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                          : 'bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-400 border-zinc-300 dark:border-zinc-700 shadow-xs'
                       }`}
                       aria-label={`Mark set ${idx + 1} done`}
                     >
-                      <Check className={`w-4 h-4 ${set.completed ? 'stroke-[3]' : 'opacity-40'}`} />
+                      <Check className={`w-5 h-5 ${set.completed ? 'stroke-[3]' : 'opacity-30'}`} />
                     </button>
                   </td>
 

@@ -4,34 +4,50 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { supabase } from '../lib/supabase';
 import {
   UserProfile,
+  AuthContextType,
   UpdateProfileInput,
   UpdateEmailInput,
   UpdatePasswordInput,
 } from '../types/auth';
-
-interface AuthContextType {
-  user: UserProfile | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (
-    name: string,
-    email: string,
-    password: string,
-    additional?: Partial<UpdateProfileInput>
-  ) => Promise<{ success: boolean; error?: string }>;
-  logout: () => Promise<void>;
-  updateProfile: (data: UpdateProfileInput) => Promise<{ success: boolean; error?: string }>;
-  updateEmail: (data: UpdateEmailInput) => Promise<{ success: boolean; error?: string }>;
-  updatePassword: (data: UpdatePasswordInput) => Promise<{ success: boolean; error?: string }>;
-  refreshProfile: () => Promise<void>;
-}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const createGuestProfile = (): UserProfile => {
+    let savedLocal: any = {};
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('ppl_guest_profile');
+        if (raw) savedLocal = JSON.parse(raw);
+      } catch {
+        // ignore error
+      }
+    }
+    return {
+      id: 'guest-athlete',
+      name: savedLocal.name || 'Athlete (Guest)',
+      email: 'local@hypertrophy.app',
+      preferredUnit: savedLocal.preferredUnit || 'kg',
+      fitnessGoal: savedLocal.fitnessGoal || 'Hypertrophy',
+      createdAt: new Date().toISOString().split('T')[0],
+      onboardingCompleted: true,
+      selectedSplit: savedLocal.selectedSplit || 'ppl',
+      weakPoints: savedLocal.weakPoints || [],
+      experienceLevel: savedLocal.experienceLevel || 'Intermediate',
+      barbellBaseWeight: savedLocal.barbellBaseWeight || 20,
+      isGuest: true,
+    };
+  };
+
+  const continueAsGuest = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('ppl_guest_mode', 'true');
+    }
+    setUser(createGuestProfile());
+  };
 
   // Helper to read local overrides
   const getLocalProfileMeta = (userId: string) => {
@@ -128,6 +144,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user && mounted) {
           const profile = await fetchProfile(session.user.id, session.user.email);
           if (mounted) setUser(profile);
+        } else if (typeof window !== 'undefined' && localStorage.getItem('ppl_guest_mode') === 'true' && mounted) {
+          setUser(createGuestProfile());
         }
       } catch (err) {
         console.error('Auth initialization error:', err);
@@ -175,6 +193,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (data.user) {
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('ppl_guest_mode');
+        }
         const profile = await fetchProfile(data.user.id, data.user.email);
         setUser(profile);
         return { success: true };
@@ -256,6 +277,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Ignore if table schema differs
         }
 
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('ppl_guest_mode');
+        }
         const profile = await fetchProfile(data.user.id, data.user.email);
         setUser(profile);
         return { success: true };
@@ -269,6 +293,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('ppl_guest_mode');
+      }
       await supabase.auth.signOut();
     } catch (e) {
       console.error('Sign out error:', e);
@@ -281,6 +308,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     data: UpdateProfileInput
   ): Promise<{ success: boolean; error?: string }> => {
     if (!user) return { success: false, error: 'User is not authenticated.' };
+
+    if (user.isGuest) {
+      const updatedGuest: UserProfile = {
+        ...user,
+        name: data.name?.trim() || user.name,
+        age: data.age ?? user.age,
+        height: data.height ?? user.height,
+        weight: data.weight ?? user.weight,
+        preferredUnit: data.preferredUnit ?? user.preferredUnit,
+        fitnessGoal: data.fitnessGoal ?? user.fitnessGoal,
+        onboardingCompleted: data.onboardingCompleted ?? user.onboardingCompleted,
+        selectedSplit: data.selectedSplit ?? user.selectedSplit,
+        weakPoints: data.weakPoints ?? user.weakPoints,
+        experienceLevel: data.experienceLevel ?? user.experienceLevel,
+        barbellBaseWeight: data.barbellBaseWeight ?? user.barbellBaseWeight,
+      };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('ppl_guest_profile', JSON.stringify(updatedGuest));
+      }
+      setUser(updatedGuest);
+      return { success: true };
+    }
 
     try {
       // Save locally to guarantee offline / immediate availability
@@ -420,7 +469,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         isAuthenticated: !!user,
+        isGuest: !!user?.isGuest,
         isLoading,
+        continueAsGuest,
         login,
         signup,
         logout,

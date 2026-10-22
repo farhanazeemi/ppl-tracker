@@ -55,7 +55,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
   scheduledDayId,
   dayOfWeekName,
 }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isGuest } = useAuth();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
@@ -196,24 +196,47 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
 
             {/* Profile / Auth Button */}
             {isAuthenticated && user ? (
-              <button
-                onClick={onOpenProfile}
-                className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-2xl transition shadow-xs active:scale-95 group cursor-pointer"
-                title="View & Edit Profile"
-                aria-label="View & Edit Profile"
-              >
-                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-black font-black text-xs shadow-xs">
-                  {getInitials(user.name)}
+              isGuest ? (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={onOpenProfile}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs font-mono font-medium transition cursor-pointer"
+                    title="Guest Athlete Settings"
+                    aria-label="Guest Athlete Settings"
+                  >
+                    <User className="w-3.5 h-3.5 text-zinc-400" />
+                    <span className="hidden sm:inline">Guest</span>
+                  </button>
+                  <button
+                    onClick={onOpenAuth}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-black font-display font-bold text-xs uppercase tracking-wider rounded-2xl shadow-xs transition active:scale-95 cursor-pointer"
+                    title="Save to Free Cloud Account"
+                    aria-label="Save to Free Cloud Account"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Sync Cloud</span>
+                  </button>
                 </div>
-                <div className="text-left hidden xl:block pr-1">
-                  <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 block leading-tight truncate max-w-[90px]">
-                    {user.name.split(' ')[0]}
-                  </span>
-                  <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-mono block">
-                    {user.weight ? `${user.weight}kg` : 'Profile'}
-                  </span>
-                </div>
-              </button>
+              ) : (
+                <button
+                  onClick={onOpenProfile}
+                  className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-2xl transition shadow-xs active:scale-95 group cursor-pointer"
+                  title="View & Edit Profile"
+                  aria-label="View & Edit Profile"
+                >
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-black font-black text-xs shadow-xs">
+                    {getInitials(user.name)}
+                  </div>
+                  <div className="text-left hidden xl:block pr-1">
+                    <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 block leading-tight truncate max-w-[90px]">
+                      {user.name.split(' ')[0]}
+                    </span>
+                    <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-mono block">
+                      {user.weight ? `${user.weight}kg` : 'Profile'}
+                    </span>
+                  </div>
+                </button>
+              )
             ) : (
               <button
                 onClick={onOpenAuth}

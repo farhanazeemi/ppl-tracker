@@ -217,6 +217,41 @@ export const RestTimer: React.FC<RestTimerProps> = ({
           style={{ width: `${percent}%` }}
         />
       </div>
+
+      {/* Floating Sticky Mini-Timer when Active */}
+      {(isRunning || isDone) && (
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-zinc-950/95 text-white border border-amber-500/40 rounded-2xl p-2.5 sm:px-4 sm:py-3 shadow-2xl backdrop-blur-md flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <div className="flex items-center gap-2">
+            <Timer className={`w-4 h-4 ${isDone ? 'text-emerald-400 animate-bounce' : 'text-amber-500'}`} />
+            <span className="font-mono text-sm sm:text-base font-extrabold text-white">
+              {isDone ? 'REST DONE!' : formatTime(remaining)}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={togglePause}
+              className="p-1.5 bg-amber-500 hover:bg-amber-600 text-black rounded-lg transition active:scale-90 cursor-pointer"
+              aria-label={isRunning ? 'Pause rest timer' : 'Resume rest timer'}
+            >
+              {isRunning ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+            </button>
+            <button
+              onClick={() => adjustTime(15)}
+              className="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs font-mono font-bold transition cursor-pointer"
+              aria-label="Add 15 seconds"
+            >
+              +15s
+            </button>
+            <button
+              onClick={handleReset}
+              className="p-1.5 text-zinc-400 hover:text-white transition cursor-pointer"
+              aria-label="Stop rest timer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

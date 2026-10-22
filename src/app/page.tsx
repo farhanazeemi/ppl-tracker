@@ -429,8 +429,8 @@ export default function PplTrackerHome() {
   }
 
   // 2. POST-SIGNUP ONBOARDING & PROFILE SETUP:
-  // Trigger multi-step onboarding flow if authenticated user hasn't completed setup yet
-  const needsOnboarding = !user.onboardingCompleted || isOnboardingModalOpen;
+  // Trigger multi-step onboarding flow if authenticated user hasn't completed setup yet (bypass for guest athlete)
+  const needsOnboarding = (!user.onboardingCompleted && !user.isGuest) || isOnboardingModalOpen;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 pb-32 selection:bg-amber-500 selection:text-white transition-colors duration-200">

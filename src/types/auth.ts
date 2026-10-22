@@ -15,6 +15,27 @@ export interface UserProfile {
   weakPoints?: string[];
   experienceLevel?: 'Beginner' | 'Intermediate' | 'Advanced';
   barbellBaseWeight?: number;
+  isGuest?: boolean;
+}
+
+export interface AuthContextType {
+  user: UserProfile | null;
+  isAuthenticated: boolean;
+  isGuest: boolean;
+  isLoading: boolean;
+  continueAsGuest: () => void;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (
+    name: string,
+    email: string,
+    password: string,
+    additional?: Partial<UpdateProfileInput>
+  ) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  updateProfile: (data: UpdateProfileInput) => Promise<{ success: boolean; error?: string }>;
+  updateEmail: (data: UpdateEmailInput) => Promise<{ success: boolean; error?: string }>;
+  updatePassword: (data: UpdatePasswordInput) => Promise<{ success: boolean; error?: string }>;
+  refreshProfile: () => Promise<void>;
 }
 
 export interface UpdateProfileInput {

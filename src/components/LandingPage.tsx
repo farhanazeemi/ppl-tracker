@@ -24,12 +24,14 @@ import {
 import { ThemeToggle } from './ThemeToggle';
 import { ALL_TRAINING_PROGRAMS } from '../data/workouts';
 import { MOCK_BLOG_POSTS } from '../data/mockBlogPosts';
+import { useAuth } from '../context/AuthContext';
 
 interface LandingPageProps {
   onOpenAuth: (mode: 'login' | 'signup') => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
+  const { continueAsGuest } = useAuth();
   const [selectedSplitTab, setSelectedSplitTab] = useState<string>('ppl');
 
   // Interactive Live Demo preview states
@@ -111,15 +113,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
             <ThemeToggle />
             <button
               type="button"
+              onClick={continueAsGuest}
+              className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-amber-500 hover:text-amber-400 font-bold transition cursor-pointer"
+            >
+              Guest Mode
+            </button>
+            <button
+              type="button"
               onClick={() => onOpenAuth('login')}
-              className="px-3.5 py-2 text-xs font-mono uppercase tracking-wider text-zinc-700 dark:text-zinc-300 hover:text-amber-500 font-semibold transition cursor-pointer"
+              className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-zinc-700 dark:text-zinc-300 hover:text-amber-500 font-medium transition cursor-pointer"
             >
               Sign In
             </button>
             <button
               type="button"
               onClick={() => onOpenAuth('signup')}
-              className="px-4 sm:px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-black text-xs font-display font-bold uppercase tracking-wider rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95 flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black text-xs font-display font-bold uppercase tracking-wider rounded-xl transition shadow-md shadow-amber-500/20 active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
               Sign Up Free <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -129,7 +138,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
 
       {/* HERO SECTION */}
       <section className="relative overflow-hidden pt-12 sm:pt-20 pb-16 sm:pb-24 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-amber-500/15 via-orange-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-amber-500/10 via-orange-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-500 text-xs font-mono font-semibold">
@@ -147,38 +156,47 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
             Stop relying on generic notes apps. PPL Tracker automatically detects today&apos;s scheduled split day, tailors workouts to your lagging muscle groups, enforces double progression ceilings, and automates your rest intervals.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+            <button
+              type="button"
+              onClick={continueAsGuest}
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-display font-black uppercase tracking-wider text-sm rounded-2xl shadow-xl shadow-amber-500/25 transition-transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Zap className="w-4 h-4 fill-current" />
+              Start Workout Now (Instant Guest Mode)
+            </button>
             <button
               type="button"
               onClick={() => onOpenAuth('signup')}
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-display font-bold uppercase tracking-wider text-sm rounded-2xl shadow-xl shadow-amber-500/25 transition-transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-4 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-mono text-xs uppercase tracking-wider rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer"
             >
-              Sign Up for Free — Unlock Tracker <ArrowRight className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              Sign Up & Cloud Sync
             </button>
             <a
               href="#demo"
-              className="w-full sm:w-auto px-6 py-4 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-mono text-xs uppercase tracking-wider rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-5 py-4 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-mono text-xs uppercase tracking-wider transition flex items-center justify-center gap-1.5"
             >
-              <Play className="w-3.5 h-3.5 text-amber-500" /> Explore Interactive Demo
+              <Play className="w-3.5 h-3.5 text-amber-500" /> Interactive Demo
             </a>
           </div>
 
-          {/* Social Proof Metric Bar */}
+          {/* Authentic Architecture Pillars Bar */}
           <div className="pt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { val: '1.2M+', label: 'Sets Logged' },
-              { val: '99.4%', label: 'Double Progression Accuracy' },
-              { val: '4 Splits', label: 'PPL, Bro, Upper/Lower, Full' },
-              { val: '100% Free', label: 'No Ads or Paywalls' },
+              { val: '6-Day Split', label: 'Push · Pull · Legs System' },
+              { val: 'Double Progression', label: 'Auto Rep Ceiling Detection' },
+              { val: 'Web Audio Rest', label: 'Built-in Interval Alerts' },
+              { val: 'Olympic Math', label: 'Barbell Plates Per Sleeve' },
             ].map((stat, i) => (
               <div
                 key={i}
-                className="p-4 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-zinc-200/80 dark:border-zinc-800/80 backdrop-blur-sm"
+                className="p-4 rounded-2xl bg-white/80 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 backdrop-blur-sm"
               >
-                <div className="text-xl sm:text-2xl font-display font-black text-amber-500">
+                <div className="text-lg sm:text-xl font-display font-black text-amber-500">
                   {stat.val}
                 </div>
-                <div className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 uppercase mt-0.5">
+                <div className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 uppercase mt-0.5 font-medium">
                   {stat.label}
                 </div>
               </div>
