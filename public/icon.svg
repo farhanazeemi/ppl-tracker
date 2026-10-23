@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="128" fill="#090a0f"/>
+  <circle cx="256" cy="256" r="180" fill="url(#amber-glow)" opacity="0.12"/>
+  
+  <!-- Dumbbell / Flame Hybrid Icon -->
+  <g transform="translate(106, 106)" stroke="#f59e0b" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Barbell / Weight Plates -->
+    <line x1="60" y1="210" x2="240" y2="90" stroke="#fbbf24" stroke-width="28"/>
+    <!-- Left Plate Stack -->
+    <rect x="36" y="160" width="32" height="100" rx="8" fill="#f59e0b"/>
+    <rect x="16" y="180" width="20" height="60" rx="6" fill="#d97706"/>
+    <!-- Right Plate Stack -->
+    <rect x="232" y="40" width="32" height="100" rx="8" fill="#f59e0b"/>
+    <rect x="264" y="60" width="20" height="60" rx="6" fill="#d97706"/>
+    <!-- Center Flame Symbol -->
+    <path d="M150 110 C150 110, 190 140, 190 180 C190 205, 172 225, 150 225 C128 225, 110 205, 110 180 C110 160, 130 135, 150 110 Z" fill="url(#flame-grad)" stroke="#f59e0b" stroke-width="8"/>
+    <circle cx="150" cy="188" r="14" fill="#fbbf24"/>
+  </g>
+  
+  <defs>
+    <radialGradient id="amber-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 256) rotate(90) scale(180)">
+      <stop stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="flame-grad" x1="150" y1="110" x2="150" y2="225" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+</svg>

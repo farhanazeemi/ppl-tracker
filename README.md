@@ -1,5 +1,7 @@
 # 6-Day PPL Hypertrophy Tracker (Upper Chest & 3D Delts Focus)
 
+> 🌐 **Live Web Application**: [https://ppltracker.web.id](https://ppltracker.web.id)
+
 A high-performance progressive overload hypertrophy tracking application built with **Next.js 15 (App Router)**, **React 19**, **Tailwind CSS**, **Three.js**, and **GSAP**, upgraded from `ppl-tracker.html` following **UI/UX Pro Max** design standards.
 
 ---
