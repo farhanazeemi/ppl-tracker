@@ -2,6 +2,87 @@ import { client, isSanityConfigured } from './client';
 import { ALL_POSTS_QUERY, POST_BY_SLUG_QUERY, CATEGORIES_QUERY, RECENT_POSTS_QUERY } from './queries';
 import { MOCK_BLOG_POSTS, BlogPost } from '../data/mockBlogPosts';
 
+function parseSanityBodyToSections(body: any, excerpt: string) {
+  if (!body) {
+    return {
+      introduction: excerpt || '',
+      sections: [{ heading: 'Key Insights', body: excerpt || 'Detailed biomechanics study.' }],
+      conclusion: '',
+    };
+  }
+
+  if (typeof body === 'string') {
+    const rawSections = body.split(/\n(?=## )/g);
+    const sections: Array<{ heading: string; body: string; keyTakeaway?: string }> = [];
+    let intro = excerpt || '';
+
+    rawSections.forEach((sec, idx) => {
+      const trimmed = sec.trim();
+      if (trimmed.startsWith('## ')) {
+        const lines = trimmed.split('\n');
+        const heading = lines[0].replace('## ', '').trim();
+        const content = lines.slice(1).join('\n').trim();
+        sections.push({ heading, body: content });
+      } else if (idx === 0 && !intro) {
+        intro = trimmed;
+      } else {
+        sections.push({ heading: 'Analysis', body: trimmed });
+      }
+    });
+
+    return {
+      introduction: intro,
+      sections: sections.length > 0 ? sections : [{ heading: 'Detailed Breakdown', body: body }],
+      conclusion: '',
+    };
+  }
+
+  if (Array.isArray(body)) {
+    const sections: Array<{ heading: string; body: string; keyTakeaway?: string }> = [];
+    let currentHeading = 'Overview';
+    let currentParagraphs: string[] = [];
+
+    body.forEach((block: any) => {
+      if (block._type === 'block') {
+        const blockText = (block.children || []).map((c: any) => c.text || '').join('');
+        if (block.style === 'h2' || block.style === 'h3') {
+          if (currentParagraphs.length > 0) {
+            sections.push({
+              heading: currentHeading,
+              body: currentParagraphs.join('\n\n'),
+            });
+            currentParagraphs = [];
+          }
+          currentHeading = blockText;
+        } else {
+          if (blockText.trim()) {
+            currentParagraphs.push(blockText.trim());
+          }
+        }
+      }
+    });
+
+    if (currentParagraphs.length > 0) {
+      sections.push({
+        heading: currentHeading,
+        body: currentParagraphs.join('\n\n'),
+      });
+    }
+
+    return {
+      introduction: excerpt || '',
+      sections: sections.length > 0 ? sections : [{ heading: 'Key Takeaways', body: excerpt }],
+      conclusion: '',
+    };
+  }
+
+  return {
+    introduction: excerpt || '',
+    sections: [{ heading: 'Summary', body: excerpt }],
+    conclusion: '',
+  };
+}
+
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
   if (isSanityConfigured && client) {
     try {
@@ -62,16 +143,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
             bio: post.author?.bio,
           },
           categories: post.categories || [],
-          content: {
-            introduction: post.excerpt || '',
-            sections: [
-              {
-                heading: 'Detailed Analysis',
-                body: typeof post.body === 'string' ? post.body : 'Detailed biomechanics study.',
-              },
-            ],
-            conclusion: '',
-          },
+          content: parseSanityBodyToSections(post.body, post.excerpt),
         };
       }
     } catch (err) {
