@@ -1,10 +1,12 @@
 import type { MetadataRoute } from 'next';
-import { MOCK_BLOG_POSTS } from '../data/mockBlogPosts';
+import { getAllBlogPosts } from '../sanity/getPosts';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://ppltracker.web.id';
 
-  const blogUrls: MetadataRoute.Sitemap = MOCK_BLOG_POSTS.map((post) => ({
+  const posts = await getAllBlogPosts();
+
+  const blogUrls: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.publishedAt || Date.now()),
     changeFrequency: 'monthly' as const,

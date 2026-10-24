@@ -1,0 +1,26 @@
+{
+  "display_name": "Daily 10 Fitness Articles -> Sanity.io Publisher",
+  "description": "Automatically generates 10 SEO fitness articles daily at 09:00 and mutates them into Sanity Content Lake.",
+  "builtin": "schedule",
+  "args": [
+    "0 9 * * *",
+    "python3",
+    "D:\\SaaS\\ppl tracker\\antigravity_daily_10_articles_publisher.py",
+    "--dataset",
+    "D:\\SaaS\\ppl tracker\\fitness_articles_1000_plus_dataset.json",
+    "--batch-size",
+    "10",
+    "--strategy",
+    "balanced",
+    "--mode",
+    "gemini-api",
+    "--sanity-push"
+  ],
+  "restart_policy": "on-failure",
+  "env": {
+    "GEMINI_API_KEY": "${GEMINI_API_KEY}",
+    "SANITY_PROJECT_ID": "${SANITY_PROJECT_ID}",
+    "SANITY_DATASET": "production",
+    "SANITY_API_TOKEN": "${SANITY_API_TOKEN}"
+  }
+}

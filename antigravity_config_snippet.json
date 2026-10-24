@@ -1,0 +1,7 @@
+{
+  "sidecars": {
+    "daily-fitness-publisher": {
+      "enabled": true
+    }
+  }
+}
