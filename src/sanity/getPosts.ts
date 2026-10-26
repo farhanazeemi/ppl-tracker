@@ -96,6 +96,8 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
           excerpt: p.excerpt,
           readTime: p.readTime || '5 min read',
           splitCategory: p.splitCategory || 'General',
+          mainImage: p.mainImage?.asset?.url || (typeof p.mainImage === 'string' ? p.mainImage : undefined),
+          imageAlt: p.mainImage?.alt || p.title,
           author: {
             name: p.author?.name || 'Science Contributor',
             role: p.author?.role || 'Fitness Specialist',
@@ -136,6 +138,8 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
           excerpt: post.excerpt,
           readTime: post.readTime || '5 min read',
           splitCategory: post.splitCategory || 'General',
+          mainImage: post.mainImage?.asset?.url || (typeof post.mainImage === 'string' ? post.mainImage : undefined),
+          imageAlt: post.mainImage?.alt || post.title,
           author: {
             name: post.author?.name || 'Science Contributor',
             role: post.author?.role || 'Fitness Specialist',

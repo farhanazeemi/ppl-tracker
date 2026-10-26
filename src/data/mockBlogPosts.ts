@@ -6,6 +6,8 @@ export interface BlogPost {
   excerpt: string;
   readTime: string;
   splitCategory: 'PPL' | 'Bro Split' | 'Upper/Lower' | 'Full Body' | 'General';
+  mainImage?: string;
+  imageAlt?: string;
   author: {
     name: string;
     role: string;
@@ -22,9 +24,26 @@ export interface BlogPost {
       heading: string;
       body: string;
       keyTakeaway?: string;
+      image?: string;
+      imageCaption?: string;
     }>;
     conclusion: string;
   };
+}
+
+export function formatPostDate(dateStr?: string): string {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return dateStr;
+  }
 }
 
 export const MOCK_BLOG_POSTS: BlogPost[] = [
@@ -36,6 +55,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     excerpt: 'Why standard 45-degree incline presses overload your front delts instead of your upper chest, and how a 15–30 degree bench angle optimizes clavicular fiber alignment.',
     readTime: '6 min read',
     splitCategory: 'PPL',
+    mainImage: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1200&auto=format&fit=crop&q=80',
+    imageAlt: 'Athlete executing heavy incline dumbbell press with proper elbow tuck and clavicular alignment',
     author: {
       name: 'Dr. Marcus Vance, Ph.D.',
       role: 'Biomechanics & Hypertrophy Researcher',
@@ -53,12 +74,16 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
         {
           heading: '1. The Anatomical Angle of the Clavicular Fibers',
           body: 'The pectoralis major consists of two distinct heads: the sternocostal head and the clavicular head. The clavicular head originates along the medial half of the clavicle and inserts into the lateral lip of the bicipital groove of the humerus. Because these fibers run downward and outward at roughly 15 to 30 degrees, the optimal line of resistance must match this angle during humeral adduction.',
-          keyTakeaway: 'Set your adjustable bench to strictly 15° to 30° (typically the first or second pin). Steeper angles convert the exercise into a shoulder press.'
+          keyTakeaway: 'Set your adjustable bench to strictly 15° to 30° (typically the first or second pin). Steeper angles convert the exercise into a shoulder press.',
+          image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop&q=80',
+          imageCaption: '15°–30° bench positioning directly aligns mechanical load with clavicular pectoralis fiber origin.'
         },
         {
           heading: '2. Elbow Path & Convergent Pressing',
           body: 'Fixed barbells lock the wrists and elbows into a rigid horizontal plane, preventing natural adduction. When using dumbbells or converging machine presses, aim to tuck the elbows to approximately 45 degrees relative to the ribcage. At the top of the movement, focus on driving your biceps toward each other rather than banging the dumbbells together.',
-          keyTakeaway: 'The chest functions by drawing the upper arm across the midline of the chest. Peak contraction requires humeral adduction, not forearm touching.'
+          keyTakeaway: 'The chest functions by drawing the upper arm across the midline of the chest. Peak contraction requires humeral adduction, not forearm touching.',
+          image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'Humeral adduction: driving upper arms across the chest activates deep upper pectoral motor units.'
         },
         {
           heading: '3. Stretch-Mediated Hypertrophy Under Load',
@@ -77,6 +102,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     excerpt: 'Comparing 2x/week muscle frequency against 1x/week high volume splits. We analyze muscle protein synthesis windows, systemic fatigue, and workout density.',
     readTime: '7 min read',
     splitCategory: 'PPL',
+    mainImage: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&auto=format&fit=crop&q=80',
+    imageAlt: 'Free weights and dumbbell racks in a training facility comparing split programming architectures',
     author: {
       name: 'Elena Rostova, CSCS',
       role: 'Head of High-Performance Strength',
@@ -93,12 +120,16 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
         {
           heading: '1. The 36–48 Hour Muscle Protein Synthesis Window',
           body: 'Following a resistance training bout, Muscle Protein Synthesis (MPS) elevates rapidly, peaks at 24 hours, and returns to baseline within approximately 36 to 48 hours in trained individuals. When you train a muscle only once per week (as in a Bro Split), that muscle spends 4 to 5 days in a neutral or catabolic state without growth stimulus.',
-          keyTakeaway: 'Training each muscle group twice every 7 days (as in a 6-day PPL) produces two distinct MPS spikes per week, nearly doubling growth opportunities.'
+          keyTakeaway: 'Training each muscle group twice every 7 days (as in a 6-day PPL) produces two distinct MPS spikes per week, nearly doubling growth opportunities.',
+          image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'Frequent MPS stimulus resets anabolic pathways every 48–72 hours across push and pull groups.'
         },
         {
           heading: '2. The Diminishing Returns of Junk Volume',
           body: 'Research by James Krieger and Brad Schoenfeld shows that after about 6 to 8 hard sets per muscle group in a single session, subsequent sets yield sharply diminishing returns while massively increasing fatigue and muscle damage. A Bro Split with 20 sets of chest in one hour often results in "junk volume" sets performed under heavy central nervous system fatigue.',
-          keyTakeaway: 'Splitting 16 weekly sets into two 8-set sessions produces higher quality sets with greater average mechanical load than one 16-set blitz.'
+          keyTakeaway: 'Splitting 16 weekly sets into two 8-set sessions produces higher quality sets with greater average mechanical load than one 16-set blitz.',
+          image: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'High motor unit recruitment happens during the first 6–8 quality working sets before neural fatigue degrades output.'
         },
         {
           heading: '3. When the Bro Split Still Has a Place',
@@ -117,6 +148,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     excerpt: 'Why linear weight jumps lead to early plateaus and joint injury, and how manipulating rep ceilings guarantees continuous progressive overload.',
     readTime: '5 min read',
     splitCategory: 'General',
+    mainImage: 'https://images.unsplash.com/photo-1521804906057-1df8fdb718b7?w=1200&auto=format&fit=crop&q=80',
+    imageAlt: 'Calibrated Olympic barbell plates and collars loaded for measured progressive overload',
     author: {
       name: 'Liam Sterling',
       role: 'Natural Bodybuilder & Coach',
@@ -133,7 +166,9 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
         {
           heading: '1. Defining Double Progression',
           body: 'In a double progression model, you work within a prescribed rep range (for example, 8 to 12 reps) using a fixed weight. You progress reps first across all target sets. Only once you hit the top rep ceiling (12 reps) on every single prescribed working set do you earn the right to increase the load at your next session.',
-          keyTakeaway: 'Never increase weight if your final set falls below the rep ceiling. Reps must be mastered before load increases.'
+          keyTakeaway: 'Never increase weight if your final set falls below the rep ceiling. Reps must be mastered before load increases.',
+          image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'Mastering every set at the target rep ceiling ensures true structural muscle hypertrophy prior to loading weight jumps.'
         },
         {
           heading: '2. Example Progression Walkthrough',
@@ -143,7 +178,9 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
         {
           heading: '3. Managing Reps in Reserve (RIR)',
           body: 'All working sets must be taken within 1 to 2 reps of true concentric failure (RPE 8–9). Pushing beyond failure with forced reps introduces disproportionate systemic fatigue without commensurate muscle protein synthesis benefit.',
-          keyTakeaway: 'Stay 1–2 reps in reserve on heavy compounds like squats and deadlifts; push to 0 RIR on stable machines and isolation work.'
+          keyTakeaway: 'Stay 1–2 reps in reserve on heavy compounds like squats and deadlifts; push to 0 RIR on stable machines and isolation work.',
+          image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'High mechanical tension within 1–2 Reps in Reserve (RIR) stimulates high-threshold motor units.'
         }
       ],
       conclusion: 'Double progression provides unambiguous clarity. You either achieved your rep ceiling or you did not. When built into an automated tracker like PPL Tracker, progress becomes mathematical and repeatable.'
@@ -157,6 +194,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     excerpt: 'Why lifting directly out to your sides causes subacromial impingement, and how angling your arms 30 degrees forward delivers pure medial delt isolation.',
     readTime: '5 min read',
     splitCategory: 'Bro Split',
+    mainImage: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1200&auto=format&fit=crop&q=80',
+    imageAlt: 'Athlete performing strict lateral raises with focus on medial deltoid isolation',
     author: {
       name: 'Dr. Marcus Vance, Ph.D.',
       role: 'Biomechanics & Hypertrophy Researcher',
@@ -173,7 +212,9 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
         {
           heading: '1. The Problem with the Pure Coronal Plane',
           body: 'Raising dumbbells directly to your side (the coronal plane) forces the humerus against the acromion process of the scapula. This compresses the supraspinatus tendon and subacromial bursa. Furthermore, it often causes lifters to shrug their upper traps to complete the movement, stealing tension from the lateral deltoid.',
-          keyTakeaway: 'Bring your arms approximately 30 degrees in front of your body into the natural "scapular plane" (scaption).'
+          keyTakeaway: 'Bring your arms approximately 30 degrees in front of your body into the natural "scapular plane" (scaption).',
+          image: 'https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'Positioning dumbbell movement 30° forward avoids acromial bone collision and maximizes medial head tension.'
         },
         {
           heading: '2. Elbows Leading, Wrists Neutral',
@@ -183,7 +224,9 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
         {
           heading: '3. Why Cables Dominate Free Dumbbells for Delts',
           body: 'A dumbbell lateral raise has zero resistance at the bottom 30 degrees of abduction because gravity acts vertically. A low cable or behind-the-back cable lateral raise provides constant tension right from the stretched starting position, overloading the lateral deltoid through its full functional arc.',
-          keyTakeaway: 'Incorporate low-pulley cable lateral raises to maintain continuous torque across the initial range of motion.'
+          keyTakeaway: 'Incorporate low-pulley cable lateral raises to maintain continuous torque across the initial range of motion.',
+          image: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&auto=format&fit=crop&q=80',
+          imageCaption: 'Continuous resistance curve: low cable pulleys overload the lengthened deltoid zone.'
         }
       ],
       conclusion: 'Shift to the scapular plane, eliminate torso swinging by sitting down, and prioritize cable tension. Your side delts will respond with rapid, pain-free capping.'

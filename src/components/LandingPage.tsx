@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { ALL_TRAINING_PROGRAMS } from '../data/workouts';
-import { MOCK_BLOG_POSTS } from '../data/mockBlogPosts';
+import { MOCK_BLOG_POSTS, formatPostDate } from '../data/mockBlogPosts';
 import { useAuth } from '../context/AuthContext';
 
 interface LandingPageProps {
@@ -643,25 +643,50 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
             <Link
               key={post._id}
               href={`/blog/${post.slug}`}
-              className="p-6 rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 hover:border-amber-500/40 transition-all flex flex-col justify-between space-y-4 group shadow-sm hover:shadow-xl"
+              className="rounded-3xl overflow-hidden bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 hover:border-amber-500/40 transition-all flex flex-col justify-between group shadow-sm hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="space-y-3">
-                <span className="text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+              {/* Featured Image Thumbnail */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                {post.mainImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={post.mainImage}
+                    alt={post.imageAlt || post.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-zinc-200 dark:bg-zinc-800">
+                    <BookOpen className="w-8 h-8 text-zinc-400" />
+                  </div>
+                )}
+                <span className="absolute top-3 left-3 text-[10px] font-mono uppercase font-bold px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-amber-400 border border-amber-500/20">
                   {post.splitCategory}
                 </span>
-                <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-3">
-                  {post.excerpt}
-                </p>
               </div>
 
-              <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs font-mono">
-                <span className="text-zinc-600 dark:text-zinc-400">{post.readTime}</span>
-                <span className="text-amber-500 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Read Study <ChevronRight className="w-3.5 h-3.5" />
-                </span>
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between text-xs font-mono text-zinc-600 dark:text-zinc-400">
+                    <span className="flex items-center gap-1 text-zinc-700 dark:text-zinc-300 font-medium">
+                      <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                      {formatPostDate(post.publishedAt)}
+                    </span>
+                    <span>{post.readTime}</span>
+                  </div>
+                  <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs font-mono">
+                  <span className="text-zinc-600 dark:text-zinc-400 truncate max-w-[140px]">{post.author.name}</span>
+                  <span className="text-amber-500 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    Read Study <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

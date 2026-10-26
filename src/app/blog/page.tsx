@@ -1,70 +1,79 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  BookOpen,
-  Clock,
-  User,
-  ArrowRight,
-  Search,
-  Filter,
-  Sparkles,
-  Dumbbell,
-  ChevronRight,
-  Bookmark,
-  Share2
-} from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { getAllBlogPosts } from '../../sanity/getPosts';
-import { BlogPost } from '../../data/mockBlogPosts';
 import { ThemeToggle } from '../../components/ThemeToggle';
+import { BlogInteractiveList } from '../../components/BlogInteractiveList';
 
-export default function BlogIndexPage() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
+const baseUrl = 'https://ppltracker.web.id';
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getAllBlogPosts();
-        setPosts(data);
-      } catch (err) {
-        console.error('Failed to load blog posts:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    load();
-  }, []);
+export const metadata: Metadata = {
+  title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
+  description:
+    'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols from the PPL Tracker team.',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
+    description:
+      'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols.',
+    url: `${baseUrl}/blog`,
+    siteName: 'PPL Hypertrophy Tracker',
+    type: 'website',
+    images: [
+      {
+        url: '/icon.svg',
+        width: 512,
+        height: 512,
+        alt: 'PPL Hypertrophy Journal',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
+    description:
+      'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols.',
+    images: ['/icon.svg'],
+  },
+};
 
-  const categories = ['All', 'Biomechanics', 'Hypertrophy', 'Split Design', 'Progressive Overload'];
+export default async function BlogIndexPage() {
+  const posts = await getAllBlogPosts();
 
-  const filteredPosts = posts.filter((p) => {
-    const postCategories = Array.isArray(p.categories) ? p.categories : [];
-    const splitCat = (p.splitCategory || '').toLowerCase();
-    const title = (p.title || '').toLowerCase();
-    const excerpt = (p.excerpt || '').toLowerCase();
-    const query = searchQuery.toLowerCase();
-
-    const matchesCat =
-      selectedCategory === 'All' ||
-      postCategories.some((c) => (c?.title || '').toLowerCase() === selectedCategory.toLowerCase()) ||
-      splitCat.includes(selectedCategory.toLowerCase());
-
-    const matchesSearch =
-      query === '' ||
-      title.includes(query) ||
-      excerpt.includes(query);
-
-    return matchesCat && matchesSearch;
-  });
-
-  const featuredPost = posts[0];
+  const blogJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${baseUrl}/blog#collection`,
+    url: `${baseUrl}/blog`,
+    name: 'The Hypertrophy Science Journal',
+    description:
+      'Peer-reviewed resistance training insights, muscle hypertrophy mechanisms, exercise kinematics, and progressive overload protocols.',
+    publisher: {
+      '@type': 'Organization',
+      name: 'PPL Hypertrophy Tracker',
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/icon.svg`,
+      },
+    },
+    hasPart: posts.map((p) => ({
+      '@type': 'Article',
+      headline: p.title,
+      url: `${baseUrl}/blog/${p.slug}`,
+      datePublished: p.publishedAt,
+    })),
+  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
+
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-[#090a0f]/80 border-b border-zinc-200 dark:border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
@@ -122,172 +131,8 @@ export default function BlogIndexPage() {
           </div>
         </section>
 
-        {/* Search & Category Filter */}
-        <section className="space-y-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            {/* Category tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition whitespace-nowrap cursor-pointer ${
-                    selectedCategory === cat
-                      ? 'bg-amber-500 text-black font-bold shadow-md shadow-amber-500/20'
-                      : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Search Input */}
-            <div className="relative min-w-[240px]">
-              <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search articles..."
-                className="w-full pl-10 pr-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-amber-500 font-mono transition"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Featured Spotlight Card */}
-        {featuredPost && selectedCategory === 'All' && !searchQuery && (
-          <section>
-            <div className="text-xs font-mono uppercase tracking-widest text-amber-500 font-semibold mb-3">
-              ★ Featured Investigation
-            </div>
-            <Link
-              href={`/blog/${featuredPost.slug}`}
-              className="group block relative overflow-hidden rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 hover:border-amber-500/50 transition-all shadow-xl hover:shadow-2xl hover:shadow-amber-500/5"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-8 space-y-4">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-xs font-mono font-bold">
-                      {featuredPost.splitCategory}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs font-mono text-zinc-600 dark:text-zinc-400">
-                      <Clock className="w-3.5 h-3.5" /> {featuredPost.readTime}
-                    </span>
-                  </div>
-
-                  <h2 className="text-2xl sm:text-3xl font-display font-black uppercase tracking-tight text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors">
-                    {featuredPost.title}
-                  </h2>
-
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-sans line-clamp-3">
-                    {featuredPost.excerpt}
-                  </p>
-
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs text-zinc-700 dark:text-zinc-300">
-                        {featuredPost.author.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                          {featuredPost.author.name}
-                        </div>
-                        <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
-                          {featuredPost.author.role}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-amber-500 group-hover:translate-x-1 transition-transform">
-                      Read Full Article <ArrowRight className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="lg:col-span-4 bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-transparent p-6 rounded-2xl border border-amber-500/20 text-left space-y-3">
-                  <div className="text-xs font-mono uppercase text-amber-500 font-bold">
-                    Key Study Insights
-                  </div>
-                  <ul className="text-xs text-zinc-600 dark:text-zinc-300 space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500 font-bold">✓</span> 15°–30° bench angles maximize clavicular pec recruitment.
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500 font-bold">✓</span> 45° angles shift tension excessively to anterior deltoids.
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500 font-bold">✓</span> Humeral adduction drives contraction at peak.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Link>
-          </section>
-        )}
-
-        {/* All Articles Grid */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-zinc-900 dark:text-white">
-              {selectedCategory === 'All' ? 'All Published Articles' : `${selectedCategory} Articles`} ({filteredPosts.length})
-            </h2>
-          </div>
-
-          {filteredPosts.length === 0 ? (
-            <div className="p-12 text-center rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#12141c]">
-              <BookOpen className="w-10 h-10 text-zinc-400 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
-                No articles found matching &quot;{searchQuery}&quot;.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPosts.map((post) => (
-                <Link
-                  key={post._id}
-                  href={`/blog/${post.slug}`}
-                  className="group flex flex-col justify-between bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 hover:border-amber-500/40 hover:-translate-y-1 transition-all shadow-sm hover:shadow-xl"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 font-medium">
-                        {post.splitCategory}
-                      </span>
-                      <span className="text-zinc-600 dark:text-zinc-400 flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" /> {post.readTime}
-                      </span>
-                    </div>
-
-                    <h3 className="font-display font-bold text-lg uppercase tracking-tight text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-sans line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                  </div>
-
-                  <div className="pt-5 mt-5 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-[11px] text-zinc-700 dark:text-zinc-300">
-                        {post.author.name.charAt(0)}
-                      </div>
-                      <span className="text-xs text-zinc-700 dark:text-zinc-300 font-medium truncate max-w-[120px]">
-                        {post.author.name}
-                      </span>
-                    </div>
-
-                    <span className="text-xs font-mono font-bold text-amber-500 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      Read <ChevronRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </section>
+        {/* Client Interactive Filter & Pre-rendered Article Grid */}
+        <BlogInteractiveList initialPosts={posts} />
 
         {/* Bottom CTA Banner */}
         <section className="rounded-3xl bg-gradient-to-r from-amber-500 to-orange-500 p-8 sm:p-12 text-black flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
