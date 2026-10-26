@@ -28,6 +28,7 @@ import { ProfileModal } from '../components/ProfileModal';
 import { OnboardingModal } from '../components/OnboardingModal';
 import { LandingPage } from '../components/LandingPage';
 import { useAuth } from '../context/AuthContext';
+import { AuthModalMode } from '../types/auth';
 import { supabase } from '../lib/supabase';
 import {
   Search,
@@ -46,7 +47,7 @@ import {
 } from 'lucide-react';
 
 export default function PplTrackerHome() {
-  const { user, isAuthenticated, isLoading, refreshProfile } = useAuth();
+  const { user, isAuthenticated, isLoading, isPasswordRecovery, refreshProfile } = useAuth();
 
   // Active workout program based on user's split selection
   const userSplitId = user?.selectedSplit || 'ppl';
@@ -85,7 +86,15 @@ export default function PplTrackerHome() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [authMode, setAuthMode] = useState<AuthModalMode>('login');
+
+  // Trigger modal when password recovery link is opened
+  useEffect(() => {
+    if (isPasswordRecovery) {
+      setAuthMode('reset-password');
+      setIsAuthModalOpen(true);
+    }
+  }, [isPasswordRecovery]);
 
   const [celebrationData, setCelebrationData] = useState<{
     dayTitle: string;
@@ -344,7 +353,7 @@ export default function PplTrackerHome() {
     }
 
     setCelebrationData({
-      dayTitle: activeDayId === 'all' ? `${userSplitId.toUpperCase()} Split` : activeDayObject.title,
+      dayTitle: activeDayId === 'all' ? `${userSplitId.toUpperCase()} Split` : (activeDayObject?.title || 'Workout Session'),
       totalVolume: totalSessionVolume,
       totalSets: completedSetsCount,
       durationMinutes,

@@ -15,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
 
   const createGuestProfile = (): UserProfile => {
     let savedLocal: any = {};
@@ -72,77 +73,114 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Fetch user profile from Supabase 'public.profiles' table + merge local preferences
-  const fetchProfile = useCallback(async (userId: string, authEmail?: string): Promise<UserProfile | null> => {
-    try {
-      const localMeta = getLocalProfileMeta(userId);
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+  const fetchProfile = useCallback(
+    async (userId: string, authEmail?: string, authMetadata?: any): Promise<UserProfile | null> => {
+      try {
+        const localMeta = getLocalProfileMeta(userId);
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
 
-      if (error && error.code !== 'PGRST116') {
-        // Table or row not found, ignore error
-      }
+        if (error && error.code !== 'PGRST116') {
+          // Table or row not found, ignore error
+        }
 
-      if (data) {
-        return {
-          id: data.id,
-          name: data.name || (authEmail ? authEmail.split('@')[0] : 'Athlete'),
-          email: data.email || authEmail || '',
-          age: data.age ?? localMeta.age ?? undefined,
-          height: data.height ? Number(data.height) : (localMeta.height ?? undefined),
-          weight: data.weight ? Number(data.weight) : (localMeta.weight ?? undefined),
-          preferredUnit: (data.preferred_unit as 'kg' | 'lbs') || localMeta.preferredUnit || 'kg',
-          fitnessGoal: (data.fitness_goal as any) || localMeta.fitnessGoal || 'Hypertrophy',
-          createdAt: data.created_at ? data.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
-          onboardingCompleted: localMeta.onboardingCompleted ?? (data.onboarding_completed || false),
-          selectedSplit: localMeta.selectedSplit || data.selected_split || 'ppl',
-          weakPoints: localMeta.weakPoints || data.weak_points || [],
-          experienceLevel: localMeta.experienceLevel || data.experience_level || 'Intermediate',
+        const resolvedName =
+          data?.name ||
+          authMetadata?.full_name ||
+          authMetadata?.name ||
+          (authEmail ? authEmail.split('@')[0] : 'Athlete');
+
+        if (data) {
+          return {
+            id: data.id,
+            name: resolvedName,
+            email: data.email || authEmail || '',
+            age: data.age ?? localMeta.age ?? undefined,
+            height: data.height ? Number(data.height) : (localMeta.height ?? undefined),
+            weight: data.weight ? Number(data.weight) : (localMeta.weight ?? undefined),
+            preferredUnit: (data.preferred_unit as 'kg' | 'lbs') || localMeta.preferredUnit || 'kg',
+            fitnessGoal: (data.fitness_goal as any) || localMeta.fitnessGoal || 'Hypertrophy',
+            createdAt: data.created_at ? data.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+            onboardingCompleted: localMeta.onboardingCompleted ?? (data.onboarding_completed || false),
+            selectedSplit: localMeta.selectedSplit || data.selected_split || 'ppl',
+            weakPoints: localMeta.weakPoints || data.weak_points || [],
+            experienceLevel: localMeta.experienceLevel || data.experience_level || 'Intermediate',
+            barbellBaseWeight: localMeta.barbellBaseWeight || 20,
+          };
+        }
+
+        // If no profile row exists yet (e.g. Google OAuth signup), return default profile and auto-upsert
+        const defaultProfile: UserProfile = {
+          id: userId,
+          name: resolvedName,
+          email: authEmail || '',
+          preferredUnit: localMeta.preferredUnit || 'kg',
+          fitnessGoal: localMeta.fitnessGoal || 'Hypertrophy',
+          createdAt: new Date().toISOString().split('T')[0],
+          onboardingCompleted: localMeta.onboardingCompleted || false,
+          selectedSplit: localMeta.selectedSplit || 'ppl',
+          weakPoints: localMeta.weakPoints || [],
+          experienceLevel: localMeta.experienceLevel || 'Intermediate',
           barbellBaseWeight: localMeta.barbellBaseWeight || 20,
         };
-      }
 
-      // If no profile row exists yet, return default profile based on auth + localMeta
-      return {
-        id: userId,
-        name: authEmail ? authEmail.split('@')[0] : 'Athlete',
-        email: authEmail || '',
-        preferredUnit: localMeta.preferredUnit || 'kg',
-        fitnessGoal: localMeta.fitnessGoal || 'Hypertrophy',
-        createdAt: new Date().toISOString().split('T')[0],
-        onboardingCompleted: localMeta.onboardingCompleted || false,
-        selectedSplit: localMeta.selectedSplit || 'ppl',
-        weakPoints: localMeta.weakPoints || [],
-        experienceLevel: localMeta.experienceLevel || 'Intermediate',
-        barbellBaseWeight: localMeta.barbellBaseWeight || 20,
-      };
-    } catch (err) {
-      console.error('Failed to load profile:', err);
-      return null;
-    }
-  }, []);
+        try {
+          await supabase.from('profiles').upsert({
+            id: userId,
+            name: resolvedName,
+            email: authEmail || '',
+            preferred_unit: defaultProfile.preferredUnit,
+            fitness_goal: defaultProfile.fitnessGoal,
+            updated_at: new Date().toISOString(),
+          });
+        } catch {
+          // Ignore if table schema differs
+        }
+
+        return defaultProfile;
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+        return null;
+      }
+    },
+    []
+  );
 
   const refreshProfile = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
-      const profile = await fetchProfile(session.user.id, session.user.email);
+      const profile = await fetchProfile(session.user.id, session.user.email, session.user.user_metadata);
       setUser(profile);
     } else {
       setUser(null);
     }
   }, [fetchProfile]);
 
-  // Listen to Supabase Auth state changes
+  // Listen to Supabase Auth state changes & recovery tokens
   useEffect(() => {
     let mounted = true;
 
     async function initAuth() {
       try {
+        // Detect password recovery in URL hash or query params
+        if (typeof window !== 'undefined') {
+          const hash = window.location.hash || '';
+          const search = window.location.search || '';
+          if (
+            hash.includes('type=recovery') ||
+            search.includes('type=recovery') ||
+            search.includes('reset_password=true')
+          ) {
+            setIsPasswordRecovery(true);
+          }
+        }
+
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user && mounted) {
-          const profile = await fetchProfile(session.user.id, session.user.email);
+          const profile = await fetchProfile(session.user.id, session.user.email, session.user.user_metadata);
           if (mounted) setUser(profile);
         } else if (typeof window !== 'undefined' && localStorage.getItem('ppl_guest_mode') === 'true' && mounted) {
           setUser(createGuestProfile());
@@ -160,11 +198,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       async (event, session) => {
         if (!mounted) return;
 
+        if (event === 'PASSWORD_RECOVERY') {
+          setIsPasswordRecovery(true);
+        }
+
         if (session?.user) {
-          const profile = await fetchProfile(session.user.id, session.user.email);
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('ppl_guest_mode');
+          }
+          const profile = await fetchProfile(session.user.id, session.user.email, session.user.user_metadata);
           if (mounted) setUser(profile);
         } else {
-          if (mounted) setUser(null);
+          if (mounted && !isPasswordRecovery) setUser(null);
         }
         if (mounted) setIsLoading(false);
       }
@@ -174,7 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [fetchProfile]);
+  }, [fetchProfile, isPasswordRecovery]);
 
   const login = async (
     email: string,
@@ -334,12 +379,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       // Save locally to guarantee offline / immediate availability
       saveLocalProfileMeta(user.id, {
-        name: data.name,
-        age: data.age,
-        height: data.height,
-        weight: data.weight,
-        preferredUnit: data.preferredUnit,
-        fitnessGoal: data.fitnessGoal,
+        name: data.name?.trim() || user.name,
+        age: data.age !== undefined ? data.age : user.age,
+        height: data.height !== undefined ? data.height : user.height,
+        weight: data.weight !== undefined ? data.weight : user.weight,
+        preferredUnit: data.preferredUnit !== undefined ? data.preferredUnit : user.preferredUnit,
+        fitnessGoal: data.fitnessGoal !== undefined ? data.fitnessGoal : user.fitnessGoal,
         onboardingCompleted: data.onboardingCompleted ?? user.onboardingCompleted,
         selectedSplit: data.selectedSplit ?? user.selectedSplit,
         weakPoints: data.weakPoints ?? user.weakPoints,
@@ -347,15 +392,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         barbellBaseWeight: data.barbellBaseWeight ?? user.barbellBaseWeight,
       });
 
-      const updates = {
+      const updates: Record<string, any> = {
         name: data.name?.trim() || user.name,
-        age: typeof data.age === 'number' ? data.age : null,
-        height: typeof data.height === 'number' ? data.height : null,
-        weight: typeof data.weight === 'number' ? data.weight : null,
-        preferred_unit: data.preferredUnit,
-        fitness_goal: data.fitnessGoal,
         updated_at: new Date().toISOString(),
       };
+      if (data.age !== undefined) updates.age = typeof data.age === 'number' ? data.age : null;
+      if (data.height !== undefined) updates.height = typeof data.height === 'number' ? data.height : null;
+      if (data.weight !== undefined) updates.weight = typeof data.weight === 'number' ? data.weight : null;
+      if (data.preferredUnit !== undefined) updates.preferred_unit = data.preferredUnit;
+      if (data.fitnessGoal !== undefined) updates.fitness_goal = data.fitnessGoal;
+      if (data.selectedSplit !== undefined) updates.selected_split = data.selectedSplit;
+      if (data.weakPoints !== undefined) updates.weak_points = data.weakPoints;
+      if (data.experienceLevel !== undefined) updates.experience_level = data.experienceLevel;
 
       try {
         await supabase
@@ -379,12 +427,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         prev
           ? {
               ...prev,
-              name: updates.name,
-              age: data.age,
-              height: data.height,
-              weight: data.weight,
-              preferredUnit: data.preferredUnit,
-              fitnessGoal: data.fitnessGoal,
+              name: data.name?.trim() || prev.name,
+              age: data.age !== undefined ? data.age : prev.age,
+              height: data.height !== undefined ? data.height : prev.height,
+              weight: data.weight !== undefined ? data.weight : prev.weight,
+              preferredUnit: data.preferredUnit !== undefined ? data.preferredUnit : prev.preferredUnit,
+              fitnessGoal: data.fitnessGoal !== undefined ? data.fitnessGoal : prev.fitnessGoal,
               onboardingCompleted: data.onboardingCompleted ?? prev.onboardingCompleted,
               selectedSplit: data.selectedSplit ?? prev.selectedSplit,
               weakPoints: data.weakPoints ?? prev.weakPoints,
@@ -436,11 +484,64 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('ppl_guest_mode');
+      }
+      const redirectUrl = typeof window !== 'undefined'
+        ? `${window.location.origin}/auth/callback`
+        : undefined;
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Google Sign-In failed.' };
+    }
+  };
+
+  const resetPassword = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      return { success: false, error: 'Please enter a valid email address.' };
+    }
+
+    try {
+      const redirectUrl = typeof window !== 'undefined'
+        ? `${window.location.origin}/auth/callback?type=recovery`
+        : undefined;
+
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: redirectUrl,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Failed to send password reset email.' };
+    }
+  };
+
   const updatePassword = async (
     data: UpdatePasswordInput
   ): Promise<{ success: boolean; error?: string }> => {
-    if (!user) return { success: false, error: 'User is not authenticated.' };
-
     if (!data.newPassword || data.newPassword.length < 6) {
       return { success: false, error: 'New password must be at least 6 characters long.' };
     }
@@ -458,6 +559,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: error.message };
       }
 
+      setIsPasswordRecovery(false);
+
+      if (typeof window !== 'undefined') {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err.message || 'Failed to update password.' };
@@ -471,7 +578,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         isGuest: !!user?.isGuest,
         isLoading,
+        isPasswordRecovery,
+        setIsPasswordRecovery,
         continueAsGuest,
+        signInWithGoogle,
+        resetPassword,
         login,
         signup,
         logout,

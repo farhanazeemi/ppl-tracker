@@ -1,5 +1,7 @@
 export type TrainingSplitId = 'ppl' | 'bro-split' | 'upper-lower' | 'full-body';
 
+export type AuthModalMode = 'login' | 'signup' | 'forgot' | 'reset-password';
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -23,7 +25,11 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isGuest: boolean;
   isLoading: boolean;
+  isPasswordRecovery: boolean;
+  setIsPasswordRecovery: (value: boolean) => void;
   continueAsGuest: () => void;
+  signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (
     name: string,
@@ -39,12 +45,12 @@ export interface AuthContextType {
 }
 
 export interface UpdateProfileInput {
-  name: string;
+  name?: string;
   age?: number;
   height?: number;
   weight?: number;
-  preferredUnit: 'kg' | 'lbs';
-  fitnessGoal: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
+  preferredUnit?: 'kg' | 'lbs';
+  fitnessGoal?: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
   onboardingCompleted?: boolean;
   selectedSplit?: TrainingSplitId;
   weakPoints?: string[];

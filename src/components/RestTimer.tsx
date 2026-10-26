@@ -220,7 +220,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
 
       {/* Floating Sticky Mini-Timer when Active */}
       {(isRunning || isDone) && (
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-zinc-950/95 text-white border border-amber-500/40 rounded-2xl p-2.5 sm:px-4 sm:py-3 shadow-2xl backdrop-blur-md flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-50 bg-zinc-950/95 text-white border border-amber-500/40 rounded-2xl p-2.5 sm:px-4 sm:py-3 shadow-2xl backdrop-blur-md flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
           <div className="flex items-center gap-2">
             <Timer className={`w-4 h-4 ${isDone ? 'text-emerald-400 animate-bounce' : 'text-amber-500'}`} />
             <span className="font-mono text-sm sm:text-base font-extrabold text-white">

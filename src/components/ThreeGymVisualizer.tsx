@@ -290,7 +290,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('resize', handleResize);
-      if (container && renderer.domElement) {
+      if (container && renderer.domElement && renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
@@ -367,7 +367,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[250px] sm:h-[280px] bg-gradient-to-b from-white to-zinc-50 border border-zinc-200/90 rounded-3xl overflow-hidden shadow-sm group">
+    <div className="relative w-full h-[250px] sm:h-[280px] bg-gradient-to-b from-white to-zinc-50 dark:from-[#12141c] dark:to-[#0d0f17] border border-zinc-200/90 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm group">
       {/* 3D Canvas Container */}
       <div
         ref={containerRef}
@@ -381,7 +381,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
             className="w-2.5 h-2.5 rounded-full animate-ping"
             style={{ backgroundColor: themeColorHex }}
           />
-          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-600 font-bold">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-600 dark:text-zinc-400 font-bold">
             3D Hypertrophy Rig
           </span>
           <span
@@ -401,7 +401,7 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
           <button
             onClick={resetView}
             title="Reset 3D Angle"
-            className="p-2 bg-white/90 hover:bg-zinc-100 text-zinc-700 border border-zinc-200 rounded-xl transition shadow-sm active:scale-95"
+            className="p-2 bg-white/90 dark:bg-zinc-800/90 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-xl transition shadow-sm active:scale-95 cursor-pointer"
             aria-label="Reset 3D camera angle"
           >
             <RotateCw className="w-3.5 h-3.5" />
@@ -409,10 +409,10 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
           <button
             onClick={toggleHologramMode}
             title={isHologram ? 'Solid Shading' : 'Hologram Wireframe'}
-            className={`p-2 border rounded-xl transition shadow-sm active:scale-95 ${
+            className={`p-2 border rounded-xl transition shadow-sm active:scale-95 cursor-pointer ${
               isHologram
-                ? 'bg-amber-500 text-white border-amber-600'
-                : 'bg-white/90 hover:bg-zinc-100 text-zinc-700 border-zinc-200'
+                ? 'bg-amber-500 text-black border-amber-600 font-bold'
+                : 'bg-white/90 dark:bg-zinc-800/90 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700'
             }`}
             aria-label="Toggle wireframe mode"
           >
@@ -422,14 +422,14 @@ export const ThreeGymVisualizer: React.FC<ThreeGymVisualizerProps> = ({
       </div>
 
       {/* Bottom Focus Spec Overlay */}
-      <div className="absolute bottom-3 left-4 right-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pointer-events-none bg-white/90 border border-zinc-200/90 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-sm">
+      <div className="absolute bottom-3 left-4 right-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pointer-events-none bg-white/90 dark:bg-zinc-900/90 border border-zinc-200/90 dark:border-zinc-800 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-sm">
         <div className="flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span className="text-xs text-zinc-600 font-medium truncate">
-            Target Focus: <strong className="text-zinc-900 font-bold">{focusText}</strong>
+          <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium truncate">
+            Target Focus: <strong className="text-zinc-900 dark:text-white font-bold">{focusText}</strong>
           </span>
         </div>
-        <span className="text-[10px] font-mono text-zinc-500 self-end sm:self-auto">
+        <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 self-end sm:self-auto">
           Drag to rotate 3D
         </span>
       </div>

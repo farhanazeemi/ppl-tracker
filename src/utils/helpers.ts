@@ -12,11 +12,12 @@ export function calculateEstimated1RM(weight: number, reps: number): number {
 
 /**
  * Checks if all working completed sets hit the max rep threshold (Double Progression achieved!)
+ * In progressive overload, all prescribed working sets must be marked completed AND hit or exceed maxReps.
  */
 export function checkDoubleProgression(sets: ExerciseSet[], maxReps: number): boolean {
-  const completedSets = sets.filter(s => s.completed && !s.isWarmup);
-  if (completedSets.length === 0) return false;
-  return completedSets.every(s => typeof s.reps === 'number' && s.reps >= maxReps);
+  const workingSets = sets.filter(s => !s.isWarmup);
+  if (workingSets.length === 0) return false;
+  return workingSets.every(s => s.completed && typeof s.reps === 'number' && s.reps >= maxReps);
 }
 
 /**

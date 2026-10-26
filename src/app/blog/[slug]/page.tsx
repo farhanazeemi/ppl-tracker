@@ -127,12 +127,12 @@ export default function BlogPostDetail() {
             <span className="px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-xs font-mono font-bold">
               {post.splitCategory}
             </span>
-            {post.categories.map((c) => (
+            {(post.categories || []).map((c, idx) => (
               <span
-                key={c.slug}
+                key={c?.slug || c?.title || idx}
                 className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs font-mono font-medium"
               >
-                {c.title}
+                {c?.title}
               </span>
             ))}
             <span className="flex items-center gap-1 text-xs font-mono text-zinc-600 dark:text-zinc-400 ml-auto">

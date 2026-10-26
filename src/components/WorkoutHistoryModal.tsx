@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   X,
   Calendar,
@@ -13,7 +13,7 @@ import {
   Dumbbell,
 } from 'lucide-react';
 import { LoggedWorkoutSession } from '../types/workout';
-import { WORKOUT_DAYS } from '../data/workouts';
+import { ALL_TRAINING_PROGRAMS } from '../data/workouts';
 
 interface WorkoutHistoryModalProps {
   isOpen: boolean;
@@ -31,6 +31,22 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
   onImportData,
 }) => {
   const [activeTab, setActiveTab] = useState<'sessions' | 'prs'>('sessions');
+
+  // Exercise and Day names lookup across all training splits
+  const { exerciseNamesMap, dayNamesMap } = useMemo(() => {
+    const exMap: Record<string, string> = {};
+    const dMap: Record<string, string> = {};
+
+    ALL_TRAINING_PROGRAMS.forEach((program) => {
+      program.days.forEach((day) => {
+        dMap[day.id] = day.title;
+        day.exercises.forEach((ex) => {
+          exMap[ex.id] = ex.name;
+        });
+      });
+    });
+    return { exerciseNamesMap: exMap, dayNamesMap: dMap };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -168,7 +184,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
               </div>
             ) : (
               historyLogs.map((log) => {
-                const dayMeta = WORKOUT_DAYS.find((d) => d.id === log.dayId);
+                const dayTitle = dayNamesMap[log.dayId] || log.dayId;
                 return (
                   <div
                     key={log.id}
@@ -177,7 +193,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold uppercase bg-amber-500/10 text-amber-500 border border-amber-500/25">
-                          {dayMeta?.title || log.dayId}
+                          {dayTitle}
                         </span>
                         <span className="text-xs text-zinc-600 dark:text-zinc-400 font-mono flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
@@ -233,7 +249,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
                     className="p-3.5 bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-2xl space-y-1.5"
                   >
                     <div className="text-xs font-mono uppercase text-amber-500 font-bold truncate">
-                      {exId}
+                      {exerciseNamesMap[exId] || exId}
                     </div>
                     <div className="flex items-baseline justify-between">
                       <span className="text-lg font-mono font-black text-zinc-900 dark:text-white">

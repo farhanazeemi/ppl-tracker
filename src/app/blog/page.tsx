@@ -42,14 +42,21 @@ export default function BlogIndexPage() {
   const categories = ['All', 'Biomechanics', 'Hypertrophy', 'Split Design', 'Progressive Overload'];
 
   const filteredPosts = posts.filter((p) => {
+    const postCategories = Array.isArray(p.categories) ? p.categories : [];
+    const splitCat = (p.splitCategory || '').toLowerCase();
+    const title = (p.title || '').toLowerCase();
+    const excerpt = (p.excerpt || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+
     const matchesCat =
       selectedCategory === 'All' ||
-      p.categories.some((c) => c.title.toLowerCase() === selectedCategory.toLowerCase()) ||
-      p.splitCategory.toLowerCase().includes(selectedCategory.toLowerCase());
+      postCategories.some((c) => (c?.title || '').toLowerCase() === selectedCategory.toLowerCase()) ||
+      splitCat.includes(selectedCategory.toLowerCase());
 
     const matchesSearch =
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      query === '' ||
+      title.includes(query) ||
+      excerpt.includes(query);
 
     return matchesCat && matchesSearch;
   });

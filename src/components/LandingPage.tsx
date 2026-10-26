@@ -64,8 +64,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
     availablePlates.forEach((p) => {
       if (rem >= p) {
         const count = Math.floor(rem / p);
-        platesUsed[p] = count;
-        rem = rem % p;
+        if (count > 0) {
+          platesUsed[p] = count;
+          rem = Math.round((rem - count * p) * 100) / 100;
+        }
       }
     });
     return platesUsed;

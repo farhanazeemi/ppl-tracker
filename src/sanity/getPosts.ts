@@ -157,5 +157,10 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 }
 
 export async function getRecentPosts(currentSlug: string): Promise<BlogPost[]> {
-  return MOCK_BLOG_POSTS.filter((p) => p.slug !== currentSlug).slice(0, 3);
+  try {
+    const all = await getAllBlogPosts();
+    return all.filter((p) => p.slug !== currentSlug).slice(0, 3);
+  } catch {
+    return MOCK_BLOG_POSTS.filter((p) => p.slug !== currentSlug).slice(0, 3);
+  }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Dumbbell, Info } from 'lucide-react';
 import { calculatePlates } from '../utils/helpers';
 
@@ -19,6 +19,13 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
 }) => {
   const [targetWeight, setTargetWeight] = useState<number>(initialWeight);
   const [barWeight, setBarWeight] = useState<number>(20);
+
+  // Sync state whenever modal opens or initialWeight changes
+  useEffect(() => {
+    if (isOpen) {
+      setTargetWeight(initialWeight);
+    }
+  }, [isOpen, initialWeight]);
 
   if (!isOpen) return null;
 
