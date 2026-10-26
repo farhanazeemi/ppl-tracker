@@ -14,6 +14,7 @@ import { getBlogPostBySlug, getRecentPosts, getAllBlogPosts } from '../../../san
 import { ThemeToggle } from '../../../components/ThemeToggle';
 import { ShareButton } from '../../../components/ShareButton';
 import { formatPostDate } from '../../../data/mockBlogPosts';
+import { Footer } from '../../../components/Footer';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -370,6 +371,9 @@ export default async function BlogPostDetailPage({
           </section>
         )}
       </main>
+
+      {/* Structured Minimalist Footer */}
+      <Footer />
     </div>
   );
 }

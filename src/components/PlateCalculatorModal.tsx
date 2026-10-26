@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { X, Dumbbell, Info } from 'lucide-react';
 import { calculatePlates } from '../utils/helpers';
+import { playClickSound, playPopSound } from '../utils/audio';
 
 interface PlateCalculatorModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialWeight?: number;
   exerciseName?: string;
+  soundEnabled?: boolean;
 }
 
 export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
@@ -16,6 +18,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
   onClose,
   initialWeight = 80,
   exerciseName = 'Barbell Exercise',
+  soundEnabled = true,
 }) => {
   const [targetWeight, setTargetWeight] = useState<number>(initialWeight);
   const [barWeight, setBarWeight] = useState<number>(20);
@@ -42,7 +45,13 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
   };
 
   const addWeight = (delta: number) => {
+    playPopSound(soundEnabled);
     setTargetWeight((prev) => Math.max(barWeight, Math.round((prev + delta) * 10) / 10));
+  };
+
+  const handleClose = () => {
+    playClickSound(soundEnabled);
+    onClose();
   };
 
   return (
@@ -62,8 +71,8 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition cursor-pointer"
+            onClick={handleClose}
+            className="p-2 rounded-xl text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition btn-tactile cursor-pointer"
             aria-label="Close plate calculator"
           >
             <X className="w-5 h-5" />

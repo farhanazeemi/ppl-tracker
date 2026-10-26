@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { BlogPost, formatPostDate } from '../data/mockBlogPosts';
+import { playClickSound, playTabSound } from '../utils/audio';
 
 interface BlogInteractiveListProps {
   initialPosts: BlogPost[];
@@ -55,12 +56,15 @@ export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) 
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => {
+                  playTabSound(true);
+                  setSelectedCategory(cat);
+                }}
                 type="button"
-                className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition whitespace-nowrap cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all btn-tactile whitespace-nowrap cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-amber-500 text-black font-bold shadow-md shadow-amber-500/20'
-                    : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800'
+                    ? 'bg-amber-500 text-black font-bold shadow-xs'
+                    : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200/80 dark:border-zinc-800/80'
                 }`}
               >
                 {cat}
@@ -90,7 +94,8 @@ export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) 
           </div>
           <Link
             href={`/blog/${featuredPost.slug}`}
-            className="group block relative overflow-hidden rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 hover:border-amber-500/50 transition-all shadow-xl hover:shadow-2xl hover:shadow-amber-500/5"
+            onClick={() => playClickSound(true)}
+            className="group block relative overflow-hidden rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 hover:border-amber-500/50 card-minimal transition-all shadow-sm hover:shadow-xl"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 items-stretch">
               {/* Featured Image */}
@@ -194,7 +199,8 @@ export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) 
               <Link
                 key={post._id}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col justify-between overflow-hidden bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-amber-500/40 hover:-translate-y-1 transition-all shadow-sm hover:shadow-xl"
+                onClick={() => playClickSound(true)}
+                className="group flex flex-col justify-between overflow-hidden bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl hover:border-amber-500/40 card-minimal transition-all shadow-xs hover:shadow-lg"
               >
                 {/* Featured Thumbnail */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">

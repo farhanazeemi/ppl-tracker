@@ -4,6 +4,8 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 import { getAllBlogPosts } from '../../sanity/getPosts';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { BlogInteractiveList } from '../../components/BlogInteractiveList';
+import { Navbar } from '../../components/Navbar';
+import { Footer } from '../../components/Footer';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -74,45 +76,8 @@ export default async function BlogIndexPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
       />
 
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-[#090a0f]/80 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center text-black font-black font-display text-lg tracking-wider shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                PPL
-              </div>
-              <div>
-                <span className="font-display font-black text-lg tracking-tight uppercase block leading-none text-zinc-900 dark:text-white">
-                  HYPERTROPHY<span className="text-amber-500">.</span>
-                </span>
-                <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-600 dark:text-zinc-400 block">
-                  Science Journal
-                </span>
-              </div>
-            </Link>
-
-            <nav className="hidden md:flex items-center gap-6 text-xs font-mono uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
-              <Link href="/" className="hover:text-amber-500 transition-colors">
-                Workout Tracker
-              </Link>
-              <Link href="/blog" className="text-amber-500 font-bold">
-                Articles & Science
-              </Link>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Link
-              href="/"
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black text-xs font-display font-bold uppercase tracking-wider rounded-xl transition shadow-md shadow-amber-500/15 flex items-center gap-1.5"
-            >
-              Open Tracker <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Top Universal Navbar */}
+      <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-12">
         {/* Editorial Hero */}
@@ -146,12 +111,15 @@ export default async function BlogIndexPage() {
           </div>
           <Link
             href="/"
-            className="px-6 py-3.5 bg-black hover:bg-zinc-900 text-white font-display font-bold uppercase tracking-wider text-xs rounded-xl transition-transform active:scale-95 shadow-lg whitespace-nowrap flex items-center gap-2"
+            className="px-6 py-3.5 bg-black hover:bg-zinc-900 text-white font-display font-black uppercase tracking-wider text-xs rounded-xl transition-all btn-tactile shadow-lg whitespace-nowrap flex items-center gap-2"
           >
             Launch Free Workout Tracker <ArrowRight className="w-4 h-4 text-amber-500" />
           </Link>
         </section>
       </main>
+
+      {/* Structured Minimalist Footer */}
+      <Footer />
     </div>
   );
 }

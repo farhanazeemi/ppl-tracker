@@ -15,6 +15,9 @@ import {
   applyWeakPointPriorities,
 } from '../data/workouts';
 import { calculateExerciseVolume, checkDoubleProgression } from '../utils/helpers';
+import { playClickSound, playTabSound, playPopSound } from '../utils/audio';
+import { Navbar } from './Navbar';
+import { Footer } from './Footer';
 import { WorkoutSummaryHeader } from './WorkoutSummaryHeader';
 import { ThreeGymVisualizer } from './ThreeGymVisualizer';
 import { RestTimer } from './RestTimer';
@@ -55,9 +58,10 @@ export function PplTrackerApp() {
   // Day-Specific Smart Scheduling: detect current day of the week
   const scheduleInfo = useMemo(() => getScheduledDayForToday(userSplitId), [userSplitId]);
 
-  // Active selected workout day
+  // Active selected workout day & View mode
   const [activeDayId, setActiveDayId] = useState<SplitDayId | 'all'>('push-a');
   const [hasInitializedDay, setHasInitializedDay] = useState(false);
+  const [activeView, setActiveView] = useState<'app' | 'landing'>('app');
 
   // Sets state & logging
   const [setsState, setSetsState] = useState<Record<string, ExerciseSet[]>>({});
@@ -402,32 +406,11 @@ export function PplTrackerApp() {
     }
   };
 
-  // 1. PUBLIC LANDING PAGE & AUTH GATE:
-  // Render full landing page in initial HTML and for unauthenticated guests
-  if (!isAuthenticated || !user) {
-    return (
-      <>
-        <LandingPage
-          onOpenAuth={(mode) => {
-            setAuthMode(mode);
-            setIsAuthModalOpen(true);
-          }}
-        />
-        <AuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-          initialMode={authMode}
-        />
-      </>
-    );
-  }
-
-  // 2. POST-SIGNUP ONBOARDING & PROFILE SETUP:
-  // Trigger multi-step onboarding flow if authenticated user hasn't completed setup yet (bypass for guest athlete)
-  const needsOnboarding = (!user.onboardingCompleted && !user.isGuest) || isOnboardingModalOpen;
+  // Onboarding & Profile Setup requirement
+  const needsOnboarding = (user && !user.onboardingCompleted && !user.isGuest) || isOnboardingModalOpen;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 pb-32 selection:bg-amber-500 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 flex flex-col selection:bg-amber-500 selection:text-white transition-colors duration-200">
       {/* Onboarding Wizard Modal */}
       <OnboardingModal
         isOpen={needsOnboarding}
@@ -437,282 +420,372 @@ export function PplTrackerApp() {
         }}
       />
 
-      {/* Sticky App Header */}
-      <WorkoutSummaryHeader
-        activeDayId={activeDayId}
-        onSelectDay={setActiveDayId}
+      {/* Universal Top Navigation Header */}
+      <Navbar
+        activeView={activeView}
+        onSwitchView={setActiveView}
+        onOpenPlateCalc={() => openPlateCalculator(60, 'Barbell Press')}
+        onOpenHistory={() => {
+          playClickSound(soundEnabled);
+          setIsHistoryOpen(true);
+        }}
+        onOpenProfile={() => {
+          playClickSound(soundEnabled);
+          setIsProfileModalOpen(true);
+        }}
+        onOpenAuth={(mode) => {
+          playClickSound(soundEnabled);
+          setAuthMode(mode);
+          setIsAuthModalOpen(true);
+        }}
+        soundEnabled={soundEnabled}
+        onToggleSound={toggleSound}
         totalVolume={totalSessionVolume}
         completedSetsCount={completedSetsCount}
         totalSetsCount={totalSetsCount}
-        onFinishWorkout={handleFinishWorkout}
-        onResetSession={handleResetSession}
-        onOpenHistory={() => setIsHistoryOpen(true)}
-        onOpenProfile={() => setIsProfileModalOpen(true)}
-        onOpenAuth={() => {
-          setAuthMode('login');
-          setIsAuthModalOpen(true);
-        }}
-        sessionStartTime={sessionStartTime}
-        daysList={splitWorkouts}
-        scheduledDayId={scheduleInfo.scheduledDayId}
-        dayOfWeekName={scheduleInfo.dayOfWeekName}
       />
 
-      <main className="max-w-6xl mx-auto px-4 mt-5 space-y-6">
-        {/* DAY-SPECIFIC SMART SCHEDULING BANNER */}
-        <section className="bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-start sm:items-center gap-3">
-              <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-2xl shrink-0">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <div className="space-y-0.5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-mono font-bold uppercase text-amber-500 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Today is {scheduleInfo.dayOfWeekName}
-                  </span>
-                  <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400">
-                    • Scheduled: <strong className="text-zinc-900 dark:text-white">{scheduleInfo.scheduledWorkout.title}</strong>
-                  </span>
-                  {scheduleInfo.isRestDay && (
-                    <span className="px-2 py-0.2 rounded-full bg-sky-500/15 text-sky-500 text-[10px] font-mono font-bold">
-                      Active Recovery Day
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-sans">
-                  {scheduleInfo.statusMessage}
-                </p>
-              </div>
-            </div>
+      {/* CONDITIONAL MAIN VIEW: Tracker App vs Platform Marketing & Guide */}
+      {activeView === 'landing' ? (
+        <main className="flex-1">
+          <LandingPage
+            onOpenAuth={(mode) => {
+              playClickSound(soundEnabled);
+              setAuthMode(mode);
+              setIsAuthModalOpen(true);
+            }}
+            onStartWorkout={() => {
+              playTabSound(soundEnabled);
+              setActiveView('app');
+            }}
+            soundEnabled={soundEnabled}
+          />
+        </main>
+      ) : (
+        <div className="flex-1 pb-24 sm:pb-12">
+          {/* Sticky Session Metrics & Day Selector HUD */}
+          <WorkoutSummaryHeader
+            activeDayId={activeDayId}
+            onSelectDay={setActiveDayId}
+            totalVolume={totalSessionVolume}
+            completedSetsCount={completedSetsCount}
+            totalSetsCount={totalSetsCount}
+            onFinishWorkout={handleFinishWorkout}
+            onResetSession={handleResetSession}
+            onOpenHistory={() => {
+              playClickSound(soundEnabled);
+              setIsHistoryOpen(true);
+            }}
+            onOpenProfile={() => {
+              playClickSound(soundEnabled);
+              setIsProfileModalOpen(true);
+            }}
+            onOpenAuth={() => {
+              playClickSound(soundEnabled);
+              setAuthMode('login');
+              setIsAuthModalOpen(true);
+            }}
+            sessionStartTime={sessionStartTime}
+            daysList={splitWorkouts}
+            scheduledDayId={scheduleInfo.scheduledDayId}
+            dayOfWeekName={scheduleInfo.dayOfWeekName}
+            soundEnabled={soundEnabled}
+          />
 
-            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-              {activeDayId !== scheduleInfo.scheduledDayId && (
-                <button
-                  type="button"
-                  onClick={() => setActiveDayId(scheduleInfo.scheduledDayId)}
-                  className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-black text-xs font-mono font-bold uppercase rounded-xl transition cursor-pointer flex items-center gap-1"
-                >
-                  <Zap className="w-3.5 h-3.5" /> Jump to Today
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setIsProfileModalOpen(true)}
-                className="px-3.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 text-xs font-mono font-semibold rounded-xl transition cursor-pointer"
-              >
-                Change Split
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Top Interactive Row: 3D Rig & Rest Timer */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          {/* Three.js 3D Visualizer */}
-          <div ref={rigSectionRef} className="lg:col-span-7">
-            <ThreeGymVisualizer
-              splitType={activeDayObject.splitType as any}
-              focusText={activeDayObject.focus}
-              themeColorHex={activeDayObject.accentHex}
-            />
-          </div>
-
-          {/* Rest Timer Widget */}
-          <div ref={timerSectionRef} className="lg:col-span-5 flex flex-col justify-between">
-            <RestTimer
-              initialSeconds={90}
-              soundEnabled={soundEnabled}
-              onToggleSound={toggleSound}
-              autoStartedTimestamp={autoTimerTrigger?.timestamp}
-              autoSeconds={autoTimerTrigger?.seconds}
-            />
-
-            {/* Quick Split Insight Pill */}
-            <div className="mt-3 bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-xs">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <h4 className="text-xs font-display font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
-                  {activeDayObject.title} Focus
-                </h4>
-              </div>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">
-                {activeDayObject.subtitle}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* 3 Golden Rules Section */}
-        <GoldenRulesSection />
-
-        {/* Search & Muscle Filters Bar */}
-        <section className="bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
-          {/* Search Input */}
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
-            <input
-              type="text"
-              placeholder="Search exercise, target muscle, or cue..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl pl-10 pr-4 py-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 transition font-medium"
-            />
-          </div>
-
-          {/* Muscle Chips Filter */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            <Filter className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-1 mr-0.5" />
-            {muscleGroups.map((mg) => (
-              <button
-                key={mg}
-                onClick={() => setMuscleFilter(mg)}
-                type="button"
-                className={`px-3 py-1 rounded-xl text-[11px] font-bold whitespace-nowrap transition active:scale-95 border cursor-pointer ${
-                  muscleFilter === mg
-                    ? 'bg-amber-500 text-black border-amber-500 shadow-xs'
-                    : 'bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border-zinc-200 dark:border-zinc-800'
-                }`}
-              >
-                {mg}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Workout Days & Exercises Container */}
-        <div ref={cardsContainerRef} className="space-y-8">
-          {activeDaysList.map((day) => {
-            const filteredExercises = day.exercises.filter((ex) => {
-              const matchesSearch =
-                searchQuery === '' ||
-                ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                ex.target.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                ex.cue.toLowerCase().includes(searchQuery.toLowerCase());
-
-              const matchesMuscle =
-                muscleFilter === 'All' ||
-                ex.target.toLowerCase().includes(muscleFilter.toLowerCase()) ||
-                ex.primaryMuscle.toLowerCase().includes(muscleFilter.toLowerCase());
-
-              return matchesSearch && matchesMuscle;
-            });
-
-            if (filteredExercises.length === 0) return null;
-
-            return (
-              <section key={day.id} className="space-y-4">
-                {/* Day Header Banner */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-zinc-200 dark:border-zinc-800 gap-1">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-amber-500 uppercase">
-                        Day {day.dayNumber}
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-                      <h2 className="text-lg sm:text-xl font-display font-black text-zinc-900 dark:text-white tracking-tight uppercase">
-                        {day.title}
-                      </h2>
-                    </div>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 font-medium mt-0.5">{day.subtitle}</p>
+          <main className="max-w-6xl mx-auto px-4 mt-6 space-y-6">
+            {/* DAY-SPECIFIC SMART SCHEDULING BANNER */}
+            <section className="bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-5 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-2xl shrink-0">
+                    <Calendar className="w-5 h-5" />
                   </div>
-
-                  <span className="text-xs font-mono font-bold text-zinc-600 dark:text-zinc-400 uppercase self-start sm:self-auto">
-                    {filteredExercises.length} Movements
-                  </span>
+                  <div className="space-y-0.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs font-mono font-bold uppercase text-amber-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        Today is {scheduleInfo.dayOfWeekName}
+                      </span>
+                      <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400">
+                        • Scheduled: <strong className="text-zinc-900 dark:text-white">{scheduleInfo.scheduledWorkout.title}</strong>
+                      </span>
+                      {scheduleInfo.isRestDay && (
+                        <span className="px-2 py-0.2 rounded-full bg-sky-500/15 text-sky-500 text-[10px] font-mono font-bold">
+                          Active Recovery Day
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-sans">
+                      {scheduleInfo.statusMessage}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Exercise Cards Grid */}
-                <div className="grid grid-cols-1 gap-4">
-                  {filteredExercises.map((exercise) => {
-                    const currentSets = setsState[exercise.id] || [];
-
-                    return (
-                      <ExerciseCard
-                        key={exercise.id}
-                        exercise={exercise}
-                        sets={currentSets}
-                        themeColor={day.themeColor}
-                        onUpdateSets={handleUpdateSets}
-                        onTriggerRestTimer={handleTriggerRestTimer}
-                        onOpenPlateCalc={openPlateCalculator}
-                        soundEnabled={soundEnabled}
-                      />
-                    );
-                  })}
+                <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                  {activeDayId !== scheduleInfo.scheduledDayId && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playClickSound(soundEnabled);
+                        setActiveDayId(scheduleInfo.scheduledDayId);
+                      }}
+                      className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-black text-xs font-mono font-bold uppercase rounded-xl transition-all btn-tactile cursor-pointer flex items-center gap-1"
+                    >
+                      <Zap className="w-3.5 h-3.5" /> Jump to Today
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playClickSound(soundEnabled);
+                      setIsProfileModalOpen(true);
+                    }}
+                    className="px-3.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 text-xs font-mono font-semibold rounded-xl transition-all btn-tactile cursor-pointer"
+                  >
+                    Change Split
+                  </button>
                 </div>
-              </section>
-            );
-          })}
-        </div>
+              </div>
+            </section>
 
-        {/* Bottom Actions: Reset Checkmarks & Clear */}
-        <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
-          <span className="text-zinc-600 dark:text-zinc-400 font-medium">
-            Progress is automatically saved to your browser&apos;s local storage and synced to cloud.
-          </span>
+            {/* Top Interactive Row: 3D Rig & Rest Timer */}
+            <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              {/* Three.js 3D Visualizer */}
+              <div ref={rigSectionRef} className="lg:col-span-7">
+                <ThreeGymVisualizer
+                  splitType={activeDayObject.splitType as any}
+                  focusText={activeDayObject.focus}
+                  themeColorHex={activeDayObject.accentHex}
+                />
+              </div>
 
-          <button
-            onClick={handleResetSession}
-            type="button"
-            className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xs transition active:scale-95 font-bold cursor-pointer"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Reset Current Sets
-          </button>
+              {/* Rest Timer Widget */}
+              <div ref={timerSectionRef} className="lg:col-span-5 flex flex-col justify-between">
+                <RestTimer
+                  initialSeconds={90}
+                  soundEnabled={soundEnabled}
+                  onToggleSound={toggleSound}
+                  autoStartedTimestamp={autoTimerTrigger?.timestamp}
+                  autoSeconds={autoTimerTrigger?.seconds}
+                />
+
+                {/* Quick Split Insight Pill */}
+                <div className="mt-3 bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-4 shadow-xs">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <h4 className="text-xs font-display font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
+                      {activeDayObject.title} Focus
+                    </h4>
+                  </div>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">
+                    {activeDayObject.subtitle}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 3 Golden Rules Section */}
+            <GoldenRulesSection />
+
+            {/* Search & Muscle Filters Bar */}
+            <section className="bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+              {/* Search Input */}
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                <input
+                  type="text"
+                  placeholder="Search exercise, target muscle, or cue..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 transition font-medium"
+                />
+              </div>
+
+              {/* Muscle Chips Filter */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                <Filter className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-1 mr-0.5" />
+                {muscleGroups.map((mg) => (
+                  <button
+                    key={mg}
+                    onClick={() => {
+                      playTabSound(soundEnabled);
+                      setMuscleFilter(mg);
+                    }}
+                    type="button"
+                    className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all btn-tactile border cursor-pointer ${
+                      muscleFilter === mg
+                        ? 'bg-amber-500 text-black border-amber-500 shadow-xs'
+                        : 'bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border-zinc-200 dark:border-zinc-800'
+                    }`}
+                  >
+                    {mg}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Workout Days & Exercises Container */}
+            <div ref={cardsContainerRef} className="space-y-8">
+              {activeDaysList.map((day) => {
+                const filteredExercises = day.exercises.filter((ex) => {
+                  const matchesSearch =
+                    searchQuery === '' ||
+                    ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    ex.target.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    ex.cue.toLowerCase().includes(searchQuery.toLowerCase());
+
+                  const matchesMuscle =
+                    muscleFilter === 'All' ||
+                    ex.target.toLowerCase().includes(muscleFilter.toLowerCase()) ||
+                    ex.primaryMuscle.toLowerCase().includes(muscleFilter.toLowerCase());
+
+                  return matchesSearch && matchesMuscle;
+                });
+
+                if (filteredExercises.length === 0) return null;
+
+                return (
+                  <section key={day.id} className="space-y-4">
+                    {/* Day Header Banner */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-zinc-200/80 dark:border-zinc-800/80 gap-1">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-bold text-amber-500 uppercase">
+                            Day {day.dayNumber}
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+                          <h2 className="text-lg sm:text-xl font-display font-black text-zinc-900 dark:text-white tracking-tight uppercase">
+                            {day.title}
+                          </h2>
+                        </div>
+                        <p className="text-xs text-zinc-600 dark:text-zinc-400 font-medium mt-0.5">{day.subtitle}</p>
+                      </div>
+
+                      <span className="text-xs font-mono font-bold text-zinc-600 dark:text-zinc-400 uppercase self-start sm:self-auto">
+                        {filteredExercises.length} Movements
+                      </span>
+                    </div>
+
+                    {/* Exercise Cards Grid */}
+                    <div className="grid grid-cols-1 gap-4">
+                      {filteredExercises.map((exercise) => {
+                        const currentSets = setsState[exercise.id] || [];
+
+                        return (
+                          <ExerciseCard
+                            key={exercise.id}
+                            exercise={exercise}
+                            sets={currentSets}
+                            themeColor={day.themeColor}
+                            onUpdateSets={handleUpdateSets}
+                            onTriggerRestTimer={handleTriggerRestTimer}
+                            onOpenPlateCalc={openPlateCalculator}
+                            soundEnabled={soundEnabled}
+                          />
+                        );
+                      })}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
+
+            {/* Bottom Actions: Reset Checkmarks & Clear */}
+            <div className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+              <span className="text-zinc-600 dark:text-zinc-400 font-medium font-mono">
+                Progress automatically saved to your browser&apos;s local storage and synced to cloud.
+              </span>
+
+              <button
+                onClick={() => {
+                  playClickSound(soundEnabled);
+                  handleResetSession();
+                }}
+                type="button"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xs transition-all btn-tactile font-mono font-bold cursor-pointer"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Reset Current Sets
+              </button>
+            </div>
+          </main>
         </div>
-      </main>
+      )}
+
+      {/* Structured Comprehensive Minimalist Footer */}
+      <Footer
+        soundEnabled={soundEnabled}
+        onToggleSound={toggleSound}
+        onOpenPlateCalc={() => openPlateCalculator(60, 'Barbell Press')}
+        onOpenHistory={() => setIsHistoryOpen(true)}
+      />
 
       {/* Native App-Style Mobile Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#090a0f]/95 backdrop-blur-lg border-t border-zinc-200 dark:border-zinc-800 px-4 py-2 sm:hidden shadow-lg transition-colors">
-        <div className="max-w-md mx-auto grid grid-cols-5 gap-1">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            type="button"
-            className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition cursor-pointer"
-          >
-            <Dumbbell className="w-5 h-5" />
-            <span className="text-[10px] font-bold mt-0.5">Workout</span>
-          </button>
+      {activeView === 'app' && (
+        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#090a0f]/95 backdrop-blur-lg border-t border-zinc-200/80 dark:border-zinc-800/80 px-4 py-2 sm:hidden shadow-lg transition-colors">
+          <div className="max-w-md mx-auto grid grid-cols-5 gap-1">
+            <button
+              onClick={() => {
+                playClickSound(soundEnabled);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              type="button"
+              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
+            >
+              <Dumbbell className="w-5 h-5 text-amber-500" />
+              <span className="text-[10px] font-bold mt-0.5">Workout</span>
+            </button>
 
-          <button
-            onClick={() => scrollToSection(timerSectionRef)}
-            type="button"
-            className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition cursor-pointer"
-          >
-            <Timer className="w-5 h-5 text-amber-500" />
-            <span className="text-[10px] font-bold mt-0.5">Timer</span>
-          </button>
+            <button
+              onClick={() => {
+                playClickSound(soundEnabled);
+                scrollToSection(timerSectionRef);
+              }}
+              type="button"
+              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
+            >
+              <Timer className="w-5 h-5" />
+              <span className="text-[10px] font-bold mt-0.5">Timer</span>
+            </button>
 
-          <button
-            onClick={() => scrollToSection(rigSectionRef)}
-            type="button"
-            className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition cursor-pointer"
-          >
-            <Boxes className="w-5 h-5" />
-            <span className="text-[10px] font-bold mt-0.5">3D Rig</span>
-          </button>
+            <button
+              onClick={() => {
+                playClickSound(soundEnabled);
+                scrollToSection(rigSectionRef);
+              }}
+              type="button"
+              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
+            >
+              <Boxes className="w-5 h-5" />
+              <span className="text-[10px] font-bold mt-0.5">3D Rig</span>
+            </button>
 
-          <button
-            onClick={() => setIsHistoryOpen(true)}
-            type="button"
-            className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition cursor-pointer"
-          >
-            <History className="w-5 h-5" />
-            <span className="text-[10px] font-bold mt-0.5">Logs</span>
-          </button>
+            <button
+              onClick={() => {
+                playClickSound(soundEnabled);
+                setIsHistoryOpen(true);
+              }}
+              type="button"
+              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
+            >
+              <History className="w-5 h-5" />
+              <span className="text-[10px] font-bold mt-0.5">Logs</span>
+            </button>
 
-          <button
-            onClick={() => setIsProfileModalOpen(true)}
-            type="button"
-            className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition cursor-pointer"
-          >
-            <User className="w-5 h-5" />
-            <span className="text-[10px] font-bold mt-0.5">Profile</span>
-          </button>
-        </div>
-      </nav>
+            <button
+              onClick={() => {
+                playClickSound(soundEnabled);
+                setIsProfileModalOpen(true);
+              }}
+              type="button"
+              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
+            >
+              <User className="w-5 h-5" />
+              <span className="text-[10px] font-bold mt-0.5">Profile</span>
+            </button>
+          </div>
+        </nav>
+      )}
 
       {/* Modals */}
       <PlateCalculatorModal
@@ -720,6 +793,7 @@ export function PplTrackerApp() {
         onClose={() => setIsPlateCalcOpen(false)}
         initialWeight={plateCalcWeight}
         exerciseName={plateCalcExercise}
+        soundEnabled={soundEnabled}
       />
 
       <WorkoutHistoryModal
@@ -741,6 +815,7 @@ export function PplTrackerApp() {
             localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
           }
         }}
+        soundEnabled={soundEnabled}
       />
 
       <CelebrationModal

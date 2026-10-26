@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { ExerciseDefinition, ExerciseSet } from '../types/workout';
 import { calculateEstimated1RM, checkDoubleProgression } from '../utils/helpers';
-import { playSetCompleteSound } from '../utils/audio';
+import { playSetCompleteSound, playClickSound, playPopSound, playTabSound } from '../utils/audio';
 
 interface ExerciseCardProps {
   exercise: ExerciseDefinition;
@@ -263,10 +263,11 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                         <button
                           type="button"
                           onClick={() => {
+                            playPopSound(soundEnabled);
                             const cur = typeof set.weight === 'number' ? set.weight : 0;
                             handleUpdateField(set.id, 'weight', String(Math.max(0, cur + 2.5)));
                           }}
-                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-zinc-100 dark:bg-zinc-800 hover:bg-amber-500 hover:text-black text-zinc-600 dark:text-zinc-400 rounded border border-zinc-200 dark:border-zinc-700 transition"
+                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-zinc-100 dark:bg-zinc-800 hover:bg-amber-500 hover:text-black text-zinc-600 dark:text-zinc-400 rounded border border-zinc-200 dark:border-zinc-700 transition btn-tactile cursor-pointer"
                           title="Add 2.5kg"
                           aria-label={`Add 2.5kg to set ${idx + 1}`}
                         >
@@ -275,10 +276,11 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                         <button
                           type="button"
                           onClick={() => {
+                            playPopSound(soundEnabled);
                             const cur = typeof set.weight === 'number' ? set.weight : 0;
                             handleUpdateField(set.id, 'weight', String(Math.max(0, cur - 2.5)));
                           }}
-                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 rounded border border-zinc-200 dark:border-zinc-700 transition"
+                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 rounded border border-zinc-200 dark:border-zinc-700 transition btn-tactile cursor-pointer"
                           title="Subtract 2.5kg"
                           aria-label={`Subtract 2.5kg from set ${idx + 1}`}
                         >
@@ -338,8 +340,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
                   <td className="py-3 pr-4 pl-2 text-right">
                     {sets.length > 1 && (
                       <button
-                        onClick={() => handleRemoveSet(set.id)}
-                        className="p-1 text-zinc-400 hover:text-red-500 rounded transition cursor-pointer"
+                        type="button"
+                        onClick={() => {
+                          playClickSound(soundEnabled);
+                          handleRemoveSet(set.id);
+                        }}
+                        className="p-1 text-zinc-400 hover:text-red-500 rounded transition btn-tactile cursor-pointer"
                         title="Delete Set"
                         aria-label="Delete set"
                       >
@@ -358,8 +364,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       <div className="p-3 sm:p-4 bg-zinc-50/50 dark:bg-zinc-900/40 border-t border-zinc-100 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex items-center gap-2">
           <button
-            onClick={handleAddSet}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs font-bold transition shadow-xs active:scale-95 cursor-pointer font-mono"
+            type="button"
+            onClick={() => {
+              playClickSound(soundEnabled);
+              handleAddSet();
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs font-bold transition shadow-xs btn-tactile cursor-pointer font-mono"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Set
@@ -367,12 +377,14 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
           {exercise.equipment === 'barbell' && (
             <button
+              type="button"
               onClick={() => {
+                playClickSound(soundEnabled);
                 const currentWeight =
                   typeof sets[0]?.weight === 'number' ? sets[0].weight : 60;
                 onOpenPlateCalc(currentWeight, exercise.name);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/25 rounded-xl text-xs font-bold transition shadow-xs active:scale-95 cursor-pointer font-mono"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/25 rounded-xl text-xs font-bold transition shadow-xs btn-tactile cursor-pointer font-mono"
             >
               <Calculator className="w-3.5 h-3.5" />
               Plate Math
@@ -389,8 +401,12 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
         {/* Collapsible Form & Biomechanics Cues Toggle */}
         <button
-          onClick={() => setShowCues(!showCues)}
-          className="flex items-center gap-1 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer font-mono"
+          type="button"
+          onClick={() => {
+            playTabSound(soundEnabled);
+            setShowCues(!showCues);
+          }}
+          className="flex items-center gap-1 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition btn-tactile cursor-pointer font-mono"
         >
           <span>Biomechanics & Cues</span>
           {showCues ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}

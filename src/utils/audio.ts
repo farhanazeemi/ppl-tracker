@@ -1,4 +1,5 @@
 // Web Audio API Synthesizer - Louder & punchier audio cues designed for gym environments
+// Plus crisp, tactile micro-interaction sounds for every click
 
 let audioCtx: AudioContext | null = null;
 
@@ -16,6 +17,97 @@ function getAudioContext(): AudioContext | null {
     audioCtx.resume();
   }
   return audioCtx;
+}
+
+/**
+ * Satisfying, tactile micro-click on every interactive button / tap.
+ * Crisp 20ms transient resembling a premium mechanical switch.
+ */
+export function playClickSound(enabled = true) {
+  if (!enabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1400, now);
+    osc.frequency.exponentialRampToValueAtTime(450, now + 0.022);
+
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.024);
+  } catch {
+    // Ignore audio context interruptions
+  }
+}
+
+/**
+ * Smooth, subtle tone when switching navigation tabs, split days, or filters.
+ */
+export function playTabSound(enabled = true) {
+  if (!enabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(740, now + 0.04);
+
+    gain.gain.setValueAtTime(0.14, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.052);
+  } catch {
+    // Ignore audio context interruptions
+  }
+}
+
+/**
+ * Playful pop for toggle switches, plate math increments, and modal dialogs.
+ */
+export function playPopSound(enabled = true) {
+  if (!enabled) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(320, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.035);
+
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.048);
+  } catch {
+    // Ignore audio context interruptions
+  }
 }
 
 /**

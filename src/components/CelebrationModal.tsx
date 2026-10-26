@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Trophy, Flame, CheckCircle2, Award, Clock, ArrowRight } from 'lucide-react';
-import { playCelebrationSound } from '../utils/audio';
+import { playCelebrationSound, playClickSound } from '../utils/audio';
 
 interface CelebrationModalProps {
   isOpen: boolean;
@@ -130,8 +130,11 @@ export const CelebrationModal: React.FC<CelebrationModalProps> = ({
         )}
 
         <button
-          onClick={onClose}
-          className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-display font-bold text-xs uppercase tracking-wider rounded-2xl shadow-sm flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer"
+          onClick={() => {
+            playClickSound(soundEnabled);
+            onClose();
+          }}
+          className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-display font-black text-xs uppercase tracking-wider rounded-2xl shadow-sm flex items-center justify-center gap-2 transition btn-tactile cursor-pointer"
         >
           <span>Continue Tracking</span>
           <ArrowRight className="w-4 h-4" />

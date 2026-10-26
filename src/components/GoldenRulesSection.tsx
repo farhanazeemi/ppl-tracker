@@ -38,7 +38,7 @@ export const GoldenRulesSection: React.FC = () => {
           return (
             <div
               key={rule.number}
-              className="bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-5 shadow-xs hover:shadow-md card-minimal transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">

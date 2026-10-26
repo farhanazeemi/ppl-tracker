@@ -25,12 +25,19 @@ import { ThemeToggle } from './ThemeToggle';
 import { ALL_TRAINING_PROGRAMS } from '../data/workouts';
 import { MOCK_BLOG_POSTS, formatPostDate } from '../data/mockBlogPosts';
 import { useAuth } from '../context/AuthContext';
+import { playClickSound, playTabSound, playPopSound, playSetCompleteSound } from '../utils/audio';
 
 interface LandingPageProps {
   onOpenAuth: (mode: 'login' | 'signup') => void;
+  onStartWorkout?: () => void;
+  soundEnabled?: boolean;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({
+  onOpenAuth,
+  onStartWorkout,
+  soundEnabled = true,
+}) => {
   const { continueAsGuest } = useAuth();
   const [selectedSplitTab, setSelectedSplitTab] = useState<string>('ppl');
 
@@ -44,9 +51,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
   const [demoPlateWeight, setDemoPlateWeight] = useState<number>(100);
 
   const toggleDemoSet = (id: number) => {
+    playSetCompleteSound(soundEnabled);
     setDemoSets((prev) =>
       prev.map((s) => (s.id === id ? { ...s, completed: !s.completed } : s))
     );
+  };
+
+  const handleStartApp = () => {
+    playClickSound(soundEnabled);
+    continueAsGuest();
+    if (onStartWorkout) onStartWorkout();
   };
 
   const completedCount = demoSets.filter((s) => s.completed).length;
@@ -76,73 +90,55 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
   const plates = calculatePlates(demoPlateWeight);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">
-      {/* Top Marketing Navigation */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-[#090a0f]/85 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500 flex items-center justify-center text-black font-black font-display text-lg tracking-wider shadow-lg shadow-amber-500/25">
-                PPL
-              </div>
-              <div>
-                <span className="font-display font-black text-xl sm:text-2xl tracking-tight uppercase block leading-none text-zinc-900 dark:text-white">
-                  HYPERTROPHY<span className="text-amber-500">.</span>
-                </span>
-                <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-600 dark:text-zinc-400 block">
-                  Progressive Overload OS
-                </span>
-              </div>
-            </div>
-
-            <nav className="hidden lg:flex items-center gap-6 text-xs font-mono uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
-              <a href="#features" className="hover:text-amber-500 transition-colors">
-                Core Features
-              </a>
-              <a href="#splits" className="hover:text-amber-500 transition-colors">
-                Training Splits
-              </a>
-              <a href="#demo" className="hover:text-amber-500 transition-colors">
-                Live Interactive Demo
-              </a>
-              <Link href="/blog" className="hover:text-amber-500 transition-colors">
-                Biomechanics Journal
-              </Link>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={continueAsGuest}
-              className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-amber-500 hover:text-amber-400 font-bold transition cursor-pointer"
-            >
-              Guest Mode
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenAuth('login')}
-              className="px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-zinc-700 dark:text-zinc-300 hover:text-amber-500 font-medium transition cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenAuth('signup')}
-              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black text-xs font-display font-bold uppercase tracking-wider rounded-xl transition shadow-md shadow-amber-500/20 active:scale-95 flex items-center gap-1.5 cursor-pointer"
-            >
-              Sign Up Free <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <div className="bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 sm:pt-20 pb-16 sm:pb-24 border-b border-zinc-200 dark:border-zinc-800">
+      <section className="relative overflow-hidden pt-10 sm:pt-16 pb-16 sm:pb-24 border-b border-zinc-200/80 dark:border-zinc-800/80">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-amber-500/10 via-orange-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-500 text-xs font-mono font-semibold">
+            <Sparkles className="w-3.5 h-3.5" /> Science-Backed Hypertrophy & Automated Day Scheduling
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-black uppercase tracking-tight text-zinc-900 dark:text-white max-w-5xl mx-auto leading-none">
+            Relentless Progressive Overload. <br />
+            <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-400 bg-clip-text text-transparent">
+              Engineered For Maximum Muscle.
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-3xl mx-auto font-sans leading-relaxed">
+            Stop relying on generic notes apps. PPL Tracker automatically detects today&apos;s scheduled split day, tailors workouts to your lagging muscle groups, enforces double progression ceilings, and automates your rest intervals.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+            <button
+              type="button"
+              onClick={handleStartApp}
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-display font-black uppercase tracking-wider text-sm rounded-2xl shadow-xl shadow-amber-500/25 transition-transform btn-tactile flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Zap className="w-4 h-4 fill-current" />
+              Start Workout Now (Instant Tracker)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                playClickSound(soundEnabled);
+                onOpenAuth('signup');
+              }}
+              className="w-full sm:w-auto px-6 py-4 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-mono text-xs uppercase tracking-wider rounded-2xl transition-all btn-tactile flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              Sign Up & Cloud Sync
+            </button>
+            <a
+              href="#demo"
+              onClick={() => playClickSound(soundEnabled)}
+              className="w-full sm:w-auto px-5 py-4 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-mono text-xs uppercase tracking-wider transition-all btn-tactile flex items-center justify-center gap-1.5"
+            >
+              <Play className="w-3.5 h-3.5 text-amber-500" /> Interactive Demo
+            </a>
+          </div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-500 text-xs font-mono font-semibold">
             <Sparkles className="w-3.5 h-3.5" /> Science-Backed Hypertrophy & Automated Day Scheduling
           </div>
@@ -718,24 +714,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth }) => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 py-10 text-center text-xs font-mono text-zinc-600 dark:text-zinc-400 space-y-2">
-        <p>© 2026 PPL Hypertrophy Tracker. All scientific protocols based on peer-reviewed biomechanics.</p>
-        <div className="flex items-center justify-center gap-4 text-amber-500 font-semibold">
-          <Link href="/blog" className="hover:underline">
-            Biomechanics Journal
-          </Link>
-          <span>•</span>
-          <button type="button" onClick={() => onOpenAuth('login')} className="hover:underline cursor-pointer">
-            Sign In
-          </button>
-          <span>•</span>
-          <button type="button" onClick={() => onOpenAuth('signup')} className="hover:underline cursor-pointer">
-            Create Profile
-          </button>
-        </div>
-      </footer>
     </div>
   );
 };

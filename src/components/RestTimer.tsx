@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Volume2, VolumeX, Plus, Minus, Timer } from 'lucide-react';
-import { playTimerDoneSound } from '../utils/audio';
+import { playTimerDoneSound, playClickSound, playPopSound } from '../utils/audio';
 import { formatTime } from '../utils/helpers';
 
 interface RestTimerProps {
@@ -60,6 +60,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   }, [isRunning, soundEnabled]);
 
   const handleStart = (seconds: number) => {
+    playClickSound(soundEnabled);
     setTotalSeconds(seconds);
     setRemaining(seconds);
     setIsRunning(true);
@@ -67,6 +68,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   };
 
   const togglePause = () => {
+    playClickSound(soundEnabled);
     if (remaining === 0) {
       handleStart(totalSeconds);
     } else {
@@ -75,12 +77,14 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   };
 
   const handleReset = () => {
+    playClickSound(soundEnabled);
     setIsRunning(false);
     setIsDone(false);
     setRemaining(totalSeconds);
   };
 
   const adjustTime = (delta: number) => {
+    playPopSound(soundEnabled);
     setRemaining((prev) => {
       const next = Math.max(0, prev + delta);
       if (next > totalSeconds) setTotalSeconds(next);

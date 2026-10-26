@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { LoggedWorkoutSession } from '../types/workout';
 import { ALL_TRAINING_PROGRAMS } from '../data/workouts';
+import { playClickSound, playTabSound } from '../utils/audio';
 
 interface WorkoutHistoryModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface WorkoutHistoryModalProps {
   historyLogs: LoggedWorkoutSession[];
   onClearHistory: () => void;
   onImportData: (data: LoggedWorkoutSession[]) => void;
+  soundEnabled?: boolean;
 }
 
 export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
@@ -29,6 +31,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
   historyLogs,
   onClearHistory,
   onImportData,
+  soundEnabled = true,
 }) => {
   const [activeTab, setActiveTab] = useState<'sessions' | 'prs'>('sessions');
 
