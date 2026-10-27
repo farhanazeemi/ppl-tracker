@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PplTrackerApp } from '../components/PplTrackerApp';
+import { getWebApplicationSchema } from '../lib/schema';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -36,5 +37,15 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <PplTrackerApp />;
+  const webAppSchema = getWebApplicationSchema();
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+      />
+      <PplTrackerApp />
+    </>
+  );
 }

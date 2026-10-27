@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Search,
@@ -22,7 +22,26 @@ export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) 
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const categories = ['All', 'Biomechanics', 'Hypertrophy', 'Split Design', 'Progressive Overload'];
+  const categories = useMemo(() => {
+    const catMap = new Map<string, number>();
+    initialPosts.forEach((p) => {
+      if (p.splitCategory && p.splitCategory !== 'General') {
+        catMap.set(p.splitCategory, (catMap.get(p.splitCategory) || 0) + 1);
+      }
+      if (Array.isArray(p.categories)) {
+        p.categories.forEach((c) => {
+          if (c?.title) {
+            catMap.set(c.title, (catMap.get(c.title) || 0) + 1);
+          }
+        });
+      }
+    });
+    // Sort categories by frequency
+    const sorted = Array.from(catMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([name]) => name);
+    return ['All', ...sorted.slice(0, 10)];
+  }, [initialPosts]);
 
   const filteredPosts = initialPosts.filter((p) => {
     const postCategories = Array.isArray(p.categories) ? p.categories : [];

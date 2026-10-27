@@ -32,3 +32,8 @@
 5. **Cloud Database Architecture**:
    - Built on Supabase PostgreSQL with Row Level Security (RLS).
    - Persists user profiles (age, height, weight, fitness goal, units) and workout session histories.
+
+6. **The Hypertrophy Science Journal (/blog)**:
+   - Peer-reviewed resistance training insights, muscle hypertrophy mechanisms, exercise kinematics, and progressive overload protocols.
+   - Comprehensive breakdowns on clavicular pec (upper chest) lengthened partials, low-bar squat isometrics and pin work, body recomposition energy balances, optimal protein dosing, and scapular plane deltoid abduction.
+   - Fully structured with Schema.org BlogPosting, semantic Markdown, high-resolution biomechanical imagery, and machine-readable data.

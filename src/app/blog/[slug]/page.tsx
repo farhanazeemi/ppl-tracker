@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { getBlogPostBySlug, getRecentPosts, getAllBlogPosts } from '../../../sanity/getPosts';
+import { getArticleSchema } from '../../../lib/schema';
 import { ThemeToggle } from '../../../components/ThemeToggle';
 import { ShareButton } from '../../../components/ShareButton';
 import { formatPostDate } from '../../../data/mockBlogPosts';
@@ -90,43 +91,7 @@ export default async function BlogPostDetailPage({
   }
 
   const recent = await getRecentPosts(post.slug);
-  const postUrl = `${baseUrl}/blog/${post.slug}`;
-
-  const articleJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    '@id': `${postUrl}#article`,
-    headline: post.title,
-    description: post.excerpt,
-    image: post.mainImage ? [post.mainImage] : [`${baseUrl}/icon.svg`],
-    datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': postUrl,
-    },
-    author: {
-      '@type': 'Person',
-      name: post.author.name,
-      jobTitle: post.author.role,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'PPL Hypertrophy Tracker',
-      url: baseUrl,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${baseUrl}/icon.svg`,
-      },
-    },
-    keywords: [
-      post.splitCategory,
-      ...(post.categories || []).map((c) => c.title),
-      'hypertrophy',
-      'progressive overload',
-      'biomechanics',
-    ].join(', '),
-  };
+  const articleJsonLd = getArticleSchema(post);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">

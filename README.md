@@ -1,54 +1,149 @@
-# 6-Day PPL Hypertrophy Tracker (Upper Chest & 3D Delts Focus)
+# 🏋️ PPL Hypertrophy Tracker (Push • Pull • Legs)
 
-> 🌐 **Live Web Application**: [https://ppltracker.web.id](https://ppltracker.web.id)
+[![Live Web Application](https://img.shields.io/badge/Production-ppltracker.web.id-amber?style=for-the-badge&logo=vercel)](https://ppltracker.web.id)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19.0-61dafb?style=for-the-badge&logo=react)](https://react.dev/)
+[![Sanity Studio v3](https://img.shields.io/badge/Sanity_CMS-v3-f03e2f?style=for-the-badge&logo=sanity)](https://www.sanity.io/)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_Database-3ecf8e?style=for-the-badge&logo=supabase)](https://supabase.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-A high-performance progressive overload hypertrophy tracking application built with **Next.js 15 (App Router)**, **React 19**, **Tailwind CSS**, **Three.js**, and **GSAP**, upgraded from `ppl-tracker.html` following **UI/UX Pro Max** design standards.
-
----
-
-## 🚀 Key Features & Architectural Upgrades
-
-### 1. Interactive 3D Hypertrophy Rig (Three.js & GSAP)
-- Custom procedural 3D Olympic Barbell and calibrated bumper plates rendered in WebGL.
-- **Dynamic Color Shifts**: Glow rings and studio lighting morph seamlessly between active split types:
-  - **Push**: Energy Amber / Orange (`#f97316`)
-  - **Pull**: Electric Sky Cyan (`#0ea5e9`)
-  - **Legs**: Emerald Hypertrophy Green (`#10b981`)
-- Realtime mouse drag & touch rotation, wireframe hologram toggle, and GSAP scale / rotation choreography.
-
-### 2. Comprehensive Set-by-Set Logging & Progressive Overload Engine
-- Replaces static checkmarks with detailed weight (kg) and rep inputs for every working set.
-- **Estimated 1RM**: Realtime Epley formula calculation for peak sets.
-- **Double Progression Protocol**: Automatically alerts lifters when all working sets reach the top rep ceiling (e.g. 10 reps on an 8–10 target) with an "Earned" badge signaling to increase weight next session.
-- **Plate Math Calculator**: Barbell math helper showing exact color-coded Olympic bumper plates (25kg, 20kg, 15kg, 10kg, 5kg, 2.5kg, 1.25kg) required per sleeve.
-
-### 3. Integrated Auto Rest Timer with Audio Cues
-- Automatically triggers on set completion with the exercise's specific rest interval (60s, 75s, 90s, 120s, 150s).
-- Built-in zero-dependency **Web Audio API synthesizer** providing punchy triple-tone finish alerts and set chimes.
-- Quick adjustments (+15s / -15s), preset chips (45s, 60s, 90s, 2m, 3m), and audio mute toggle.
-
-### 4. Session Metrics, History & PR Tracking
-- Tracks total workout volume ($kg \times reps$), sets completed, and session duration in real time.
-- **Finish Workout Celebration**: GSAP confetti bursts and celebratory modal.
-- **History & PRs**: Local storage persistence, PR Hall of Fame, and JSON export/import for zero data lock-in.
-- **Backwards Compatibility**: Automatically imports any existing checkmark states from `ppl-tracker.html`.
-
-### 5. UI/UX Pro Max Standards
-- OLED dark theme with high contrast (zinc-950 backdrop, zinc-900 surfaces).
-- Athletic typography using **Barlow Condensed**, **Barlow**, and **JetBrains Mono** for tabular numbers.
-- Responsive design tailored for mobile gym use (touch targets $\ge 44\text{px}$, sticky quick-nav bar).
+> **The Progressive Overload Operating System for Natural Lifters.**  
+> Built with Next.js 15 App Router, React 19, Three.js, GSAP, Sanity CMS, and Supabase.
 
 ---
 
-## 🛠️ Scripts & Commands
+## 🌟 Overview
 
+**PPL Hypertrophy Tracker** is an evidence-based progressive overload web application and resistance training research journal. It eliminates guesswork in the gym by automating rep-bracket ceilings (Double Progression), rest interval timing, barbell plate math, and periodized training splits — paired with peer-reviewed biomechanics studies.
+
+- **Production Domain**: [https://ppltracker.web.id](https://ppltracker.web.id)
+- **Scientific Journal**: [https://ppltracker.web.id/blog](https://ppltracker.web.id/blog)
+- **Headless Content Studio**: [https://ppltracker.web.id/studio](https://ppltracker.web.id/studio)
+
+---
+
+## 🚀 Key Features
+
+### 1. Double Progression Protocol Engine
+- Working sets are tracked within structured rep brackets (e.g., $3 \times 8\text{--}12$ or $3 \times 10\text{--}15$).
+- When all sets hit the prescribed rep ceiling at strict form, the engine triggers an **"Earned Double Progression"** badge signaling to advance weight by the smallest incremental load ($+2.5\text{ kg} / +5\text{ lbs}$) while resetting to the lower rep floor.
+- Built-in Epley 1RM formula calculation for peak working sets.
+
+### 2. Interactive 3D Anatomy & Rig Visualizer (Three.js & GSAP)
+- Procedural 3D Olympic Barbell and calibrated bumper plates rendered in WebGL.
+- **Dynamic Lighting & Ambient Atmosphere**: Shifts color states according to active split:
+  - **Push**: Amber / Orange (`#f59e0b`)
+  - **Pull**: Sky Blue (`#0ea5e9`)
+  - **Legs**: Emerald Green (`#10b981`)
+- Touch & mouse drag orbit rotation, wireframe hologram inspection, and GSAP confetti animations on workout completion.
+
+### 3. Automated Rest Interval Timers & Web Audio API
+- Automatic rest countdowns customized per movement ($60\text{s}$, $90\text{s}$, $120\text{s}$, $180\text{s}$).
+- Zero-dependency synthesizer using the browser's native **Web Audio API** for tactile button clicks, countdown chimes, and completion alerts.
+- Dedicated sound effects toggle (mute / unmute).
+
+### 4. Olympic Barbell Plate Calculator
+- Realtime plate breakdown calculator for standard Olympic bars ($20\text{ kg} / 45\text{ lbs}$).
+- Visually stacks color-coded bumper plates ($25\text{kg}$, $20\text{kg}$, $15\text{kg}$, $10\text{kg}$, $5\text{kg}$, $2.5\text{kg}$, $1.25\text{kg}$) per sleeve.
+
+### 5. Supabase Cloud Sync & Guest Athlete Mode
+- **Dual Authentication Modes**:
+  - **Cloud Athlete**: Email / Password & Google OAuth sign-in with cloud history synchronization.
+  - **Guest Athlete**: Instant local offline access with zero signup friction.
+- Cloud database on Supabase PostgreSQL with strict Row Level Security (RLS) policies.
+- Athlete profile customization: Bodyweight, height, age, training split, and unit preference ($kg / lbs$).
+
+### 6. The Hypertrophy Science Journal & Sanity Studio (/blog & /studio)
+- Integrated headless CMS powered by **Sanity Studio v3** and **Next-Sanity**.
+- High-resolution biomechanical featured photography and contextual diagrams.
+- Instant search and category filter across 10 distinct fitness domains:
+  - Clavicular Pec / Upper Chest Hypertrophy
+  - Low-Bar Squat Mechanics & Overcoming Isometrics
+  - Energy Balance & Evidence-Based Body Recomposition
+  - Protein Timing & MPS Window Distribution
+  - Zone 2 Low-Intensity Aerobic Base Conditioning
+  - Gymnastic Rings & Calisthenics Leverage Progressions
+  - Scapular Plane Abduction & Rotator Cuff Prehab
+  - Perimenopause & Women's Strength Training
+  - VO2 Max Protocols & Longevity Science
+  - Overcoming Gym Anxiety & Habit Formation
+
+### 7. Google Search & AI Engine Optimization (SEO & GEO)
+- Comprehensive **Schema.org** structured data:
+  - `WebApplication` schema on Homepage.
+  - `BlogPosting` and `CollectionPage` schema with BreadcrumbList on the Journal.
+  - `Organization` and `WebSite` sitewide identity graphs.
+- Generative Engine Optimization (**GEO**) with `public/llms.txt` for AI crawlers (ChatGPT, Perplexity, Claude, Google Gemini).
+- Dynamic `robots.ts` and automated `sitemap.ts` indexing all 48+ static routes.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Core Library**: [React 19](https://react.dev/)
+- **Styling**: [Tailwind CSS v3](https://tailwindcss.com/)
+- **3D Graphics**: [Three.js](https://threejs.org/)
+- **Animations**: [GSAP (GreenSock)](https://gsap.com/)
+- **CMS / Headless Blog**: [Sanity v3](https://www.sanity.io/) & [Next-Sanity](https://github.com/sanity-io/next-sanity)
+- **Backend & Auth**: [Supabase](https://supabase.com/) (PostgreSQL + RLS + GoTrue Auth)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment & Hosting**: [Vercel](https://vercel.com/)
+
+---
+
+## 💻 Getting Started
+
+### Prerequisites
+- Node.js 18.17+ or 20+ installed
+- npm or yarn
+
+### 1. Clone the Repository
 ```bash
-# Start development server
+git clone https://github.com/farhanazeemi/ppl-tracker.git
+cd ppl-tracker
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+Create a `.env.local` file in the root directory:
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Sanity Studio & Blog CMS
+NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
+```
+
+### 4. Run Development Server
+```bash
 npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-# Build for production
+### 5. Production Build
+```bash
 npm run build
-
-# Start production server
 npm run start
 ```
+
+---
+
+## 🔒 Security & Data Privacy
+
+- **Zero Credentials in Git**: All API keys, tokens, and local configuration are strictly isolated in `.env.local` and ignored via `.gitignore`.
+- **Row Level Security (RLS)**: User workout logs and profiles in Supabase are isolated by user UUID; athletes can only access their own logs.
+- **Export / Import**: Full JSON export and import options ensure users own their data with zero platform lock-in.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE) — free to use for personal and educational resistance training tracking.

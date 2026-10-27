@@ -195,6 +195,51 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
             </ul>
           </div>
+
+          {/* Column 5: Trust & Organization */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
+              Trust & Governance
+            </h4>
+            <ul className="space-y-2 text-xs font-mono text-zinc-600 dark:text-zinc-400">
+              <li>
+                <Link
+                  href="/about"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  About PPL Tracker
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  Contact & Support
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Bottom Bar: System Status, Audio Toggle, Shortcuts & Copyright */}
@@ -250,8 +295,24 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
         </div>
 
-        <div className="mt-4 text-center text-[11px] font-mono text-zinc-600 dark:text-zinc-400">
-          © 2026 PPL Hypertrophy Tracker. All scientific resistance protocols based on peer-reviewed biomechanics studies.
+        <div className="mt-4 pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-zinc-600 dark:text-zinc-400 text-center sm:text-left">
+          <div>
+            © 2026 PPL Hypertrophy Tracker. All scientific resistance protocols based on peer-reviewed biomechanics studies.
+          </div>
+          <div className="flex items-center gap-4 text-[10px] uppercase font-bold text-zinc-500 dark:text-zinc-400">
+            <Link href="/about" className="hover:text-amber-500 transition-colors">
+              About
+            </Link>
+            <Link href="/contact" className="hover:text-amber-500 transition-colors">
+              Contact
+            </Link>
+            <Link href="/privacy" className="hover:text-amber-500 transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-amber-500 transition-colors">
+              Terms
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

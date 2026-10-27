@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { getAllBlogPosts } from '../../sanity/getPosts';
+import { getBlogCollectionSchema } from '../../lib/schema';
 import { ThemeToggle } from '../../components/ThemeToggle';
 import { BlogInteractiveList } from '../../components/BlogInteractiveList';
 import { Navbar } from '../../components/Navbar';
@@ -43,31 +44,7 @@ export const metadata: Metadata = {
 
 export default async function BlogIndexPage() {
   const posts = await getAllBlogPosts();
-
-  const blogJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    '@id': `${baseUrl}/blog#collection`,
-    url: `${baseUrl}/blog`,
-    name: 'The Hypertrophy Science Journal',
-    description:
-      'Peer-reviewed resistance training insights, muscle hypertrophy mechanisms, exercise kinematics, and progressive overload protocols.',
-    publisher: {
-      '@type': 'Organization',
-      name: 'PPL Hypertrophy Tracker',
-      url: baseUrl,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${baseUrl}/icon.svg`,
-      },
-    },
-    hasPart: posts.map((p) => ({
-      '@type': 'Article',
-      headline: p.title,
-      url: `${baseUrl}/blog/${p.slug}`,
-      datePublished: p.publishedAt,
-    })),
-  };
+  const blogJsonLd = getBlogCollectionSchema(posts.length);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">

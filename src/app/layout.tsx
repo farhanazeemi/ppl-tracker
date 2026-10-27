@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Providers } from '../components/Providers';
+import { getRootWebSiteSchema } from '../lib/schema';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -95,66 +96,19 @@ export const viewport: Viewport = {
   themeColor: '#fafafa',
 };
 
-const jsonLdData = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'WebApplication',
-      '@id': `${baseUrl}/#webapp`,
-      url: baseUrl,
-      name: 'PPL Hypertrophy Tracker',
-      description:
-        'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, 3D visualizer, user profiles, and double progression tracking.',
-      applicationCategory: 'HealthAndFitnessApplication',
-      operatingSystem: 'All (iOS, Android, Windows, macOS, Linux)',
-      browserRequirements: 'Requires JavaScript. Requires HTML5.',
-      softwareVersion: '2.0.0',
-      inLanguage: 'en-US',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-        availability: 'https://schema.org/InStock',
-      },
-      featureList: [
-        '6-Day Push-Pull-Legs periodized hypertrophy routine',
-        'Double progression rep-range overload engine',
-        'Automated rest interval timers with audio chimes',
-        'Olympic barbell plate calculator (45lb / 20kg bar math)',
-        'Interactive 3D muscle anatomy visualizer',
-        'Supabase cloud profile persistence and workout history sync',
-      ],
-      author: {
-        '@type': 'Person',
-        name: 'Farhan Azeemi',
-        url: 'https://github.com/farhanazeemi',
-      },
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${baseUrl}/#website`,
-      url: baseUrl,
-      name: 'PPL Hypertrophy Tracker',
-      description: 'Science-backed progressive overload hypertrophy app and workout logger.',
-      publisher: {
-        '@type': 'Person',
-        name: 'Farhan Azeemi',
-      },
-    },
-  ],
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const websiteSchema = getRootWebSiteSchema();
+
   return (
     <html lang="en">
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
       <body className="min-h-screen bg-[#fafafa] text-zinc-900 antialiased selection:bg-amber-500 selection:text-white transition-colors duration-200">
