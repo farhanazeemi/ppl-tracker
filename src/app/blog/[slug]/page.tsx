@@ -19,6 +19,9 @@ import { Footer } from '../../../components/Footer';
 
 const baseUrl = 'https://ppltracker.web.id';
 
+export const revalidate = 60;
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts();
   return posts.map((post) => ({

@@ -10,6 +10,8 @@ import { Footer } from '../../components/Footer';
 
 const baseUrl = 'https://ppltracker.web.id';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
   description:
