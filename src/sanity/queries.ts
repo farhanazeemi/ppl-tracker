@@ -36,6 +36,7 @@ export const POST_BY_SLUG_QUERY = `
     title,
     "slug": slug.current,
     publishedAt,
+    _updatedAt,
     "excerpt": coalesce(excerpt, seo.metaDescription, ""),
     "readTime": coalesce(readTime, string(readingTimeMinutes) + " min read", "5 min read"),
     splitCategory,

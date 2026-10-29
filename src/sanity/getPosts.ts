@@ -67,10 +67,13 @@ export function cleanPromptFromExcerpt(excerpt?: string, title?: string): string
   if (!excerpt) return `Evidence-based investigation into ${title || 'resistance training and hypertrophy science'}.`;
   let cleaned = excerpt.trim();
   // Strip any accidental LLM generation prompt prefixes
-  cleaned = cleaned.replace(/^(write\s+an?\s+(actionable\s+)?(hypertrophy\s+|technical\s+)?(guide|article|deep dive)\s+on\s+)/i, 'Comprehensive guide on ');
-  cleaned = cleaned.replace(/^(develop\s+a\s+(technical\s+)?(strength\s+)?training\s+article\s+on\s+)/i, 'Technical breakdown of ');
-  cleaned = cleaned.replace(/^(synthesize\s+(the\s+)?)/i, 'Evidence synthesis of ');
-  cleaned = cleaned.replace(/^(create\s+a\s+detailed\s+breakdown\s+of\s+)/i, 'Detailed breakdown of ');
+  cleaned = cleaned.replace(/^(write\s+an?\s+(actionable\s+|empathetic,?\s+|evidence-based\s+|technical\s+)?(hypertrophy\s+|fat loss\s+|strength\s+)?(guide|article|deep dive)\s+(on|focused on)\s+)/i, '');
+  cleaned = cleaned.replace(/^(develop\s+a\s+(technical\s+)?(strength\s+)?training\s+article\s+on\s+)/i, '');
+  cleaned = cleaned.replace(/^(synthesize\s+(the\s+)?(core\s+)?)/i, '');
+  cleaned = cleaned.replace(/^(create\s+a\s+detailed\s+breakdown\s+of\s+)/i, '');
+  if (cleaned.length > 0) {
+    cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  }
   return cleaned;
 }
 
@@ -247,6 +250,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
           title: post.title,
           slug: post.slug,
           publishedAt: post.publishedAt,
+          modifiedAt: post._updatedAt || post.publishedAt,
           excerpt: cleanExcerpt,
           readTime: post.readTime || '5 min read',
           splitCategory: post.splitCategory || 'General',
@@ -259,6 +263,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
             bio: post.author?.bio,
           },
           categories: post.categories || [],
+          rawBody: post.body,
           content: parseSanityBodyToSections(post.body, cleanExcerpt),
         };
       }

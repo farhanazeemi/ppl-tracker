@@ -3,9 +3,10 @@ export interface BlogPost {
   title: string;
   slug: string;
   publishedAt: string;
+  modifiedAt?: string;
   excerpt: string;
   readTime: string;
-  splitCategory: 'PPL' | 'Bro Split' | 'Upper/Lower' | 'Full Body' | 'General';
+  splitCategory: string;
   mainImage?: string;
   imageAlt?: string;
   author: {
@@ -18,6 +19,7 @@ export interface BlogPost {
     title: string;
     slug: string;
   }>;
+  rawBody?: any;
   content: {
     introduction: string;
     sections: Array<{

@@ -12,11 +12,14 @@ import {
 } from 'lucide-react';
 import { getBlogPostBySlug, getRecentPosts, getAllBlogPosts } from '../../../sanity/getPosts';
 import { getArticleSchema } from '../../../lib/schema';
-import { ThemeToggle } from '../../../components/ThemeToggle';
 import { ShareButton } from '../../../components/ShareButton';
 import { formatPostDate } from '../../../data/mockBlogPosts';
 import { Navbar } from '../../../components/Navbar';
 import { Footer } from '../../../components/Footer';
+import { TableOfContents } from '../../../components/TableOfContents';
+import { FaqAccordion } from '../../../components/FaqAccordion';
+import { ArticlePortableText } from '../../../components/ArticlePortableText';
+import { processArticleBody } from '../../../utils/articleContent';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -46,9 +49,10 @@ export async function generateMetadata({
   }
 
   const postUrl = `${baseUrl}/blog/${post.slug}`;
+  const modifiedDate = post.modifiedAt || post.publishedAt;
 
   return {
-    title: post.title,
+    title: `${post.title} | PPL Hypertrophy Tracker`,
     description: post.excerpt,
     alternates: {
       canonical: `/blog/${post.slug}`,
@@ -60,6 +64,7 @@ export async function generateMetadata({
       url: postUrl,
       type: 'article',
       publishedTime: post.publishedAt,
+      modifiedTime: modifiedDate,
       authors: [post.author.name],
       tags: (post.categories || []).map((c) => c.title),
       siteName: 'PPL Hypertrophy Tracker',
@@ -95,7 +100,13 @@ export default async function BlogPostDetailPage({
   }
 
   const recent = await getRecentPosts(post.slug);
-  const articleJsonLd = getArticleSchema(post);
+  const { toc, faqs, mainBlocks } = processArticleBody(post.rawBody, post.title);
+
+  const articleJsonLd = getArticleSchema({
+    ...post,
+    faqItems: faqs,
+    modifiedAt: post.modifiedAt,
+  });
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">
@@ -142,7 +153,7 @@ export default async function BlogPostDetailPage({
             {post.title}
           </h1>
 
-          {/* Author info card with Post Date */}
+          {/* Author info card with Post Date and Modification Date */}
           <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-zinc-200 dark:border-zinc-800">
             <div className="flex items-center gap-3">
               {post.author.avatar ? (
@@ -185,63 +196,55 @@ export default async function BlogPostDetailPage({
             </div>
           )}
 
-          {/* Lead Excerpt */}
+          {/* Lead Excerpt / Key Takeaway */}
           <div className="p-6 bg-zinc-100 dark:bg-zinc-900/60 border-l-4 border-amber-500 rounded-r-2xl">
             <p className="text-base sm:text-lg text-zinc-800 dark:text-zinc-200 font-sans leading-relaxed italic">
               &quot;{post.excerpt}&quot;
             </p>
           </div>
 
-          {/* Article Body Sections with Related Section Images */}
-          <div className="space-y-8 text-zinc-800 dark:text-zinc-300 font-sans leading-relaxed text-sm sm:text-base">
-            <p className="text-base leading-relaxed">{post.content.introduction}</p>
+          {/* Dynamic Table of Contents for Long Articles */}
+          {toc.length >= 3 && <TableOfContents items={toc} />}
 
-            {post.content.sections.map((section, idx) => (
-              <div key={idx} className="space-y-3 pt-4">
-                <h2 className="text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-zinc-900 dark:text-white">
-                  {section.heading}
-                </h2>
-                <p className="leading-relaxed whitespace-pre-line">{section.body}</p>
+          {/* Article Body Content */}
+          <div className="space-y-6 text-zinc-800 dark:text-zinc-300 font-sans leading-relaxed text-sm sm:text-base">
+            {mainBlocks && mainBlocks.length > 0 ? (
+              <ArticlePortableText value={mainBlocks} />
+            ) : (
+              // Fallback for mock or string content
+              <>
+                <p className="text-base leading-relaxed">{post.content.introduction}</p>
+                {post.content.sections.map((section, idx) => (
+                  <div key={idx} className="space-y-3 pt-4">
+                    <h2 className="text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-zinc-900 dark:text-white">
+                      {section.heading}
+                    </h2>
+                    <p className="leading-relaxed whitespace-pre-line">{section.body}</p>
 
-                {/* Related Section Image */}
-                {section.image && (
-                  <figure className="my-6 overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 shadow-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={section.image}
-                      alt={section.imageCaption || section.heading}
-                      className="w-full max-h-[420px] object-cover"
-                    />
-                    {section.imageCaption && (
-                      <figcaption className="p-3.5 text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-white dark:bg-[#12141c] border-t border-zinc-200 dark:border-zinc-800 flex items-center gap-2">
-                        <span className="text-amber-500 font-bold uppercase tracking-wider">Fig {idx + 1}</span>
-                        <span>—</span>
-                        <span>{section.imageCaption}</span>
-                      </figcaption>
+                    {section.keyTakeaway && (
+                      <div className="mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-zinc-900 dark:text-zinc-100 space-y-1">
+                        <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-amber-500">
+                          <Sparkles className="w-4 h-4 text-amber-500" /> Key Biomechanical Takeaway
+                        </div>
+                        <p className="text-xs sm:text-sm font-semibold">{section.keyTakeaway}</p>
+                      </div>
                     )}
-                  </figure>
-                )}
-
-                {section.keyTakeaway && (
-                  <div className="mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-zinc-900 dark:text-zinc-100 space-y-1">
-                    <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-amber-500">
-                      <Sparkles className="w-4 h-4 text-amber-500" /> Key Biomechanical Takeaway
-                    </div>
-                    <p className="text-xs sm:text-sm font-semibold">{section.keyTakeaway}</p>
+                  </div>
+                ))}
+                {post.content.conclusion && (
+                  <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800">
+                    <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white mb-2">
+                      Clinical Summary
+                    </h3>
+                    <p className="leading-relaxed">{post.content.conclusion}</p>
                   </div>
                 )}
-              </div>
-            ))}
-
-            {post.content.conclusion && (
-              <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800">
-                <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white mb-2">
-                  Clinical Summary
-                </h3>
-                <p className="leading-relaxed">{post.content.conclusion}</p>
-              </div>
+              </>
             )}
           </div>
+
+          {/* Interactive Accessible FAQ Accordion */}
+          {faqs.length > 0 && <FaqAccordion items={faqs} />}
         </article>
 
         {/* Action Callout for Workout Tracker */}
@@ -253,14 +256,21 @@ export default async function BlogPostDetailPage({
             Apply These Principles Today in Your Scheduled Workout
           </h3>
           <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl">
-            PPL Tracker automatically implements 15°–30° incline angles, sets target rep ceilings, provides automatic rest timers with audio countdowns, and prioritizes your chosen weak points.
+            Once you&apos;ve chosen your exercises and target weekly set landmarks, use the{' '}
+            <Link
+              href="/tools/ppl-tracker"
+              className="text-amber-400 underline font-semibold hover:text-amber-300 transition-colors"
+            >
+              PPL Tracker workout tool
+            </Link>{' '}
+            to record your sets, reps, audio rest countdowns, and progressive overload history.
           </p>
           <div>
             <Link
               href="/tools/ppl-tracker"
               className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-black font-display font-bold uppercase tracking-wider text-xs rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
             >
-              Start Tracking This Session <ArrowRight className="w-4 h-4" />
+              Launch Free Workout Tracker <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>

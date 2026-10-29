@@ -149,69 +149,113 @@ export function getBlogCollectionSchema(postCount: number) {
   };
 }
 
+export interface FaqSchemaItem {
+  question: string;
+  answer: string;
+}
+
 /**
- * BlogPosting schema with BreadcrumbList for article detail pages.
+ * FAQPage schema helper.
+ * Note: Google Search limits FAQ rich results primarily to well-known government and health authorities.
+ * This schema provides structured-content semantics and machine-interoperability for GEO/AEO.
+ */
+export function getFaqPageSchema(faqItems: FaqSchemaItem[], pageUrl: string) {
+  if (!faqItems || faqItems.length === 0) return null;
+  return {
+    '@type': 'FAQPage',
+    '@id': `${pageUrl}#faq`,
+    url: pageUrl,
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+/**
+ * BlogPosting schema with BreadcrumbList and optional FAQPage for article detail pages.
  */
 export function getArticleSchema(post: {
   slug: string;
   title: string;
   excerpt: string;
   publishedAt: string;
-  author: { name: string; role?: string };
+  modifiedAt?: string;
+  author: { name: string; role?: string; bio?: string; avatar?: string };
   mainImage?: string;
   imageAlt?: string;
   splitCategory?: string;
-  categories?: Array<{ title: string }>;
+  categories?: Array<{ title: string; slug?: string }>;
   readTime?: string;
+  faqItems?: FaqSchemaItem[];
 }) {
   const postUrl = `${BASE_URL}/blog/${post.slug}`;
   const imageUrl = post.mainImage || `${BASE_URL}/icon.svg`;
+  const datePublished = post.publishedAt || new Date().toISOString();
+  const dateModified = post.modifiedAt || post.publishedAt || datePublished;
+
+  const graphEntities: any[] = [
+    {
+      '@type': 'BlogPosting',
+      '@id': `${postUrl}#article`,
+      isPartOf: {
+        '@id': `${BASE_URL}/blog#collection`,
+      },
+      headline: post.title,
+      description: post.excerpt,
+      image: [imageUrl],
+      datePublished: datePublished,
+      dateModified: dateModified,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': postUrl,
+      },
+      url: postUrl,
+      articleSection: post.splitCategory || 'Hypertrophy Science',
+      isAccessibleForFree: true,
+      author: {
+        '@type': 'Person',
+        '@id': `${BASE_URL}/#author-farhan-azeemi`,
+        name: post.author?.name || 'Farhan Azeemi',
+        jobTitle: post.author?.role || 'Fitness Specialist & Software Engineer',
+        url: 'https://github.com/farhanazeemi',
+        ...(post.author?.avatar ? { image: post.author.avatar } : {}),
+      },
+      publisher: {
+        '@id': `${BASE_URL}/#organization`,
+      },
+      inLanguage: 'en-US',
+      keywords: [
+        post.splitCategory || 'Hypertrophy',
+        ...(post.categories || []).map((c) => c.title),
+        'progressive overload',
+        'resistance training',
+        'muscle hypertrophy',
+        'biomechanics',
+        'evidence-based training',
+      ].join(', '),
+    },
+    getBreadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Journal', url: '/blog' },
+      { name: post.title, url: `/blog/${post.slug}` },
+    ]),
+  ];
+
+  if (post.faqItems && post.faqItems.length > 0) {
+    const faqEntity = getFaqPageSchema(post.faqItems, postUrl);
+    if (faqEntity) {
+      graphEntities.push(faqEntity);
+    }
+  }
 
   return {
     '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'BlogPosting',
-        '@id': `${postUrl}#article`,
-        isPartOf: {
-          '@id': `${BASE_URL}/blog#collection`,
-        },
-        headline: post.title,
-        description: post.excerpt,
-        image: [imageUrl],
-        datePublished: post.publishedAt,
-        dateModified: post.publishedAt,
-        mainEntityOfPage: {
-          '@type': 'WebPage',
-          '@id': postUrl,
-        },
-        articleSection: post.splitCategory || 'Hypertrophy Science',
-        isAccessibleForFree: true,
-        author: {
-          '@type': 'Person',
-          name: post.author.name,
-          jobTitle: post.author.role || 'Fitness Specialist',
-        },
-        publisher: {
-          '@id': `${BASE_URL}/#organization`,
-        },
-        inLanguage: 'en-US',
-        keywords: [
-          post.splitCategory || 'Hypertrophy',
-          ...(post.categories || []).map((c) => c.title),
-          'progressive overload',
-          'resistance training',
-          'muscle hypertrophy',
-          'biomechanics',
-          'evidence-based training',
-        ].join(', '),
-      },
-      getBreadcrumbSchema([
-        { name: 'Home', url: '/' },
-        { name: 'Journal', url: '/blog' },
-        { name: post.title, url: `/blog/${post.slug}` },
-      ]),
-    ],
+    '@graph': graphEntities,
   };
 }
 

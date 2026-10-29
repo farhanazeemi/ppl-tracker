@@ -47,3 +47,6 @@ published_state*.json
 antigravity_config*.json
 sidecar.json
 content/
+scripts/*.mjs
+scripts/*.json
+
