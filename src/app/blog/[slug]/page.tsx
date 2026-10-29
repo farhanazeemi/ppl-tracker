@@ -257,7 +257,7 @@ export default async function BlogPostDetailPage({
           </p>
           <div>
             <Link
-              href="/"
+              href="/tools/ppl-tracker"
               className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-black font-display font-bold uppercase tracking-wider text-xs rounded-xl transition shadow-lg shadow-amber-500/20 active:scale-95"
             >
               Start Tracking This Session <ArrowRight className="w-4 h-4" />

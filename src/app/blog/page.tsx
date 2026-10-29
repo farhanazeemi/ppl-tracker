@@ -89,7 +89,7 @@ export default async function BlogIndexPage() {
             </p>
           </div>
           <Link
-            href="/"
+            href="/tools/ppl-tracker"
             className="px-6 py-3.5 bg-black hover:bg-zinc-900 text-white font-display font-black uppercase tracking-wider text-xs rounded-xl transition-all btn-tactile shadow-lg whitespace-nowrap flex items-center gap-2"
           >
             Launch Free Workout Tracker <ArrowRight className="w-4 h-4 text-amber-500" />
