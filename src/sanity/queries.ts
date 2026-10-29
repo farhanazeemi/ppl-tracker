@@ -9,6 +9,8 @@ export const ALL_POSTS_QUERY = `
     "excerpt": coalesce(excerpt, seo.metaDescription, ""),
     "readTime": coalesce(readTime, string(readingTimeMinutes) + " min read", "5 min read"),
     splitCategory,
+    imageUrl,
+    imageAlt,
     mainImage {
       asset-> {
         _id,
@@ -38,6 +40,8 @@ export const POST_BY_SLUG_QUERY = `
     "readTime": coalesce(readTime, string(readingTimeMinutes) + " min read", "5 min read"),
     splitCategory,
     body,
+    imageUrl,
+    imageAlt,
     mainImage {
       asset-> {
         _id,

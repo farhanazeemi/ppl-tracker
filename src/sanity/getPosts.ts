@@ -2,104 +2,66 @@ import { client, isSanityConfigured } from './client';
 import { ALL_POSTS_QUERY, POST_BY_SLUG_QUERY, CATEGORIES_QUERY, RECENT_POSTS_QUERY } from './queries';
 import { MOCK_BLOG_POSTS, BlogPost } from '../data/mockBlogPosts';
 
-const CATEGORY_IMAGE_FALLBACKS: Record<string, { url: string; alt: string }> = {
-  push: {
-    url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Athlete performing incline dumbbell press targeting the clavicular head of the pectoralis major',
-  },
-  chest: {
-    url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Athlete training upper chest and clavicular pectoralis fibers',
-  },
-  pec: {
-    url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Clavicular pectoral hypertrophy training execution',
-  },
-  legs: {
-    url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Powerlifter executing low-bar back squat with optimal hip drive and bracing',
-  },
-  squat: {
-    url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Heavy barbell back squat in power rack with chalked grip',
-  },
-  recomp: {
-    url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Body recomposition athlete tracking physique progress and resistance training volume',
-  },
-  fat: {
-    url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Body recomposition and metabolic fat loss resistance protocol',
-  },
-  nutrition: {
-    url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Optimal daily dietary protein intake and micronutrient timing for resistance athletes',
-  },
-  protein: {
-    url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&auto=format&fit=crop&q=80',
-    alt: 'High-protein nutritional timing and evidence-based macro distribution',
-  },
-  endurance: {
-    url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Zone 2 low-intensity aerobic base building for mitochondrial density and recovery',
-  },
-  aerobic: {
-    url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Aerobic base conditioning and low-intensity heart rate zone training',
-  },
-  running: {
-    url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Endurance runner pacing low heart rate training',
-  },
-  calisthenics: {
-    url: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Calisthenics athlete executing compound bodyweight progressions on gymnastic rings',
-  },
-  bodyweight: {
-    url: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Recommended routine bodyweight leverage ladder progression',
-  },
-  rotator: {
-    url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Shoulder prehab and scapular upward rotation protocol with resistance bands',
-  },
-  shoulder: {
-    url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Shoulder joint health, scapular control, and prehab drills',
-  },
-  mobility: {
-    url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Loaded joint mobility and impingement prevention drills',
-  },
-  women: {
-    url: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Evidence-based barbell resistance training protocol for women over 40',
-  },
-  vo2: {
-    url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Cardiovascular VO2 max conditioning protocol for all-cause mortality reduction',
-  },
-  longevity: {
-    url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Evidence-based longevity and conditioning protocols',
-  },
-  mindset: {
-    url: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Overcoming commercial gym anxiety with structured beginner workout protocols',
-  },
-  gym: {
-    url: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Commercial gym equipment and structured progressive overload workouts',
-  },
-  delt: {
-    url: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Strict lateral raise execution for lateral deltoid isolation',
-  },
-  pull: {
-    url: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1200&auto=format&fit=crop&q=80',
-    alt: 'Pull day hypertrophy training targeting lats and rhomboids',
-  },
-};
+// Curated pool of high-resolution fitness photography to ensure every article gets a distinct image
+const DIVERSE_FITNESS_GALLERY: Array<{ url: string; alt: string }> = [
+  { url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1200&auto=format&fit=crop&q=80', alt: 'Incline dumbbell press targeting clavicular pectoralis fibers' },
+  { url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop&q=80', alt: 'Athlete performing barbell bench press with strict leg drive' },
+  { url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&auto=format&fit=crop&q=80', alt: 'Cable crossover flyes emphasizing lengthened pectoral stretch' },
+  { url: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1200&auto=format&fit=crop&q=80', alt: 'Incline dumbbell flyes with deep humeral adduction' },
+  { url: 'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=1200&auto=format&fit=crop&q=80', alt: 'Bodyweight chest dips on heavy parallel dip station' },
+  { url: 'https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?w=1200&auto=format&fit=crop&q=80', alt: 'Close-grip pressing for triceps and upper chest fiber recruitment' },
+  { url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=1200&auto=format&fit=crop&q=80', alt: 'Heavy low-bar back squat in power rack with chalked grip' },
+  { url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&auto=format&fit=crop&q=80', alt: 'High-bar Olympic back squat with deep knee flexion' },
+  { url: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1200&auto=format&fit=crop&q=80', alt: 'Conventional barbell deadlift pull from the floor with neutral spine' },
+  { url: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=1200&auto=format&fit=crop&q=80', alt: 'Sumo deadlift lockout with heavy chalked hands' },
+  { url: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=1200&auto=format&fit=crop&q=80', alt: 'Barbell pin squat training in power rack for sticking point mastery' },
+  { url: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=1200&auto=format&fit=crop&q=80', alt: 'Safety squat bar good morning execution for posterior chain' },
+  { url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&auto=format&fit=crop&q=80', alt: 'Balanced macronutrient meal prep with high-protein sources' },
+  { url: 'https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?w=1200&auto=format&fit=crop&q=80', alt: 'Athlete tracking daily calories and body composition progress' },
+  { url: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=1200&auto=format&fit=crop&q=80', alt: 'Nutritious lean protein, vegetables and complex carbohydrates' },
+  { url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&auto=format&fit=crop&q=80', alt: 'Healthy salmon and dark leafy greens for metabolic recovery' },
+  { url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&auto=format&fit=crop&q=80', alt: 'Fresh high-protein grilled chicken salad with avocado' },
+  { url: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1200&auto=format&fit=crop&q=80', alt: 'Energy-dense pre-workout breakfast with oats, berries, and eggs' },
+  { url: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=1200&auto=format&fit=crop&q=80', alt: 'Whey protein shaker bottle on weightlifting bench' },
+  { url: 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?w=1200&auto=format&fit=crop&q=80', alt: 'Athlete pre-workout hydration drink and sports nutrition' },
+  { url: 'https://images.unsplash.com/photo-1550345332-09e3ac987658?w=1200&auto=format&fit=crop&q=80', alt: 'Post-workout recovery smoothie bowl with chia seeds and fruit' },
+  { url: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=1200&auto=format&fit=crop&q=80', alt: 'Clinical sports nutrition vitamins, minerals, and omega-3s' },
+  { url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=1200&auto=format&fit=crop&q=80', alt: 'Endurance runner pacing low heart rate zone 2 aerobic session' },
+  { url: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1200&auto=format&fit=crop&q=80', alt: 'Runner checking heart rate monitor smartwatch during tempo run' },
+  { url: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1200&auto=format&fit=crop&q=80', alt: 'Trail runner climbing alpine ridge at sunrise for aerobic conditioning' },
+  { url: 'https://images.unsplash.com/photo-1486218119243-13883505764c?w=1200&auto=format&fit=crop&q=80', alt: 'Distance runner lacing performance running shoes on road' },
+  { url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&auto=format&fit=crop&q=80', alt: 'Lactate threshold tempo interval training on athletic running track' },
+  { url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&auto=format&fit=crop&q=80', alt: 'Track sprints and explosive conditioning workout' },
+  { url: 'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=1200&auto=format&fit=crop&q=80', alt: 'Calisthenics athlete executing strict muscle-up on gymnastic rings' },
+  { url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&auto=format&fit=crop&q=80', alt: 'Strict wide-grip pull-ups on outdoor calisthenics bar station' },
+  { url: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=1200&auto=format&fit=crop&q=80', alt: 'Parallel bar tricep dips in outdoor street workout gym park' },
+  { url: 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=1200&auto=format&fit=crop&q=80', alt: 'Gymnast holding isometric L-sit hold on wooden parallettes' },
+  { url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&auto=format&fit=crop&q=80', alt: 'Resistance band rotator cuff external rotation prehab drill' },
+  { url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&auto=format&fit=crop&q=80', alt: 'Loaded joint mobility stretch and hip 90/90 drill on mat' },
+  { url: 'https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=1200&auto=format&fit=crop&q=80', alt: 'Thoracic spine extension and mobility roll on dense foam roller' },
+  { url: 'https://images.unsplash.com/photo-1508215885820-4523e431397b?w=1200&auto=format&fit=crop&q=80', alt: 'Ankle dorsiflexion knee-to-wall test and mobility exercise' },
+  { url: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&auto=format&fit=crop&q=80', alt: 'Strong woman over 40 deadlifting heavy barbell with locked lats' },
+  { url: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1200&auto=format&fit=crop&q=80', alt: 'Athletic female lifter executing barbell hip thrusts on bench' },
+  { url: 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=1200&auto=format&fit=crop&q=80', alt: 'Kettlebell Romanian deadlifts targeting posterior chain and glutes' },
+  { url: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=1200&auto=format&fit=crop&q=80', alt: 'Female runner performing post-workout mobility and hamstring recovery' },
+  { url: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=1200&auto=format&fit=crop&q=80', alt: 'Sleep and recovery optimization metrics on bedside smartwatch' },
+  { url: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=1200&auto=format&fit=crop&q=80', alt: 'Athlete performing VO2 max interval training on concept 2 rowing machine' },
+  { url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop&q=80', alt: 'High-intensity cardiovascular testing on air assault bike' },
+  { url: 'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=1200&auto=format&fit=crop&q=80', alt: 'Grip strength and forearm flexor testing with heavy iron carry' },
+  { url: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=1200&auto=format&fit=crop&q=80', alt: 'Beginner lifter walking onto gym floor with gym bag and workout plan' },
+  { url: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1200&auto=format&fit=crop&q=80', alt: 'Olympic barbell loaded with calibrated iron plates in private gym' },
+  { url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&auto=format&fit=crop&q=80', alt: 'Two training partners encouraging each other during heavy resistance set' },
+  { url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&auto=format&fit=crop&q=80', alt: 'Progressive overload tracking logbook next to dumbbells' },
+];
+
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
 
 export function cleanPromptFromExcerpt(excerpt?: string, title?: string): string {
   if (!excerpt) return `Evidence-based investigation into ${title || 'resistance training and hypertrophy science'}.`;
@@ -113,6 +75,13 @@ export function cleanPromptFromExcerpt(excerpt?: string, title?: string): string
 }
 
 export function resolvePostImage(p: any): { url: string; alt: string } {
+  if (p.imageUrl && typeof p.imageUrl === 'string' && p.imageUrl.startsWith('http')) {
+    return {
+      url: p.imageUrl,
+      alt: p.imageAlt || p.title || 'PPL Hypertrophy Science Journal',
+    };
+  }
+
   const directUrl = p.mainImage?.asset?.url || (typeof p.mainImage === 'string' && p.mainImage.startsWith('http') ? p.mainImage : null);
   if (directUrl) {
     return {
@@ -121,21 +90,13 @@ export function resolvePostImage(p: any): { url: string; alt: string } {
     };
   }
 
-  const slug = (p.slug || '').toLowerCase();
-  const cat = (p.splitCategory || '').toLowerCase();
-
-  for (const [key, val] of Object.entries(CATEGORY_IMAGE_FALLBACKS)) {
-    if (slug.includes(key) || cat.includes(key)) {
-      return {
-        url: val.url,
-        alt: p.imageAlt || val.alt,
-      };
-    }
-  }
+  const slug = (p.slug || p._id || p.title || '').toLowerCase();
+  const index = hashString(slug) % DIVERSE_FITNESS_GALLERY.length;
+  const picked = DIVERSE_FITNESS_GALLERY[index];
 
   return {
-    url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1200&auto=format&fit=crop&q=80',
-    alt: p.title || 'PPL Hypertrophy Science Journal',
+    url: picked.url,
+    alt: p.imageAlt || p.title || picked.alt,
   };
 }
 
