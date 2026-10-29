@@ -15,6 +15,7 @@ import { getArticleSchema } from '../../../lib/schema';
 import { ThemeToggle } from '../../../components/ThemeToggle';
 import { ShareButton } from '../../../components/ShareButton';
 import { formatPostDate } from '../../../data/mockBlogPosts';
+import { Navbar } from '../../../components/Navbar';
 import { Footer } from '../../../components/Footer';
 
 const baseUrl = 'https://ppltracker.web.id';
@@ -103,30 +104,21 @@ export default async function BlogPostDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
-      {/* Top Navigation */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-[#090a0f]/80 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      {/* Top Global Navigation Bar */}
+      <Navbar />
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
+        {/* Sub-header Navigation */}
+        <div className="flex items-center justify-between gap-4">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 hover:text-amber-500 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" /> All Articles
           </Link>
-
-          <div className="flex items-center gap-3">
-            <ShareButton />
-            <ThemeToggle />
-            <Link
-              href="/"
-              className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-black text-xs font-display font-bold uppercase rounded-xl transition shadow-md shadow-amber-500/15"
-            >
-              Open Tracker
-            </Link>
-          </div>
+          <ShareButton />
         </div>
-      </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-10">
         {/* Article Header */}
         <article className="space-y-6">
           <div className="flex flex-wrap items-center gap-2.5">

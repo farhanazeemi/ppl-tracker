@@ -111,6 +111,33 @@ export const Footer: React.FC<FooterProps> = ({
               Athlete Tools
             </h4>
             <ul className="space-y-2 text-xs font-mono text-zinc-600 dark:text-zinc-400">
+              <li>
+                <Link
+                  href="/tools/ppl-tracker"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  PPL Workout Tracker
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/bmi-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  Body Mass Index (BMI) Calc
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors font-bold text-amber-500"
+                >
+                  View All Tools Directory →
+                </Link>
+              </li>
               {onOpenPlateCalc && (
                 <li>
                   <button
@@ -133,21 +160,6 @@ export const Footer: React.FC<FooterProps> = ({
                   </button>
                 </li>
               )}
-              <li>
-                <span className="hover:text-amber-500 transition-colors cursor-default">
-                  Web Audio Rest Interval Timer
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-amber-500 transition-colors cursor-default">
-                  Double Progression Engine
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-amber-500 transition-colors cursor-default">
-                  3D Anatomy Muscle Rig
-                </span>
-              </li>
             </ul>
           </div>
 

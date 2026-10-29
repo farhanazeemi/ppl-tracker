@@ -15,6 +15,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const toolsPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/ppl-tracker`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/bmi-calculator`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+  ];
+
   const staticCompliancePages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/about`,
@@ -55,6 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
+    ...toolsPages,
     ...staticCompliancePages,
     ...blogUrls,
   ];

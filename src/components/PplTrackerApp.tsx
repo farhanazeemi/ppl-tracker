@@ -48,7 +48,11 @@ import {
   Zap,
 } from 'lucide-react';
 
-export function PplTrackerApp() {
+export function PplTrackerApp({
+  initialView = 'app',
+}: {
+  initialView?: 'app' | 'landing';
+} = {}) {
   const { user, isAuthenticated, isLoading, isPasswordRecovery, refreshProfile } = useAuth();
 
   // Active workout program based on user's split selection
@@ -61,7 +65,7 @@ export function PplTrackerApp() {
   // Active selected workout day & View mode
   const [activeDayId, setActiveDayId] = useState<SplitDayId | 'all'>('push-a');
   const [hasInitializedDay, setHasInitializedDay] = useState(false);
-  const [activeView, setActiveView] = useState<'app' | 'landing'>('app');
+  const [activeView, setActiveView] = useState<'app' | 'landing'>(initialView);
 
   // Sets state & logging
   const [setsState, setSetsState] = useState<Record<string, ExerciseSet[]>>({});
