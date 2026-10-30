@@ -69,6 +69,8 @@ import {
   Sparkles,
   Calendar,
   Zap,
+  Wifi,
+  WifiOff,
 } from 'lucide-react';
 
 export function PplTrackerApp({
@@ -89,6 +91,34 @@ export function PplTrackerApp({
   const [activeDayId, setActiveDayId] = useState<SplitDayId | 'all'>('push-a');
   const [hasInitializedDay, setHasInitializedDay] = useState(false);
   const [activeView, setActiveView] = useState<'app' | 'landing'>(initialView);
+
+  // Network connectivity state for gym offline usage
+  const [isOnline, setIsOnline] = useState<boolean>(true);
+  const [showReconnectedBanner, setShowReconnectedBanner] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    setIsOnline(navigator.onLine);
+
+    const handleOnline = () => {
+      setIsOnline(true);
+      setShowReconnectedBanner(true);
+      const timer = setTimeout(() => setShowReconnectedBanner(false), 4000);
+      return () => clearTimeout(timer);
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setShowReconnectedBanner(false);
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Sets state & logging
   const [setsState, setSetsState] = useState<Record<string, ExerciseSet[]>>({});
@@ -522,6 +552,52 @@ export function PplTrackerApp({
           />
 
           <main className="max-w-6xl mx-auto px-4 mt-6 space-y-6">
+            {/* OFFLINE GYM STATUS BANNER */}
+            {!isOnline && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-amber-500/20 text-amber-500 shrink-0">
+                    <WifiOff className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="font-bold text-amber-500 uppercase tracking-wider block sm:inline">
+                      Offline Mode Active • Gym-Safe Session
+                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400 block sm:inline sm:ml-2">
+                      All sets, weights, reps & timers are securely saving locally on this device.
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-black px-2.5 py-1 rounded-full self-start sm:self-auto shrink-0 shadow-xs">
+                  100% Offline Ready
+                </span>
+              </div>
+            )}
+
+            {showReconnectedBanner && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-3xl p-4 flex items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
+                    <Wifi className="w-4 h-4" />
+                  </div>
+                  <span>
+                    <strong className="text-emerald-400">Connection Restored:</strong> Cloud sync re-established.
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500 text-black px-2.5 py-1 rounded-full shrink-0 shadow-xs">
+                  Synced
+                </span>
+              </div>
+            )}
+
             {/* DAY-SPECIFIC SMART SCHEDULING BANNER */}
             <section className="bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-5 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

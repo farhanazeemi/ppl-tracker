@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import { Barlow, Barlow_Condensed, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '../components/Providers';
+import { GoogleAnalytics } from '../components/GoogleAnalytics';
+import { ServiceWorkerRegistration } from '../components/ServiceWorkerRegistration';
 import { getRootWebSiteSchema } from '../lib/schema';
 
 const barlow = Barlow({
@@ -99,6 +100,11 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PPL Tracker',
+  },
   robots: {
     index: true,
     follow: true,
@@ -136,28 +142,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {/* Google tag (gtag.js) loaded during idle time to prevent TBT/LCP contention */}
-        <Script
-          strategy="lazyOnload"
-          src="https://www.googletagmanager.com/gtag/js?id=G-HTGL7X5C4X"
-        />
-        <Script
-          id="google-analytics"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-HTGL7X5C4X', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
+        {/* Google Analytics & GTM loaded on idle, excludes internal Sanity Studio routes */}
+        <GoogleAnalytics />
       </head>
       <body className="min-h-screen bg-[#fafafa] text-zinc-900 antialiased selection:bg-amber-500 selection:text-white transition-colors duration-200">
         <Providers>{children}</Providers>
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );

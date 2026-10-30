@@ -1,17 +1,43 @@
 {
   "name": "PPL Hypertrophy Tracker",
   "short_name": "PPL Tracker",
-  "description": "Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, 3D visualizer, and user profiles.",
-  "start_url": "/",
+  "description": "Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, biomechanics kinematics, and double progression tracking.",
+  "start_url": "/tools/ppl-tracker",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#fafafa",
+  "orientation": "portrait-primary",
+  "background_color": "#090a0f",
   "theme_color": "#f59e0b",
+  "categories": ["fitness", "health", "sports"],
   "icons": [
     {
       "src": "/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Workout Tracker",
+      "short_name": "Tracker",
+      "description": "Open your active 6-day Push-Pull-Legs workout routine",
+      "url": "/tools/ppl-tracker",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Barbell Plate Math",
+      "short_name": "Plate Math",
+      "description": "Calculate exact Olympic plates needed per barbell sleeve",
+      "url": "/tools/ppl-tracker",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "BMI Calculator",
+      "short_name": "BMI Calc",
+      "description": "Screen body mass metrics with metric or imperial units",
+      "url": "/tools/bmi-calculator",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
     }
   ]
 }
