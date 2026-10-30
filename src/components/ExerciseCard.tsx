@@ -27,7 +27,7 @@ interface ExerciseCardProps {
   soundEnabled: boolean;
 }
 
-export const ExerciseCard: React.FC<ExerciseCardProps> = ({
+export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
   exercise,
   sets,
   themeColor,
@@ -437,4 +437,6 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       )}
     </div>
   );
-};
+});
+
+ExerciseCard.displayName = 'ExerciseCard';

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Search,
   Clock,
@@ -120,11 +121,13 @@ export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) 
               {/* Featured Image */}
               <div className="lg:col-span-5 relative aspect-[16/10] lg:aspect-auto overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                 {featuredPost.mainImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={featuredPost.mainImage}
                     alt={featuredPost.imageAlt || featuredPost.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 ) : (
                   <div className="w-full h-full min-h-[220px] flex items-center justify-center bg-gradient-to-br from-amber-500/20 to-orange-500/10">
@@ -224,11 +227,13 @@ export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) 
                 {/* Featured Thumbnail */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                   {post.mainImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={post.mainImage}
                       alt={post.imageAlt || post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-800">

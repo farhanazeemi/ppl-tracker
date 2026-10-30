@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import gsap from 'gsap';
+import dynamic from 'next/dynamic';
 import {
   SplitDayId,
   ExerciseSet,
@@ -19,20 +19,43 @@ import { playClickSound, playTabSound, playPopSound } from '../utils/audio';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { WorkoutSummaryHeader } from './WorkoutSummaryHeader';
-import { ThreeGymVisualizer } from './ThreeGymVisualizer';
+import { GymRigVisualizer } from './GymRigVisualizer';
 import { RestTimer } from './RestTimer';
 import { ExerciseCard } from './ExerciseCard';
 import { GoldenRulesSection } from './GoldenRulesSection';
-import { PlateCalculatorModal } from './PlateCalculatorModal';
-import { WorkoutHistoryModal } from './WorkoutHistoryModal';
-import { CelebrationModal } from './CelebrationModal';
-import { AuthModal } from './AuthModal';
-import { ProfileModal } from './ProfileModal';
-import { OnboardingModal } from './OnboardingModal';
-import { LandingPage } from './LandingPage';
 import { useAuth } from '../context/AuthContext';
 import { AuthModalMode } from '../types/auth';
 import { supabase } from '../lib/supabase';
+
+// Dynamically import heavy modals to eliminate them from initial JavaScript bundle
+const PlateCalculatorModal = dynamic(
+  () => import('./PlateCalculatorModal').then((m) => m.PlateCalculatorModal),
+  { ssr: false }
+);
+const WorkoutHistoryModal = dynamic(
+  () => import('./WorkoutHistoryModal').then((m) => m.WorkoutHistoryModal),
+  { ssr: false }
+);
+const CelebrationModal = dynamic(
+  () => import('./CelebrationModal').then((m) => m.CelebrationModal),
+  { ssr: false }
+);
+const AuthModal = dynamic(
+  () => import('./AuthModal').then((m) => m.AuthModal),
+  { ssr: false }
+);
+const ProfileModal = dynamic(
+  () => import('./ProfileModal').then((m) => m.ProfileModal),
+  { ssr: false }
+);
+const OnboardingModal = dynamic(
+  () => import('./OnboardingModal').then((m) => m.OnboardingModal),
+  { ssr: false }
+);
+const LandingPage = dynamic(
+  () => import('./LandingPage').then((m) => m.LandingPage),
+  { ssr: false }
+);
 import {
   Search,
   Filter,
@@ -391,13 +414,15 @@ export function PplTrackerApp({
     setSessionStartTime(Date.now());
   };
 
-  // GSAP animated transition on day tab switch
+  // High-performance hardware-accelerated CSS Web Animations API transition on day tab switch
   useEffect(() => {
     if (cardsContainerRef.current) {
-      gsap.fromTo(
-        cardsContainerRef.current,
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }
+      cardsContainerRef.current.animate(
+        [
+          { opacity: 0, transform: 'translateY(10px)' },
+          { opacity: 1, transform: 'translateY(0)' },
+        ],
+        { duration: 200, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' }
       );
     }
   }, [activeDayId]);
@@ -552,11 +577,11 @@ export function PplTrackerApp({
               </div>
             </section>
 
-            {/* Top Interactive Row: 3D Rig & Rest Timer */}
+            {/* Top Interactive Row: Rig & Rest Timer */}
             <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-              {/* Three.js 3D Visualizer */}
+              {/* High-Performance Vector Rig & Kinematics Visualizer */}
               <div ref={rigSectionRef} className="lg:col-span-7">
-                <ThreeGymVisualizer
+                <GymRigVisualizer
                   splitType={activeDayObject.splitType as any}
                   focusText={activeDayObject.focus}
                   themeColorHex={activeDayObject.accentHex}
@@ -791,59 +816,69 @@ export function PplTrackerApp({
         </nav>
       )}
 
-      {/* Modals */}
-      <PlateCalculatorModal
-        isOpen={isPlateCalcOpen}
-        onClose={() => setIsPlateCalcOpen(false)}
-        initialWeight={plateCalcWeight}
-        exerciseName={plateCalcExercise}
-        soundEnabled={soundEnabled}
-      />
+      {/* On-Demand Modals (Rendered only when open to preserve DOM performance) */}
+      {isPlateCalcOpen && (
+        <PlateCalculatorModal
+          isOpen={isPlateCalcOpen}
+          onClose={() => setIsPlateCalcOpen(false)}
+          initialWeight={plateCalcWeight}
+          exerciseName={plateCalcExercise}
+          soundEnabled={soundEnabled}
+        />
+      )}
 
-      <WorkoutHistoryModal
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
-        historyLogs={historyLogs}
-        onClearHistory={async () => {
-          setHistoryLogs([]);
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('ppl_history_v2');
-          }
-          if (user?.id) {
-            await supabase.from('workout_sessions').delete().eq('user_id', user.id);
-          }
-        }}
-        onImportData={(imported) => {
-          setHistoryLogs(imported);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
-          }
-        }}
-        soundEnabled={soundEnabled}
-      />
+      {isHistoryOpen && (
+        <WorkoutHistoryModal
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          historyLogs={historyLogs}
+          onClearHistory={async () => {
+            setHistoryLogs([]);
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('ppl_history_v2');
+            }
+            if (user?.id) {
+              await supabase.from('workout_sessions').delete().eq('user_id', user.id);
+            }
+          }}
+          onImportData={(imported) => {
+            setHistoryLogs(imported);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
+            }
+          }}
+          soundEnabled={soundEnabled}
+        />
+      )}
 
-      <CelebrationModal
-        isOpen={isCelebrationOpen}
-        onClose={() => setIsCelebrationOpen(false)}
-        dayTitle={celebrationData.dayTitle}
-        totalVolume={celebrationData.totalVolume}
-        totalSets={celebrationData.totalSets}
-        durationMinutes={celebrationData.durationMinutes}
-        doubleProgressions={celebrationData.doubleProgressions}
-        soundEnabled={soundEnabled}
-      />
+      {isCelebrationOpen && (
+        <CelebrationModal
+          isOpen={isCelebrationOpen}
+          onClose={() => setIsCelebrationOpen(false)}
+          dayTitle={celebrationData.dayTitle}
+          totalVolume={celebrationData.totalVolume}
+          totalSets={celebrationData.totalSets}
+          durationMinutes={celebrationData.durationMinutes}
+          doubleProgressions={celebrationData.doubleProgressions}
+          soundEnabled={soundEnabled}
+        />
+      )}
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        initialMode={authMode}
-      />
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          initialMode={authMode}
+        />
+      )}
 
-      <ProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        onOpenOnboarding={() => setIsOnboardingModalOpen(true)}
-      />
+      {isProfileModalOpen && (
+        <ProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setIsProfileModalOpen(false)}
+          onOpenOnboarding={() => setIsOnboardingModalOpen(true)}
+        />
+      )}
     </div>
   );
 }

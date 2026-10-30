@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   Clock,
@@ -184,14 +185,16 @@ export default async function BlogPostDetailPage({
             </div>
           </div>
 
-          {/* Featured Cover Image */}
+          {/* Featured Cover Image - LCP Optimized with priority */}
           {post.mainImage && (
             <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-xl bg-zinc-100 dark:bg-zinc-800">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={post.mainImage}
                 alt={post.imageAlt || post.title}
-                className="w-full h-full object-cover"
+                fill
+                priority
+                sizes="(max-width: 896px) 100vw, 896px"
+                className="object-cover"
               />
             </div>
           )}

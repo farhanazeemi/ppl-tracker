@@ -25,11 +25,19 @@ import {
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '../context/AuthContext';
+import dynamic from 'next/dynamic';
 import { playClickSound, playTabSound } from '../utils/audio';
 import { FITNESS_TOOLS, FitnessTool } from '../config/tools';
-import { AuthModal } from './AuthModal';
-import { ProfileModal } from './ProfileModal';
 import { AuthModalMode } from '../types/auth';
+
+const AuthModal = dynamic(
+  () => import('./AuthModal').then((m) => m.AuthModal),
+  { ssr: false }
+);
+const ProfileModal = dynamic(
+  () => import('./ProfileModal').then((m) => m.ProfileModal),
+  { ssr: false }
+);
 
 interface NavbarProps {
   activeView?: 'app' | 'landing';
@@ -582,17 +590,21 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
       </header>
 
-      {/* Standalone Modals (Rendered when Navbar handles auth/profile independently) */}
-      <AuthModal
-        isOpen={standaloneAuthOpen}
-        onClose={() => setStandaloneAuthOpen(false)}
-        initialMode={standaloneAuthMode}
-      />
+      {/* Standalone Modals (Rendered dynamically only when Navbar triggers them independently) */}
+      {standaloneAuthOpen && (
+        <AuthModal
+          isOpen={standaloneAuthOpen}
+          onClose={() => setStandaloneAuthOpen(false)}
+          initialMode={standaloneAuthMode}
+        />
+      )}
 
-      <ProfileModal
-        isOpen={standaloneProfileOpen}
-        onClose={() => setStandaloneProfileOpen(false)}
-      />
+      {standaloneProfileOpen && (
+        <ProfileModal
+          isOpen={standaloneProfileOpen}
+          onClose={() => setStandaloneProfileOpen(false)}
+        />
+      )}
     </>
   );
 };

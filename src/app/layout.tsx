@@ -1,8 +1,30 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
+import { Barlow, Barlow_Condensed, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '../components/Providers';
 import { getRootWebSiteSchema } from '../lib/schema';
+
+const barlow = Barlow({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-barlow',
+  display: 'swap',
+});
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['700', '800', '900'],
+  variable: '--font-barlow-condensed',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+});
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -13,7 +35,7 @@ export const metadata: Metadata = {
     template: '%s | PPL Hypertrophy Tracker',
   },
   description:
-    'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, 3D visualizer, user profiles, and double progression tracking.',
+    'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, biomechanics visualizer, user profiles, and double progression tracking.',
   keywords: [
     'PPL workout tracker',
     'push pull legs split',
@@ -41,7 +63,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'PPL Hypertrophy Tracker | Minimalist Workout App',
     description:
-      'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, 3D visualizer, user profiles, and double progression tracking.',
+      'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, biomechanics visualizer, user profiles, and double progression tracking.',
     url: baseUrl,
     siteName: 'PPL Hypertrophy Tracker',
     images: [
@@ -105,20 +127,23 @@ export default function RootLayout({
   const websiteSchema = getRootWebSiteSchema();
 
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${barlow.variable} ${barlowCondensed.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {/* Google tag (gtag.js) */}
+        {/* Google tag (gtag.js) loaded during idle time to prevent TBT/LCP contention */}
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-HTGL7X5C4X"
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
