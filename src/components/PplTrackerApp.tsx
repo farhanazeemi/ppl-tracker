@@ -262,9 +262,11 @@ export function PplTrackerApp({
 
   const defaultFallbackSets = (saved: any) => saved || {};
 
+  const isCloudUser = (u: any): u is { id: string; isGuest?: boolean } => !!u?.id && !u.isGuest && u.id !== 'guest-athlete';
+
   // Sync workout history with Supabase when user logs in
   useEffect(() => {
-    if (!user?.id) return;
+    if (!isCloudUser(user)) return;
 
     async function syncCloudWorkouts() {
       try {
@@ -442,7 +444,7 @@ export function PplTrackerApp({
     }
 
     // Persist workout to Supabase if authenticated
-    if (user?.id) {
+    if (isCloudUser(user)) {
       supabase
         .from('workout_sessions')
         .insert({
@@ -953,7 +955,7 @@ export function PplTrackerApp({
             if (typeof window !== 'undefined') {
               localStorage.removeItem('ppl_history_v2');
             }
-            if (user?.id) {
+            if (isCloudUser(user)) {
               await supabase.from('workout_sessions').delete().eq('user_id', user.id);
             }
           }}
