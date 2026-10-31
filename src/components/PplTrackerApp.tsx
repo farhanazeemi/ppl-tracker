@@ -962,7 +962,15 @@ export function PplTrackerApp({
           onImportData={(imported) => {
             setHistoryLogs(imported);
             if (typeof window !== 'undefined') {
-              localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
+              try {
+                localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
+              } catch (e: any) {
+                if (e?.name === 'QuotaExceededError' || e?.code === 22) {
+                  alert('Storage quota exceeded. Your workout history could not be saved to local storage.');
+                } else {
+                  console.error('Failed to save imported history:', e);
+                }
+              }
             }
           }}
           soundEnabled={soundEnabled}
