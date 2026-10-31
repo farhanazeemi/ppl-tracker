@@ -93,18 +93,26 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
   }[user?.selectedSplit || 'ppl'] || 'Push-Pull-Legs';
 
   return (
-    <div className="bg-[var(--bg-card)]/90 backdrop-blur-md border-b border-[var(--border-subtle)] px-4 py-3 sm:py-3.5 transition-colors duration-200 sticky top-16 z-30">
+    <div className="bg-[var(--bg-card)]/90 backdrop-blur-xl border-b border-[var(--border-subtle)] px-4 py-3 sm:py-3.5 transition-colors duration-200 sticky top-16 z-30 shadow-xs">
+      {/* Session Progress Accent Bar */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--bg-elevated)] overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-[#B7FF4A] to-[#36D6B0] transition-all duration-500"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+
       <div className="max-w-6xl mx-auto space-y-3">
         {/* Main Title Row */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/25 rounded-md font-mono">
+              <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-[#B7FF4A]/10 text-[#B7FF4A] border border-[#B7FF4A]/25 rounded-md font-mono">
                 {splitDisplayTitle}
               </span>
               {dayOfWeekName && (
-                <span className="px-2.5 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/25 rounded-md font-mono flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="px-2.5 py-0.5 text-[10px] font-bold bg-[#36D6B0]/10 text-[#36D6B0] border border-[#36D6B0]/25 rounded-md font-mono flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#36D6B0] animate-pulse" />
                   Today is {dayOfWeekName}
                 </span>
               )}
@@ -115,9 +123,9 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
               )}
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[var(--text-primary)] uppercase flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[var(--text-primary)] uppercase flex items-center gap-2 font-display">
               Active Workout Session
-              <Sparkles className="w-4 h-4 text-[var(--accent-primary)] shrink-0 hidden sm:inline" />
+              <Sparkles className="w-4 h-4 text-[#B7FF4A] shrink-0 hidden sm:inline" />
             </h1>
           </div>
 
@@ -125,7 +133,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             {/* Volume Metric */}
             <div className="px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl flex items-center gap-2 shadow-xs">
-              <Flame className="w-4 h-4 text-[var(--accent-primary)]" />
+              <Flame className="w-4 h-4 text-[#B7FF4A]" />
               <div>
                 <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-bold font-mono">
                   Volume
@@ -141,7 +149,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
 
             {/* Sets Done Metric */}
             <div className="px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl flex items-center gap-2 shadow-xs">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-[#36D6B0]" />
               <div>
                 <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-bold font-mono">
                   Sets Done
@@ -180,9 +188,9 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             <button
               type="button"
               onClick={handleFinish}
-              className="px-4 py-2 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-[var(--accent-primary)]/20 flex items-center gap-1.5 transition-all btn-tactile cursor-pointer"
+              className="px-4 py-2 bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] font-display font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-[#B7FF4A]/20 flex items-center gap-1.5 transition-all btn-tactile cursor-pointer"
             >
-              <Trophy className="w-4 h-4" />
+              <Trophy className="w-4 h-4 fill-current" />
               <span>Finish Workout</span>
             </button>
           </div>
@@ -213,7 +221,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
                 onClick={() => handleDaySelect(day.id)}
                 className={`relative px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider whitespace-nowrap transition-all btn-tactile flex items-center gap-1.5 cursor-pointer ${
                   isActive
-                    ? 'bg-[var(--accent-primary)] text-black shadow-xs font-black'
+                    ? 'bg-[#B7FF4A] text-[#090B0F] shadow-xs font-black'
                     : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]'
                 }`}
               >
@@ -221,7 +229,9 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
                 {isTodayScheduled && (
                   <span
                     className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full ${
-                      isActive ? 'bg-black text-[var(--accent-primary)]' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      isActive
+                        ? 'bg-[#090B0F] text-[#B7FF4A]'
+                        : 'bg-[#36D6B0]/20 text-[#36D6B0] border border-[#36D6B0]/30'
                     }`}
                   >
                     Today

@@ -739,7 +739,7 @@ export function PplTrackerApp({
                         playClickSound(soundEnabled);
                         setActiveDayId(scheduleInfo.scheduledDayId);
                       }}
-                      className="px-3.5 py-1.5 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-black text-xs font-mono font-bold uppercase rounded-xl transition-all btn-tactile cursor-pointer flex items-center gap-1 shadow-sm shadow-[var(--accent-primary)]/20"
+                      className="px-3.5 py-1.5 bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] text-xs font-mono font-black uppercase rounded-xl transition-all btn-tactile cursor-pointer flex items-center gap-1 shadow-sm shadow-[#B7FF4A]/20"
                     >
                       <Zap className="w-3.5 h-3.5" /> Jump to Today
                     </button>
@@ -824,7 +824,7 @@ export function PplTrackerApp({
                     type="button"
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all btn-tactile border cursor-pointer ${
                       muscleFilter === mg
-                        ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] shadow-xs'
+                        ? 'bg-[#B7FF4A] text-[#090B0F] border-[#B7FF4A] shadow-xs font-black'
                         : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
                     }`}
                   >
@@ -857,21 +857,21 @@ export function PplTrackerApp({
                 return (
                   <section key={day.id} className="space-y-4">
                     {/* Day Header Banner */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-zinc-200/80 dark:border-zinc-800/80 gap-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-[var(--border-subtle)] gap-1">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-[var(--accent-primary)] uppercase">
+                          <span className="font-mono text-xs font-bold text-[#B7FF4A] uppercase">
                             Day {day.dayNumber}
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-                          <h2 className="text-lg sm:text-xl font-display font-black text-zinc-900 dark:text-white tracking-tight uppercase">
+                          <h2 className="text-lg sm:text-xl font-display font-black text-[var(--text-primary)] tracking-tight uppercase">
                             {day.title}
                           </h2>
                         </div>
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 font-medium mt-0.5">{day.subtitle}</p>
+                        <p className="text-xs text-[var(--text-secondary)] font-medium mt-0.5 font-sans">{day.subtitle}</p>
                       </div>
 
-                      <span className="text-xs font-mono font-bold text-zinc-600 dark:text-zinc-400 uppercase self-start sm:self-auto">
+                      <span className="text-xs font-mono font-bold text-[var(--text-muted)] uppercase self-start sm:self-auto">
                         {filteredExercises.length} Movements
                       </span>
                     </div>
@@ -915,8 +915,8 @@ export function PplTrackerApp({
             </div>
 
             {/* Bottom Actions: Reset Checkmarks & Clear */}
-            <div className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
-              <span className="text-zinc-600 dark:text-zinc-400 font-medium font-mono">
+            <div className="pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+              <span className="text-[var(--text-muted)] font-medium font-mono">
                 Progress automatically saved to your browser&apos;s local storage and synced to cloud.
               </span>
 
@@ -926,7 +926,7 @@ export function PplTrackerApp({
                   handleResetSession();
                 }}
                 type="button"
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xs transition-all btn-tactile font-mono font-bold cursor-pointer"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-2xl shadow-xs transition-all btn-tactile font-mono font-bold cursor-pointer"
               >
                 <RotateCcw className="w-4 h-4" />
                 Reset Current Sets

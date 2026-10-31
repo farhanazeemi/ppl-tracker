@@ -13,6 +13,7 @@ import {
   Award,
   Zap,
   Sparkles,
+  Info,
 } from 'lucide-react';
 import { ExerciseDefinition, ExerciseSet } from '../types/workout';
 import { calculateEstimated1RM, checkDoubleProgression } from '../utils/helpers';
@@ -41,14 +42,14 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
 
   const colorStyles = {
     push: {
-      badge: 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/25',
-      accent: 'border-[var(--accent-primary)]/40',
-      activeRow: 'bg-[var(--accent-primary)]/5',
+      badge: 'bg-[#B7FF4A]/10 text-[#B7FF4A] border-[#B7FF4A]/25',
+      accent: 'border-[#B7FF4A]/40',
+      activeRow: 'bg-[#B7FF4A]/5',
     },
     pull: {
-      badge: 'bg-sky-500/10 text-sky-400 border-sky-500/25',
-      accent: 'border-sky-500/40',
-      activeRow: 'bg-sky-500/5',
+      badge: 'bg-[#36D6B0]/10 text-[#36D6B0] border-[#36D6B0]/25',
+      accent: 'border-[#36D6B0]/40',
+      activeRow: 'bg-[#36D6B0]/5',
     },
     legs: {
       badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
@@ -56,9 +57,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
       activeRow: 'bg-emerald-500/5',
     },
     gold: {
-      badge: 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/25',
-      accent: 'border-[var(--accent-primary)]/40',
-      activeRow: 'bg-[var(--accent-primary)]/5',
+      badge: 'bg-[#B7FF4A]/10 text-[#B7FF4A] border-[#B7FF4A]/25',
+      accent: 'border-[#B7FF4A]/40',
+      activeRow: 'bg-[#B7FF4A]/5',
     },
     sky: {
       badge: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/25',
@@ -66,9 +67,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
       activeRow: 'bg-cyan-500/5',
     },
   }[themeColor] || {
-    badge: 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/25',
-    accent: 'border-[var(--accent-primary)]/40',
-    activeRow: 'bg-[var(--accent-primary)]/5',
+    badge: 'bg-[#B7FF4A]/10 text-[#B7FF4A] border-[#B7FF4A]/25',
+    accent: 'border-[#B7FF4A]/40',
+    activeRow: 'bg-[#B7FF4A]/5',
   };
 
   const isDoubleProgressionReady = checkDoubleProgression(sets, exercise.maxReps);
@@ -134,15 +135,19 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
   const completedCount = sets.filter((s) => s.completed).length;
 
   return (
-    <div className={`bg-[var(--bg-card)] border rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all ${
-      exercise.isPriorityWeakPoint ? 'border-[var(--accent-primary)]/60 ring-1 ring-[var(--accent-primary)]/20' : 'border-[var(--border-subtle)]'
-    }`}>
-      {/* Exercise Header */}
+    <div
+      className={`card-bento overflow-hidden shadow-sm transition-all ${
+        exercise.isPriorityWeakPoint
+          ? 'border-[#B7FF4A]/50 ring-1 ring-[#B7FF4A]/25'
+          : 'border-[var(--border-subtle)]'
+      }`}
+    >
+      {/* Exercise Card Header */}
       <div className="p-4 sm:p-5 border-b border-[var(--border-subtle)] bg-[var(--bg-card)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`px-2.5 py-0.5 text-[11px] font-bold rounded-lg border shadow-xs font-mono ${colorStyles.badge}`}
+              className={`px-2.5 py-0.5 text-[11px] font-bold rounded-lg border shadow-xs font-mono uppercase ${colorStyles.badge}`}
             >
               {exercise.target}
             </span>
@@ -152,8 +157,8 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
 
             {/* Lagging Muscle Weak Point Badge */}
             {exercise.isPriorityWeakPoint && (
-              <span className="flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 rounded-lg animate-pulse font-mono">
-                <Zap className="w-3.5 h-3.5" />
+              <span className="flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold bg-[#B7FF4A]/15 text-[#B7FF4A] border border-[#B7FF4A]/30 rounded-lg font-mono">
+                <Zap className="w-3.5 h-3.5 fill-current" />
                 {exercise.weakPointBadge || 'Lagging Muscle Priority'}
               </span>
             )}
@@ -166,7 +171,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
             )}
           </div>
 
-          <h3 className="text-base sm:text-lg font-black text-[var(--text-primary)] uppercase tracking-tight">
+          <h3 className="text-base sm:text-lg font-black text-[var(--text-primary)] uppercase tracking-tight font-display">
             {exercise.name}
           </h3>
 
@@ -193,7 +198,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
           </div>
           <div className="px-2.5 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-center">
             <span className="text-[10px] text-[var(--text-muted)] block uppercase font-mono font-semibold">Target</span>
-            <span className="font-mono font-bold text-[var(--accent-primary)] tabular-nums">{exercise.targetReps} reps</span>
+            <span className="font-mono font-bold text-[#B7FF4A] tabular-nums">{exercise.targetReps} reps</span>
           </div>
           <div className="px-2.5 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-center">
             <span className="text-[10px] text-[var(--text-muted)] block uppercase font-mono font-semibold">Rest</span>
@@ -227,7 +232,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                   key={set.id}
                   className={`border-b border-[var(--border-subtle)] transition ${
                     set.completed
-                      ? 'bg-[var(--accent-primary)]/5'
+                      ? 'bg-[#B7FF4A]/5'
                       : 'hover:bg-[var(--bg-elevated)]/30'
                   }`}
                 >
@@ -249,7 +254,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                         aria-label={`${exercise.name} Set ${idx + 1} weight in kg`}
                         value={set.weight}
                         onChange={(e) => handleUpdateField(set.id, 'weight', e.target.value)}
-                        className={`w-20 sm:w-24 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-base sm:text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 focus:border-[var(--accent-primary)] transition ${
+                        className={`w-20 sm:w-24 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-base sm:text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[#B7FF4A]/25 focus:border-[#B7FF4A] transition ${
                           set.completed
                             ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/5'
                             : 'border-[var(--border-subtle)]'
@@ -263,7 +268,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                             const cur = typeof set.weight === 'number' ? set.weight : 0;
                             handleUpdateField(set.id, 'weight', String(Math.max(0, cur + 2.5)));
                           }}
-                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-[var(--bg-elevated)] hover:bg-[var(--accent-primary)] hover:text-black text-[var(--text-secondary)] rounded border border-[var(--border-subtle)] transition btn-tactile cursor-pointer"
+                          className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-[var(--bg-elevated)] hover:bg-[#B7FF4A] hover:text-[#090B0F] text-[var(--text-secondary)] rounded border border-[var(--border-subtle)] transition btn-tactile cursor-pointer"
                           title="Add 2.5kg"
                           aria-label={`Add 2.5kg to set ${idx + 1}`}
                         >
@@ -298,7 +303,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                         aria-label={`${exercise.name} Set ${idx + 1} completed reps`}
                         value={set.reps}
                         onChange={(e) => handleUpdateField(set.id, 'reps', e.target.value)}
-                        className={`w-18 sm:w-20 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-base sm:text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 focus:border-[var(--accent-primary)] transition ${
+                        className={`w-18 sm:w-20 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-base sm:text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[#B7FF4A]/25 focus:border-[#B7FF4A] transition ${
                           set.completed
                             ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/5'
                             : 'border-[var(--border-subtle)]'
@@ -311,7 +316,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                   <td className="py-3 px-3 hidden md:table-cell font-mono text-xs text-[var(--text-secondary)] tabular-nums">
                     {est1RM > 0 ? (
                       <span className="flex items-center gap-1 font-bold text-[var(--text-primary)]">
-                        <Flame className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                        <Flame className="w-3.5 h-3.5 text-[#B7FF4A]" />
                         {est1RM} kg
                       </span>
                     ) : (
@@ -325,7 +330,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                       onClick={() => handleToggleSetComplete(set.id)}
                       className={`w-11 h-11 rounded-2xl flex items-center justify-center transition active:scale-90 mx-auto border cursor-pointer ${
                         set.completed
-                          ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] shadow-md shadow-[var(--accent-primary)]/25 ring-2 ring-[var(--accent-primary)]/30'
+                          ? 'bg-[#B7FF4A] text-[#090B0F] border-[#B7FF4A] shadow-md shadow-[#B7FF4A]/25 ring-2 ring-[#B7FF4A]/30'
                           : 'bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-muted)] border-[var(--border-subtle)] shadow-xs'
                       }`}
                       aria-label={`Mark set ${idx + 1} done`}
@@ -382,7 +387,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                   typeof sets[0]?.weight === 'number' ? sets[0].weight : 60;
                 onOpenPlateCalc(currentWeight, exercise.name);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--accent-primary)]/10 hover:bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/25 rounded-xl text-xs font-bold transition shadow-xs btn-tactile cursor-pointer font-mono"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#36D6B0]/10 hover:bg-[#36D6B0]/20 text-[#36D6B0] border border-[#36D6B0]/25 rounded-xl text-xs font-bold transition shadow-xs btn-tactile cursor-pointer font-mono"
             >
               <Calculator className="w-3.5 h-3.5" />
               Plate Math
@@ -391,7 +396,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
 
           {highest1RM > 0 && (
             <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono text-[var(--text-muted)] pl-2">
-              <Zap className="w-3 h-3 text-[var(--accent-primary)]" />
+              <Zap className="w-3 h-3 text-[#B7FF4A]" />
               Peak 1RM: <strong className="text-[var(--text-primary)] font-bold tabular-nums">{highest1RM} kg</strong>
             </span>
           )}
@@ -401,7 +406,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
           {/* Workout Substitution Finder Shortcut */}
           <Link
             href={`/tools/workout-substitution-finder?exercise=${encodeURIComponent(exercise.name)}`}
-            className="flex items-center gap-1 text-xs font-bold text-[var(--accent-primary)] hover:underline transition font-mono"
+            className="flex items-center gap-1 text-xs font-bold text-[#B7FF4A] hover:underline transition font-mono"
             title={`Find equipment alternatives for ${exercise.name}`}
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -418,31 +423,42 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
             className="flex items-center gap-1 text-xs font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition btn-tactile cursor-pointer font-mono"
           >
             <span>Biomechanics & Cues</span>
-            {showCues ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            {showCues ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      {/* Collapsible Form Cues Section */}
+      {/* Expandable Biomechanics & Execution Cues Drawer */}
       {showCues && (
-        <div className="p-4 bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)] space-y-2.5 animate-in slide-in-from-top-2 duration-200">
-          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-3.5 shadow-xs">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent-primary)] block mb-1 font-mono">
-              Execution Cue
+        <div className="p-4 sm:p-5 bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] space-y-3 font-sans">
+          <div className="flex items-center gap-2">
+            <Info className="w-4 h-4 text-[#B7FF4A] shrink-0" />
+            <span className="font-mono uppercase font-bold text-[#B7FF4A]">
+              Scientific Execution Protocol
             </span>
-            <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">{exercise.cue}</p>
           </div>
+          <p className="leading-relaxed pl-6 text-[var(--text-primary)]">
+            {exercise.cue}
+          </p>
 
-          {exercise.biomechanicsTip && (
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-3.5 shadow-xs">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 block mb-1 font-mono">
-                Hypertrophy Biomechanics
-              </span>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
-                {exercise.biomechanicsTip}
-              </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pl-6 pt-2 font-mono text-[11px]">
+            <div className="bg-[var(--bg-card)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+              <span className="text-[var(--text-muted)] uppercase block text-[9px]">Primary Muscle</span>
+              <strong className="text-[var(--text-primary)]">{exercise.primaryMuscle}</strong>
             </div>
-          )}
+            <div className="bg-[var(--bg-card)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+              <span className="text-[var(--text-muted)] uppercase block text-[9px]">Secondary Muscle</span>
+              <strong className="text-[var(--text-primary)]">
+                {exercise.secondaryMuscles && exercise.secondaryMuscles.length > 0
+                  ? exercise.secondaryMuscles.join(', ')
+                  : 'Stabilizers'}
+              </strong>
+            </div>
+            <div className="bg-[var(--bg-card)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+              <span className="text-[var(--text-muted)] uppercase block text-[9px]">Rep Bracket</span>
+              <strong className="text-[#B7FF4A]">{exercise.minReps} – {exercise.maxReps} reps</strong>
+            </div>
+          </div>
         </div>
       )}
     </div>

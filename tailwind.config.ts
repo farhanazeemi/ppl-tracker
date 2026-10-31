@@ -31,7 +31,7 @@ const config: Config = {
           subtle: "var(--border-subtle)",
           strong: "var(--border-strong)",
         },
-        // Athletic split indicators
+        // Athletic split indicators & brand accents
         brand: {
           push: "#f97316", // Amber-Orange
           pull: "#0ea5e9", // Sky-Cyan
@@ -46,6 +46,15 @@ const config: Config = {
         sans: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
         display: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+      boxShadow: {
+        "glow-volt": "0 0 25px -4px rgba(183, 255, 74, 0.25)",
+        "glow-teal": "0 0 25px -4px rgba(54, 214, 176, 0.25)",
+        "bezel": "inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.5)",
+      },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        smooth: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       animation: {
         "pulse-subtle": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",

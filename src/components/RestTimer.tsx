@@ -121,18 +121,18 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   const percent = totalSeconds > 0 ? ((totalSeconds - remaining) / totalSeconds) * 100 : 0;
 
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-4 shadow-sm transition-all">
-      <div className="flex items-center justify-between gap-3 mb-2.5">
+    <div className="card-bento p-5 shadow-sm transition-all border-[var(--border-subtle)]">
+      <div className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] rounded-xl border border-[var(--accent-primary)]/20">
+          <div className="p-2 bg-[#B7FF4A]/10 text-[#B7FF4A] rounded-xl border border-[#B7FF4A]/25">
             <Timer className="w-4 h-4" />
           </div>
           <div>
             <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold block">
               Auto Rest Timer
             </span>
-            <span className="text-xs text-[var(--text-muted)] hidden sm:inline">
-              Triggers automatically on set completion
+            <span className="text-xs text-[var(--text-secondary)] hidden sm:inline font-sans">
+              Paces intervals automatically on set completion
             </span>
           </div>
         </div>
@@ -140,34 +140,34 @@ export const RestTimer: React.FC<RestTimerProps> = ({
         {/* Audio Toggle */}
         <button
           onClick={onToggleSound}
-          className={`p-1.5 px-2 rounded-xl border text-xs flex items-center gap-1.5 transition cursor-pointer ${
+          className={`p-1.5 px-2.5 rounded-xl border text-xs flex items-center gap-1.5 transition btn-tactile cursor-pointer ${
             soundEnabled
-              ? 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--border-subtle)]'
-              : 'bg-[var(--bg-elevated)]/40 border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              ? 'bg-[#B7FF4A]/10 border-[#B7FF4A]/30 text-[#B7FF4A]'
+              : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
           }`}
           title={soundEnabled ? 'Mute Audio Cues' : 'Enable Louder Audio Cues'}
           aria-label={soundEnabled ? 'Mute Audio Cues' : 'Enable Louder Audio Cues'}
         >
           {soundEnabled ? (
-            <Volume2 className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+            <Volume2 className="w-3.5 h-3.5 text-[#B7FF4A]" />
           ) : (
             <VolumeX className="w-3.5 h-3.5" />
           )}
-          <span className="text-[10px] font-mono font-bold">{soundEnabled ? 'LOUD' : 'OFF'}</span>
+          <span className="text-[10px] font-mono font-bold">{soundEnabled ? 'AUDIO ON' : 'MUTED'}</span>
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[var(--bg-elevated)]/60 border border-[var(--border-subtle)] rounded-2xl p-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[var(--bg-elevated)]/60 border border-[var(--border-subtle)] rounded-2xl p-3.5">
         {/* Digital Display & Controls */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <div
-              className={`font-mono text-2xl sm:text-3xl font-black tracking-tight px-3 py-1 rounded-xl border tabular-nums ${
+              className={`font-mono text-2xl sm:text-3xl font-black tracking-tight px-3.5 py-1.5 rounded-xl border tabular-nums transition-all ${
                 isDone
                   ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 animate-pulse'
                   : isRunning
-                  ? 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border-[var(--accent-primary)]/40'
-                  : 'bg-[var(--bg-card)] text-[var(--text-primary)] border-[var(--border-subtle)] shadow-sm'
+                  ? 'bg-[#B7FF4A]/15 text-[#B7FF4A] border-[#B7FF4A]/35 shadow-sm'
+                  : 'bg-[var(--bg-card)] text-[var(--text-primary)] border-[var(--border-subtle)] shadow-xs'
               }`}
             >
               {isDone ? 'READY!' : formatTime(remaining)}
@@ -177,10 +177,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
           <div className="flex items-center gap-1.5">
             <button
               onClick={togglePause}
-              className={`p-2.5 rounded-xl font-bold text-xs border transition active:scale-95 flex items-center justify-center cursor-pointer ${
+              className={`p-2.5 rounded-xl font-bold text-xs border transition active:scale-95 flex items-center justify-center cursor-pointer btn-tactile ${
                 isRunning
-                  ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] hover:bg-[var(--accent-hover)]'
-                  : 'bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] border-[var(--border-subtle)] shadow-sm'
+                  ? 'bg-[#B7FF4A] text-[#090B0F] border-[#B7FF4A] shadow-md shadow-[#B7FF4A]/20'
+                  : 'bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] border-[var(--border-subtle)] shadow-xs'
               }`}
               title={isRunning ? 'Pause' : 'Play'}
               aria-label={isRunning ? 'Pause rest timer' : 'Start rest timer'}
@@ -189,7 +189,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={handleReset}
-              className="p-2.5 bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl transition shadow-sm active:scale-95 cursor-pointer"
+              className="p-2.5 bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl transition shadow-xs active:scale-95 cursor-pointer btn-tactile"
               title="Reset"
               aria-label="Reset rest timer"
             >
@@ -197,7 +197,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={() => adjustTime(-15)}
-              className="p-2 bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl text-xs shadow-sm transition active:scale-95 cursor-pointer"
+              className="p-2 bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl text-xs shadow-xs transition active:scale-95 cursor-pointer btn-tactile font-mono font-bold"
               title="Subtract 15 seconds"
               aria-label="Subtract 15 seconds"
             >
@@ -205,7 +205,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             </button>
             <button
               onClick={() => adjustTime(15)}
-              className="p-2 bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl text-xs shadow-sm transition active:scale-95 cursor-pointer"
+              className="p-2 bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl text-xs shadow-xs transition active:scale-95 cursor-pointer btn-tactile font-mono font-bold"
               title="Add 15 seconds"
               aria-label="Add 15 seconds"
             >
@@ -226,10 +226,10 @@ export const RestTimer: React.FC<RestTimerProps> = ({
             <button
               key={preset.sec}
               onClick={() => handleStart(preset.sec)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition active:scale-95 border cursor-pointer tabular-nums ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition active:scale-95 border cursor-pointer tabular-nums btn-tactile ${
                 totalSeconds === preset.sec && isRunning
-                  ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] shadow-sm'
-                  : 'bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] border-[var(--border-subtle)] shadow-sm'
+                  ? 'bg-[#B7FF4A] text-[#090B0F] border-[#B7FF4A] shadow-xs'
+                  : 'bg-[var(--bg-card)] hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] border-[var(--border-subtle)] shadow-xs'
               }`}
             >
               {preset.label}
@@ -239,20 +239,20 @@ export const RestTimer: React.FC<RestTimerProps> = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-[var(--bg-elevated)] h-2 rounded-full mt-2.5 overflow-hidden border border-[var(--border-subtle)]">
+      <div className="w-full bg-[var(--bg-elevated)] h-2 rounded-full mt-3 overflow-hidden border border-[var(--border-subtle)]">
         <div
           className={`h-full transition-all duration-300 ${
-            isDone ? 'bg-emerald-500' : 'bg-[var(--accent-primary)]'
+            isDone ? 'bg-emerald-500' : 'bg-gradient-to-r from-[#B7FF4A] to-[#36D6B0]'
           }`}
           style={{ width: `${percent}%` }}
         />
       </div>
 
-      {/* Floating Sticky Mini-Timer when Active (Positioned safely above mobile bottom nav) */}
+      {/* Floating Sticky Mini-Timer when Active */}
       {(isRunning || isDone) && (
-        <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 bg-[var(--bg-card)]/95 text-[var(--text-primary)] border border-[var(--accent-primary)]/40 rounded-2xl p-2.5 sm:px-4 sm:py-3 shadow-2xl backdrop-blur-md flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 bg-[var(--bg-card)]/95 text-[var(--text-primary)] border border-[#B7FF4A]/40 rounded-2xl p-2.5 sm:px-4 sm:py-3 shadow-2xl backdrop-blur-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200">
           <div className="flex items-center gap-2">
-            <Timer className={`w-4 h-4 ${isDone ? 'text-emerald-400 animate-bounce' : 'text-[var(--accent-primary)]'}`} />
+            <Timer className={`w-4 h-4 ${isDone ? 'text-emerald-400 animate-bounce' : 'text-[#B7FF4A]'}`} />
             <span className="font-mono text-sm sm:text-base font-bold text-[var(--text-primary)] tabular-nums">
               {isDone ? 'REST DONE!' : formatTime(remaining)}
             </span>
@@ -260,21 +260,21 @@ export const RestTimer: React.FC<RestTimerProps> = ({
           <div className="flex items-center gap-1">
             <button
               onClick={togglePause}
-              className="p-1.5 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-black rounded-lg transition active:scale-90 cursor-pointer"
+              className="p-1.5 bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] rounded-lg transition active:scale-90 cursor-pointer btn-tactile"
               aria-label={isRunning ? 'Pause rest timer' : 'Resume rest timer'}
             >
               {isRunning ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
             </button>
             <button
               onClick={() => adjustTime(15)}
-              className="px-2 py-1 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] rounded-lg text-xs font-mono font-bold transition cursor-pointer"
+              className="px-2 py-1 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] rounded-lg text-xs font-mono font-bold transition cursor-pointer btn-tactile"
               aria-label="Add 15 seconds"
             >
               +15s
             </button>
             <button
               onClick={handleReset}
-              className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer"
+              className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer btn-tactile"
               aria-label="Stop rest timer"
             >
               <RotateCcw className="w-3.5 h-3.5" />

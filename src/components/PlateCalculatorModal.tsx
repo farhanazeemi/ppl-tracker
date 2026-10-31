@@ -2,7 +2,7 @@
 
 import { useModalAccessibility } from '../utils/useModalAccessibility';
 import React, { useState, useEffect } from 'react';
-import { X, Dumbbell, Info } from 'lucide-react';
+import { X, Dumbbell, Info, Scale } from 'lucide-react';
 import { calculatePlates } from '../utils/helpers';
 import { playClickSound, playPopSound } from '../utils/audio';
 
@@ -23,7 +23,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
 }) => {
   const [targetWeight, setTargetWeight] = useState<number>(initialWeight);
   const [barWeight, setBarWeight] = useState<number>(20);
-  useModalAccessibility(isOpen, onClose); // Standard Olympic Bar = 20kg
+  useModalAccessibility(isOpen, onClose);
 
   useEffect(() => {
     if (initialWeight && initialWeight > 0) {
@@ -58,166 +58,171 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-6 shadow-2xl overflow-hidden text-[var(--text-primary)] card-bento">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)]">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2.5 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] rounded-2xl border border-[var(--accent-primary)]/20">
-              <Dumbbell className="w-5 h-5" />
+      <div className="relative w-full max-w-lg bezel-outer">
+        <div className="bezel-inner p-6 space-y-5 text-[var(--text-primary)]">
+          {/* Header */}
+          <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)]">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2.5 bg-[#B7FF4A]/10 text-[#B7FF4A] rounded-2xl border border-[#B7FF4A]/25">
+                <Scale className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-display font-black uppercase text-[var(--text-primary)] tracking-tight">
+                  Barbell Plate Calculator
+                </h3>
+                <p className="text-xs text-[var(--text-muted)] font-medium font-sans">{exerciseName}</p>
+              </div>
             </div>
+            <button
+              onClick={handleClose}
+              className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition btn-tactile cursor-pointer"
+              aria-label="Close plate calculator"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Target Weight Input */}
+          <div className="space-y-3">
             <div>
-              <h3 className="text-base font-display font-bold uppercase text-[var(--text-primary)] tracking-tight">
-                Barbell Plate Calculator
-              </h3>
-              <p className="text-xs text-[var(--text-muted)] font-medium">{exerciseName}</p>
+              <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1.5 font-bold">
+                Target Total Weight (kg)
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  step="2.5"
+                  min={barWeight}
+                  value={targetWeight}
+                  onChange={(e) => setTargetWeight(parseFloat(e.target.value) || barWeight)}
+                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl px-4 py-2.5 text-lg font-mono tabular-nums font-bold text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A]"
+                />
+                <span className="text-sm font-bold text-[var(--text-secondary)] px-2 font-mono">KG</span>
+              </div>
             </div>
-          </div>
-          <button
-            onClick={handleClose}
-            className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition btn-tactile cursor-pointer"
-            aria-label="Close plate calculator"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
 
-        {/* Inputs */}
-        <div className="mt-5 space-y-4">
-          <div>
-            <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1.5">
-              Target Total Weight (kg)
-            </label>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                step="2.5"
-                min={barWeight}
-                value={targetWeight}
-                onChange={(e) => setTargetWeight(parseFloat(e.target.value) || barWeight)}
-                className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl px-4 py-2.5 text-lg font-mono tabular-nums font-bold text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)]"
-              />
-              <span className="text-sm font-bold text-[var(--text-secondary)] px-2 font-mono">KG</span>
-            </div>
-          </div>
-
-          {/* Quick Increment Buttons */}
-          <div className="flex flex-wrap gap-2">
-            {[-10, -2.5, +2.5, +5, +10, +20].map((delta) => (
-              <button
-                key={delta}
-                onClick={() => addWeight(delta)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono tabular-nums font-bold border transition btn-tactile cursor-pointer ${
-                  delta > 0
-                    ? 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/25 hover:bg-[var(--accent-primary)]/20'
-                    : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
-                }`}
-              >
-                {delta > 0 ? `+${delta} kg` : `${delta} kg`}
-              </button>
-            ))}
-          </div>
-
-          {/* Barbell Weight Selection */}
-          <div className="pt-2">
-            <span className="block text-xs font-mono uppercase text-[var(--text-muted)] mb-1.5">
-              Barbell Weight:
-            </span>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: 'Olympic Bar', weight: 20 },
-                { label: "Women's / Tech", weight: 15 },
-                { label: 'EZ Curl Bar', weight: 10 },
-              ].map((bar) => (
+            {/* Quick Increment Buttons */}
+            <div className="flex flex-wrap gap-2">
+              {[-10, -2.5, +2.5, +5, +10, +20].map((delta) => (
                 <button
-                  key={bar.weight}
-                  onClick={() => setBarWeight(bar.weight)}
-                  className={`py-2 px-2 rounded-2xl text-xs font-bold border text-center transition btn-tactile cursor-pointer font-mono tabular-nums ${
-                    barWeight === bar.weight
-                      ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] shadow-sm'
+                  key={delta}
+                  onClick={() => addWeight(delta)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono tabular-nums font-bold border transition btn-tactile cursor-pointer ${
+                    delta > 0
+                      ? 'bg-[#B7FF4A]/10 text-[#B7FF4A] border-[#B7FF4A]/30 hover:bg-[#B7FF4A]/20'
                       : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
                   }`}
                 >
-                  {bar.label} ({bar.weight}kg)
+                  {delta > 0 ? `+${delta} kg` : `${delta} kg`}
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* Visual Barbell Sleeve Breakdown */}
-          <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-3xl p-4 mt-4">
-            <div className="flex items-center justify-between text-xs mb-3 text-[var(--text-muted)] font-mono tabular-nums">
-              <span className="font-bold text-[var(--text-primary)]">Load Per Sleeve Side:</span>
-              <span className="font-mono text-[var(--accent-primary)] font-black text-sm">
-                {result.weightPerSide} kg / side
+            {/* Barbell Weight Selection */}
+            <div className="pt-2">
+              <span className="block text-xs font-mono uppercase text-[var(--text-muted)] mb-1.5 font-bold">
+                Barbell Base Weight:
               </span>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: 'Olympic Bar', weight: 20 },
+                  { label: "Women's / Tech", weight: 15 },
+                  { label: 'EZ Curl Bar', weight: 10 },
+                ].map((bar) => (
+                  <button
+                    key={bar.weight}
+                    onClick={() => {
+                      playPopSound(soundEnabled);
+                      setBarWeight(bar.weight);
+                    }}
+                    className={`py-2 px-2 rounded-2xl text-xs font-bold border text-center transition btn-tactile cursor-pointer font-mono tabular-nums ${
+                      barWeight === bar.weight
+                        ? 'bg-[#B7FF4A] text-[#090B0F] border-[#B7FF4A] shadow-xs'
+                        : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
+                    }`}
+                  >
+                    {bar.label} ({bar.weight}kg)
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Visual Plate Stack */}
-            <div className="min-h-[80px] bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar shadow-xs">
-              <div className="w-4 h-16 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-l-md shrink-0 flex items-center justify-center text-[9px] text-[var(--text-muted)] font-mono -rotate-90">
-                Collar
+            {/* Visual Barbell Sleeve Breakdown */}
+            <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-3xl p-4 mt-4 space-y-3">
+              <div className="flex items-center justify-between text-xs text-[var(--text-muted)] font-mono tabular-nums">
+                <span className="font-bold text-[var(--text-primary)]">Load Per Sleeve Side:</span>
+                <span className="font-mono text-[#B7FF4A] font-black text-sm">
+                  {result.weightPerSide} kg / side
+                </span>
               </div>
 
-              {result.platesPerSide.length === 0 ? (
-                <div className="text-xs text-[var(--text-muted)] italic mx-auto">
-                  Only the empty {barWeight}kg barbell
+              {/* Visual Plate Stack */}
+              <div className="min-h-[84px] bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar shadow-xs">
+                <div className="w-4 h-16 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-l-md shrink-0 flex items-center justify-center text-[9px] text-[var(--text-muted)] font-mono -rotate-90">
+                  Collar
                 </div>
-              ) : (
-                result.platesPerSide.flatMap((p: { weight: number; count: number }) =>
-                  Array.from({ length: p.count }).map((_, idx) => {
-                    const style = plateColors[p.weight] || {
-                      bg: 'bg-zinc-200 dark:bg-zinc-700',
-                      text: 'text-zinc-900 dark:text-white',
-                      border: 'border-zinc-300 dark:border-zinc-600',
-                    };
-                    const heightClass =
-                      p.weight >= 20 ? 'h-20 w-8' : p.weight >= 10 ? 'h-16 w-7' : 'h-12 w-6';
 
-                    return (
-                      <div
-                        key={`${p.weight}-${idx}`}
-                        className={`${style.bg} ${style.border} ${style.text} ${heightClass} border rounded-md shrink-0 flex flex-col items-center justify-center font-mono tabular-nums text-[10px] font-bold shadow-xs`}
-                      >
-                        <span>{p.weight}</span>
-                        <span className="text-[8px] opacity-75">kg</span>
-                      </div>
-                    );
-                  })
-                )
+                {result.platesPerSide.length === 0 ? (
+                  <div className="text-xs text-[var(--text-muted)] italic mx-auto">
+                    Only the empty {barWeight}kg barbell
+                  </div>
+                ) : (
+                  result.platesPerSide.flatMap((p: { weight: number; count: number }) =>
+                    Array.from({ length: p.count }).map((_, idx) => {
+                      const style = plateColors[p.weight] || {
+                        bg: 'bg-zinc-200 dark:bg-zinc-700',
+                        text: 'text-zinc-900 dark:text-white',
+                        border: 'border-zinc-300 dark:border-zinc-600',
+                      };
+                      const heightClass =
+                        p.weight >= 20 ? 'h-20 w-8' : p.weight >= 10 ? 'h-16 w-7' : 'h-12 w-6';
+
+                      return (
+                        <div
+                          key={`${p.weight}-${idx}`}
+                          className={`${style.bg} ${style.border} ${style.text} ${heightClass} border rounded-md shrink-0 flex flex-col items-center justify-center font-mono tabular-nums text-[10px] font-bold shadow-xs`}
+                        >
+                          <span>{p.weight}</span>
+                          <span className="text-[8px] opacity-75">kg</span>
+                        </div>
+                      );
+                    })
+                  )
+                )}
+              </div>
+
+              {/* Plate Summary Badges */}
+              <div className="flex flex-wrap gap-2">
+                {result.platesPerSide.map((p: { weight: number; count: number }) => (
+                  <span
+                    key={p.weight}
+                    className="px-2.5 py-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-xs font-mono tabular-nums font-bold text-[var(--text-secondary)] shadow-xs"
+                  >
+                    <strong className="text-[#B7FF4A] font-black">{p.count}×</strong> {p.weight}kg
+                  </span>
+                ))}
+              </div>
+
+              {result.remainder > 0 && (
+                <div className="text-xs text-[#B7FF4A] flex items-center gap-1 font-mono pt-1">
+                  <Info className="w-3.5 h-3.5" />
+                  <span>
+                    Remainder of {result.remainder * 2}kg cannot be divided with standard plates.
+                  </span>
+                </div>
               )}
             </div>
-
-            {/* Plate Summary List */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              {result.platesPerSide.map((p: { weight: number; count: number }) => (
-                <span
-                  key={p.weight}
-                  className="px-2.5 py-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-xs font-mono tabular-nums font-bold text-[var(--text-secondary)] shadow-xs"
-                >
-                  <strong className="text-[var(--accent-primary)] font-black">{p.count}×</strong> {p.weight}kg
-                </span>
-              ))}
-            </div>
-
-            {result.remainder > 0 && (
-              <div className="mt-2 text-xs text-[var(--accent-primary)] flex items-center gap-1 font-mono">
-                <Info className="w-3.5 h-3.5" />
-                <span>
-                  Remainder of {result.remainder * 2}kg cannot be divided with standard plates.
-                </span>
-              </div>
-            )}
           </div>
-        </div>
 
-        {/* Done Button */}
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-[var(--accent-primary)] hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider transition btn-tactile shadow-md shadow-[var(--accent-primary)]/20 cursor-pointer"
-          >
-            Apply & Close
-          </button>
+          {/* Apply & Close Button */}
+          <div className="pt-2 flex justify-end">
+            <button
+              onClick={handleClose}
+              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] font-display font-black text-xs uppercase tracking-wider transition btn-tactile shadow-md shadow-[#B7FF4A]/20 cursor-pointer"
+            >
+              Apply & Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

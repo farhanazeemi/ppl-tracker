@@ -20,7 +20,7 @@ import {
   Dumbbell,
   Layers,
   Target,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { TrainingSplitId } from '../types/auth';
@@ -103,12 +103,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   if (!isOpen || !user) return null;
 
-  const showNotification = (success: string, error: string = '') => {
-    setSuccessMsg(success);
-    setErrorMsg(error);
-    if (success) {
-      setTimeout(() => setSuccessMsg(''), 4000);
-    }
+  const showNotification = (msg: string) => {
+    setSuccessMsg(msg);
+    setTimeout(() => setSuccessMsg(''), 3000);
   };
 
   const handleSavePersonalInfo = async (e: React.FormEvent) => {
@@ -212,390 +209,392 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden text-[var(--text-primary)] card-bento">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)] shrink-0 relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-[var(--accent-primary)] text-black flex items-center justify-center font-display font-black text-lg shadow-sm">
-              {getInitials(user.name)}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-display font-bold text-[var(--text-primary)] uppercase tracking-tight">
-                  {user.name}
-                </h3>
-                <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/25 font-mono">
-                  {user.fitnessGoal}
-                </span>
+      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col bezel-outer">
+        <div className="bezel-inner p-6 sm:p-7 flex flex-col flex-1 overflow-hidden space-y-4 text-[var(--text-primary)]">
+          {/* Modal Header */}
+          <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)] shrink-0 relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#B7FF4A] text-[#090B0F] flex items-center justify-center font-display font-black text-lg shadow-sm">
+                {getInitials(user.name)}
               </div>
-              <p className="text-xs text-[var(--text-muted)] font-mono mt-0.5">{user.email}</p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition cursor-pointer btn-tactile"
-            aria-label="Close profile modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Tab Selection */}
-        <div className="grid grid-cols-3 p-1 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border-subtle)] mt-4 shrink-0 relative z-10 font-mono text-xs">
-          <button
-            type="button"
-            onClick={() => setActiveTab('info')}
-            className={`py-2 font-bold rounded-xl transition cursor-pointer btn-tactile ${
-              activeTab === 'info'
-                ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            Biometrics
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('split')}
-            className={`py-2 font-bold rounded-xl transition cursor-pointer btn-tactile ${
-              activeTab === 'split'
-                ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            Split & Priorities
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('security')}
-            className={`py-2 font-bold rounded-xl transition cursor-pointer btn-tactile ${
-              activeTab === 'security'
-                ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-          >
-            Security
-          </button>
-        </div>
-
-        {/* Feedback alerts */}
-        {successMsg && (
-          <div className="mt-3 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-xs text-emerald-500 font-medium flex items-center gap-2 animate-in fade-in">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>{successMsg}</span>
-          </div>
-        )}
-
-        {errorMsg && (
-          <div className="mt-3 p-3 bg-red-500/10 border border-red-500/30 rounded-2xl text-xs text-red-500 font-medium flex items-center gap-2 animate-in fade-in">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{errorMsg}</span>
-          </div>
-        )}
-
-        {/* Form Body */}
-        <div className="overflow-y-auto mt-4 space-y-4 pr-1 relative z-10 flex-1">
-          {activeTab === 'info' && (
-            <form onSubmit={handleSavePersonalInfo} className="space-y-4">
               <div>
-                <label className="block text-xs font-mono uppercase text-zinc-700 dark:text-zinc-300 mb-1">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl pl-9 pr-3 py-2.5 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-1 focus:ring-[var(--accent-primary)] transition"
-                  />
-                </div>
-              </div>
-
-              {/* Age, Height, Weight row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1 flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                    <span>Age</span>
-                  </label>
-                  <input
-                    type="number"
-                    min="10"
-                    max="110"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value === '' ? '' : parseInt(e.target.value))}
-                    className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[var(--accent-primary)]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1 flex items-center gap-1">
-                    <Ruler className="w-3.5 h-3.5 text-sky-500" />
-                    <span>Height (cm)</span>
-                  </label>
-                  <input
-                    type="number"
-                    min="50"
-                    max="260"
-                    value={height}
-                    onChange={(e) => setHeight(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                    className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[var(--accent-primary)]"
-                  />
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-mono uppercase text-[var(--text-secondary)] flex items-center gap-1">
-                      <Scale className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>Weight</span>
-                    </label>
-                    <div className="flex gap-1 text-[10px] font-mono font-bold">
-                      <button
-                        type="button"
-                        onClick={() => setPreferredUnit('kg')}
-                        className={`px-1.5 py-0.5 rounded-md transition-colors ${
-                          preferredUnit === 'kg'
-                            ? 'bg-[var(--accent-primary)] text-black'
-                            : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                        }`}
-                      >
-                        KG
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPreferredUnit('lbs')}
-                        className={`px-1.5 py-0.5 rounded-md transition-colors ${
-                          preferredUnit === 'lbs'
-                            ? 'bg-[var(--accent-primary)] text-black'
-                            : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                        }`}
-                      >
-                        LBS
-                      </button>
-                    </div>
-                  </div>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="20"
-                    max="400"
-                    value={weight}
-                    onChange={(e) => setWeight(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                    className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[var(--accent-primary)]"
-                  />
-                </div>
-              </div>
-
-              {/* Training Goal */}
-              <div>
-                <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1 flex items-center gap-1">
-                  <Dumbbell className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                  <span>Primary Hypertrophy Goal</span>
-                </label>
-                <select
-                  value={fitnessGoal}
-                  onChange={(e) => setFitnessGoal(e.target.value as any)}
-                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
-                >
-                  <option value="Hypertrophy">Hypertrophy (Muscle Size & Density)</option>
-                  <option value="Strength">Strength & Power Overload</option>
-                  <option value="Cutting">Cutting & Muscle Preservation</option>
-                  <option value="Body Recomposition">Body Recomposition</option>
-                </select>
-              </div>
-
-              <div className="pt-2 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="px-5 py-2.5 bg-[var(--accent-primary)] hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition btn-tactile active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Save className="w-4 h-4" /> Save Details
-                </button>
-              </div>
-            </form>
-          )}
-
-          {activeTab === 'split' && (
-            <form onSubmit={handleSavePersonalInfo} className="space-y-5">
-              <div>
-                <label className="block text-xs font-mono uppercase text-zinc-700 dark:text-zinc-300 mb-2">
-                  Active Training Split
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {SPLIT_CHOICES.map((sc) => (
-                    <button
-                      key={sc.id}
-                      type="button"
-                      onClick={() => setSelectedSplit(sc.id)}
-                      className={`p-3 rounded-xl border text-left transition btn-tactile cursor-pointer ${
-                        selectedSplit === sc.id
-                          ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] ring-1 ring-[var(--accent-primary)]/30'
-                          : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                      }`}
-                    >
-                      <div className="text-xs font-bold">{sc.label}</div>
-                      <div className="text-[10px] font-mono text-[var(--text-muted)] mt-0.5">{sc.days} / Week</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-mono uppercase text-[var(--text-secondary)]">
-                    Lagging Muscle Weak Points
-                  </label>
-                  <span className="text-[11px] font-mono tabular-nums text-[var(--accent-primary)] font-bold">
-                    {weakPoints.length} selected
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-display font-black text-[var(--text-primary)] uppercase tracking-tight">
+                    {user.name}
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase bg-[#B7FF4A]/10 text-[#B7FF4A] border border-[#B7FF4A]/25 font-mono">
+                    {user.fitnessGoal}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {WEAK_POINTS_LIST.map((wp) => {
-                    const isSelected = weakPoints.includes(wp);
-                    return (
+                <p className="text-xs text-[var(--text-muted)] font-mono mt-0.5">{user.email}</p>
+              </div>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition cursor-pointer btn-tactile"
+              aria-label="Close profile modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Tab Selection */}
+          <div className="grid grid-cols-3 p-1 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border-subtle)] shrink-0 relative z-10 font-mono text-xs">
+            <button
+              type="button"
+              onClick={() => setActiveTab('info')}
+              className={`py-2 font-bold rounded-xl transition cursor-pointer btn-tactile ${
+                activeTab === 'info'
+                  ? 'bg-[#B7FF4A] text-[#090B0F] shadow-xs font-black'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Biometrics
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('split')}
+              className={`py-2 font-bold rounded-xl transition cursor-pointer btn-tactile ${
+                activeTab === 'split'
+                  ? 'bg-[#B7FF4A] text-[#090B0F] shadow-xs font-black'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Split & Focus
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('security')}
+              className={`py-2 font-bold rounded-xl transition cursor-pointer btn-tactile ${
+                activeTab === 'security'
+                  ? 'bg-[#B7FF4A] text-[#090B0F] shadow-xs font-black'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Security
+            </button>
+          </div>
+
+          {/* Feedback alerts */}
+          {successMsg && (
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-xs text-emerald-400 font-medium flex items-center gap-2 animate-in fade-in font-sans">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              <span>{successMsg}</span>
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-2xl text-xs text-red-500 font-medium flex items-center gap-2 animate-in fade-in font-sans">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
+          {/* Form Body */}
+          <div className="overflow-y-auto space-y-4 pr-1 relative z-10 flex-1">
+            {activeTab === 'info' && (
+              <form onSubmit={handleSavePersonalInfo} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl pl-10 pr-4 py-2.5 text-base sm:text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A] transition font-sans"
+                    />
+                  </div>
+                </div>
+
+                {/* Age, Height, Weight row */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-[#B7FF4A]" />
+                      <span>Age</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="10"
+                      max="110"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value === '' ? '' : parseInt(e.target.value))}
+                      className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-base sm:text-sm text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[#B7FF4A]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+                      <Ruler className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Height (cm)</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="50"
+                      max="260"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value === '' ? '' : parseFloat(e.target.value))}
+                      className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-base sm:text-sm text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[#B7FF4A]"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-xs font-mono uppercase text-[var(--text-secondary)] flex items-center gap-1">
+                        <Scale className="w-3.5 h-3.5 text-[#36D6B0]" />
+                        <span>Weight</span>
+                      </label>
+                      <div className="flex gap-1 text-[10px] font-mono font-bold">
+                        <button
+                          type="button"
+                          onClick={() => setPreferredUnit('kg')}
+                          className={`px-1.5 py-0.5 rounded-md transition-colors ${
+                            preferredUnit === 'kg'
+                              ? 'bg-[#B7FF4A] text-[#090B0F]'
+                              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                          }`}
+                        >
+                          KG
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPreferredUnit('lbs')}
+                          className={`px-1.5 py-0.5 rounded-md transition-colors ${
+                            preferredUnit === 'lbs'
+                              ? 'bg-[#B7FF4A] text-[#090B0F]'
+                              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                          }`}
+                        >
+                          LBS
+                        </button>
+                      </div>
+                    </div>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="20"
+                      max="400"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value === '' ? '' : parseFloat(e.target.value))}
+                      className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-base sm:text-sm text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[#B7FF4A]"
+                    />
+                  </div>
+                </div>
+
+                {/* Training Goal */}
+                <div>
+                  <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1 flex items-center gap-1">
+                    <Dumbbell className="w-3.5 h-3.5 text-[#B7FF4A]" />
+                    <span>Primary Hypertrophy Goal</span>
+                  </label>
+                  <select
+                    value={fitnessGoal}
+                    onChange={(e) => setFitnessGoal(e.target.value as any)}
+                    className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A]"
+                  >
+                    <option value="Hypertrophy">Hypertrophy (Muscle Size & Density)</option>
+                    <option value="Strength">Strength & Power Overload</option>
+                    <option value="Cutting">Cutting & Muscle Preservation</option>
+                    <option value="Body Recomposition">Body Recomposition</option>
+                  </select>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="px-5 py-2.5 bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] font-display font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-[#B7FF4A]/20 transition btn-tactile disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Save className="w-4 h-4" /> Save Details
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {activeTab === 'split' && (
+              <form onSubmit={handleSavePersonalInfo} className="space-y-5">
+                <div>
+                  <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-2">
+                    Active Training Split
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {SPLIT_CHOICES.map((sc) => (
                       <button
-                        key={wp}
+                        key={sc.id}
                         type="button"
-                        onClick={() => toggleWeakPoint(wp)}
-                        className={`px-3 py-1.5 rounded-xl border text-xs font-mono transition btn-tactile cursor-pointer ${
-                          isSelected
-                            ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] font-bold'
+                        onClick={() => setSelectedSplit(sc.id)}
+                        className={`p-3 rounded-xl border text-left transition btn-tactile cursor-pointer ${
+                          selectedSplit === sc.id
+                            ? 'border-[#B7FF4A] bg-[#B7FF4A]/10 text-[#B7FF4A] ring-1 ring-[#B7FF4A]/30'
                             : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                         }`}
                       >
-                        {wp}
+                        <div className="text-xs font-bold font-display uppercase">{sc.label}</div>
+                        <div className="text-[10px] font-mono text-[var(--text-muted)] mt-0.5">{sc.days} / Week</div>
                       </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {onOpenOnboarding && (
-                <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)] flex items-center justify-between">
-                  <span className="text-xs text-[var(--text-secondary)]">
-                    Want the full guided setup experience?
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onOpenOnboarding();
-                    }}
-                    className="text-xs font-mono text-[var(--accent-primary)] font-bold hover:underline cursor-pointer flex items-center gap-1"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" /> Re-run Setup Wizard
-                  </button>
-                </div>
-              )}
-
-              <div className="pt-2 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="px-5 py-2.5 bg-[var(--accent-primary)] hover:opacity-95 text-black font-display font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition btn-tactile active:scale-95 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Save className="w-4 h-4" /> Save Split Settings
-                </button>
-              </div>
-            </form>
-          )}
-
-          {activeTab === 'security' && (
-            <div className="space-y-5">
-              {/* Email update */}
-              <form onSubmit={handleUpdateEmail} className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-3">
-                <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] pb-2">
-                  <Mail className="w-4 h-4 text-sky-500" />
-                  <h4 className="text-xs font-mono font-bold text-[var(--text-primary)] uppercase tracking-wider">
-                    Update Email Address
-                  </h4>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
-                  <input
-                    type="email"
-                    required
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
-                    placeholder="new-email@domain.com"
-                    className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[var(--accent-primary)]"
-                  />
-                </div>
-
-                <div className="flex justify-end pt-1">
-                  <button
-                    type="submit"
-                    disabled={isSaving || !newEmail || newEmail === user.email}
-                    className="px-4 py-2 bg-[var(--bg-main)] hover:bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-mono text-xs font-bold rounded-xl transition disabled:opacity-40 cursor-pointer btn-tactile"
-                  >
-                    Update Email
-                  </button>
-                </div>
-              </form>
-
-              {/* Password update */}
-              <form onSubmit={handleUpdatePassword} className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-3">
-                <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] pb-2">
-                  <Lock className="w-4 h-4 text-[var(--accent-primary)]" />
-                  <h4 className="text-xs font-mono font-bold text-[var(--text-primary)] uppercase tracking-wider">
-                    Change Password
-                  </h4>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <input
-                      type={showNewPassword ? 'text' : 'password'}
-                      required
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="New password"
-                      className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[var(--accent-primary)]"
-                    />
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-mono uppercase text-[var(--text-secondary)]">
+                      Lagging Muscle Weak Points
+                    </label>
+                    <span className="text-[11px] font-mono tabular-nums text-[#B7FF4A] font-bold">
+                      {weakPoints.length} selected
+                    </span>
                   </div>
-                  <div>
-                    <input
-                      type={showNewPassword ? 'text' : 'password'}
-                      required
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm password"
-                      className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[var(--accent-primary)]"
-                    />
+                  <div className="flex flex-wrap gap-1.5">
+                    {WEAK_POINTS_LIST.map((wp) => {
+                      const isSelected = weakPoints.includes(wp);
+                      return (
+                        <button
+                          key={wp}
+                          type="button"
+                          onClick={() => toggleWeakPoint(wp)}
+                          className={`px-3 py-1.5 rounded-xl border text-xs font-mono transition btn-tactile cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#B7FF4A] text-[#090B0F] border-[#B7FF4A] font-bold shadow-xs'
+                              : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                          }`}
+                        >
+                          {wp}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <div className="flex justify-end pt-1">
+                {onOpenOnboarding && (
+                  <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)] flex items-center justify-between">
+                    <span className="text-xs text-[var(--text-secondary)] font-sans">
+                      Want the full guided setup experience?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        onOpenOnboarding();
+                      }}
+                      className="text-xs font-mono text-[#B7FF4A] font-bold hover:underline cursor-pointer flex items-center gap-1"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" /> Re-run Setup Wizard
+                    </button>
+                  </div>
+                )}
+
+                <div className="pt-2 flex justify-end">
                   <button
                     type="submit"
-                    disabled={isSaving || !newPassword}
-                    className="px-4 py-2 bg-[var(--bg-main)] hover:bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-mono text-xs font-bold rounded-xl transition disabled:opacity-40 cursor-pointer btn-tactile"
+                    disabled={isSaving}
+                    className="px-5 py-2.5 bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] font-display font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-[#B7FF4A]/20 transition btn-tactile disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
                   >
-                    Change Password
+                    <Save className="w-4 h-4" /> Save Split Settings
                   </button>
                 </div>
               </form>
-            </div>
-          )}
-        </div>
+            )}
 
-        {/* Modal Footer */}
-        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between shrink-0">
-          <button
-            onClick={() => {
-              logout();
-              onClose();
-            }}
-            className="text-xs font-mono text-rose-500 hover:text-rose-600 flex items-center gap-1.5 font-bold cursor-pointer btn-tactile"
-          >
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
-          <span className="text-[11px] font-mono tabular-nums text-[var(--text-muted)]">
-            PPL Hypertrophy Tracker v2.0
-          </span>
+            {activeTab === 'security' && (
+              <div className="space-y-5">
+                {/* Email update */}
+                <form onSubmit={handleUpdateEmail} className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-3">
+                  <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] pb-2">
+                    <Mail className="w-4 h-4 text-sky-400" />
+                    <h4 className="text-xs font-mono font-bold text-[var(--text-primary)] uppercase tracking-wider">
+                      Update Email Address
+                    </h4>
+                  </div>
+
+                  <div>
+                    <input
+                      type="email"
+                      required
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      placeholder="new-email@domain.com"
+                      className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-base sm:text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[#B7FF4A]"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="submit"
+                      disabled={isSaving || !newEmail || newEmail === user.email}
+                      className="px-4 py-2 bg-[var(--bg-main)] hover:bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-mono text-xs font-bold rounded-xl transition disabled:opacity-40 cursor-pointer btn-tactile"
+                    >
+                      Update Email
+                    </button>
+                  </div>
+                </form>
+
+                {/* Password update */}
+                <form onSubmit={handleUpdatePassword} className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-3">
+                  <div className="flex items-center gap-2 border-b border-[var(--border-subtle)] pb-2">
+                    <Lock className="w-4 h-4 text-[#B7FF4A]" />
+                    <h4 className="text-xs font-mono font-bold text-[var(--text-primary)] uppercase tracking-wider">
+                      Change Password
+                    </h4>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="New password"
+                        className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-base sm:text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[#B7FF4A]"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm password"
+                        className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-base sm:text-xs text-[var(--text-primary)] font-mono focus:outline-none focus:border-[#B7FF4A]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="submit"
+                      disabled={isSaving || !newPassword}
+                      className="px-4 py-2 bg-[var(--bg-main)] hover:bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-mono text-xs font-bold rounded-xl transition disabled:opacity-40 cursor-pointer btn-tactile"
+                    >
+                      Change Password
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+
+          {/* Modal Footer */}
+          <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between shrink-0">
+            <button
+              onClick={() => {
+                logout();
+                onClose();
+              }}
+              className="text-xs font-mono text-rose-500 hover:text-rose-400 flex items-center gap-1.5 font-bold cursor-pointer btn-tactile"
+            >
+              <LogOut className="w-4 h-4" /> Sign Out
+            </button>
+            <span className="text-[11px] font-mono tabular-nums text-[var(--text-muted)]">
+              PPL Hypertrophy Tracker v2.0
+            </span>
+          </div>
         </div>
       </div>
     </div>
