@@ -1,6 +1,25 @@
 import type { NextConfig } from "next";
 
+const cspDirectives = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdn.sanity.io",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://www.googletagmanager.com https://www.google-analytics.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sanity.io https://*.api.sanity.io https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+  "media-src 'self' data: blob:",
+  "frame-src 'self' https://*.sanity.io https://ppltracker.sanity.studio",
+  "frame-ancestors 'self' https://*.sanity.io https://ppltracker.sanity.studio",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
 const securityHeaders = [
+  {
+    key: 'Content-Security-Policy-Report-Only',
+    value: cspDirectives,
+  },
   {
     key: 'X-DNS-Prefetch-Control',
     value: 'on',
