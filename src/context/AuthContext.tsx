@@ -366,6 +366,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('ppl_guest_mode');
+        localStorage.removeItem('ppl_history_v2');
+        localStorage.removeItem('ppl_sets_v2');
+        localStorage.removeItem('ppl_checked');
+        localStorage.removeItem('ppl_active_substitution');
+        if (user?.id) {
+          localStorage.removeItem(`ppl_user_profile_${user.id}`);
+        }
       }
       await supabase.auth.signOut();
     } catch (e) {
