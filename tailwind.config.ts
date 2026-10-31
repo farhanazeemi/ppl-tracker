@@ -10,22 +10,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        zinc: {
-          850: "#1b1b1f",
-          950: "#09090b",
+        surface: {
+          main: "var(--bg-main)",
+          secondary: "var(--bg-secondary)",
+          card: "var(--bg-card)",
+          elevated: "var(--bg-elevated)",
         },
+        content: {
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          muted: "var(--text-muted)",
+        },
+        accent: {
+          primary: "var(--accent-primary)",
+          "primary-fill": "var(--accent-primary-fill)",
+          secondary: "var(--accent-secondary)",
+          "secondary-fill": "var(--accent-secondary-fill)",
+        },
+        border: {
+          subtle: "var(--border-subtle)",
+          strong: "var(--border-strong)",
+        },
+        // Athletic split indicators
         brand: {
           push: "#f97316", // Amber-Orange
           pull: "#0ea5e9", // Sky-Cyan
           legs: "#10b981", // Emerald
           gold: "#eab308",
-          dark: "#09090b",
+          volt: "#B7FF4A", // Athletic Volt
+          teal: "#36D6B0", // Biomechanics Teal
+          dark: "#090B0F",
         },
       },
       fontFamily: {
-        sans: ["var(--font-barlow)", "system-ui", "-apple-system", "sans-serif"],
-        display: ["var(--font-barlow-condensed)", "Impact", "sans-serif"],
-        mono: ["var(--font-jetbrains-mono)", "monospace"],
+        sans: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       animation: {
         "pulse-subtle": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
