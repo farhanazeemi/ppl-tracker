@@ -1,3 +1,4 @@
+import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import { PplTrackerApp } from '../../../components/PplTrackerApp';
 import { getWebApplicationSchema } from '../../../lib/schema';
@@ -43,7 +44,7 @@ export default function PplTrackerPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(webAppSchema) }}
       />
       <PplTrackerApp initialView="app" />
     </>

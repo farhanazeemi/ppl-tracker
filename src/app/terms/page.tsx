@@ -1,3 +1,4 @@
+import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { AlertTriangle, FileText, CheckCircle2, ShieldAlert, Scale, HelpCircle } from 'lucide-react';
@@ -35,7 +36,7 @@ export default function TermsOfServicePage() {
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
       />
 
       <Navbar />

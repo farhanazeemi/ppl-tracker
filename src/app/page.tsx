@@ -1,3 +1,4 @@
+import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -85,7 +86,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(webAppSchema) }}
       />
 
       {/* Global Navigation Bar */}
