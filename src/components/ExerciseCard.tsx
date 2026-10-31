@@ -56,9 +56,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
       activeRow: 'bg-emerald-500/5',
     },
     gold: {
-      badge: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
-      accent: 'border-amber-500/40',
-      activeRow: 'bg-amber-500/5',
+      badge: 'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/25',
+      accent: 'border-[var(--accent-primary)]/40',
+      activeRow: 'bg-[var(--accent-primary)]/5',
     },
     sky: {
       badge: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/25',

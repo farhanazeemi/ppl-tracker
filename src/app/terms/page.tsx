@@ -59,8 +59,8 @@ export default function TermsOfServicePage() {
         </div>
 
         {/* Highlighted Medical Disclaimer Banner */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border-2 border-amber-500/40 space-y-3 shadow-lg">
-          <div className="flex items-center gap-2.5 font-bold uppercase text-amber-500 text-base">
+        <div className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border-2 border-[var(--accent-primary)]/40 space-y-3 shadow-lg card-bento">
+          <div className="flex items-center gap-2.5 font-bold uppercase text-[var(--accent-primary)] text-base font-display">
             <AlertTriangle className="w-5 h-5 shrink-0" />
             Crucial Physical Activity & Medical Disclaimer
           </div>

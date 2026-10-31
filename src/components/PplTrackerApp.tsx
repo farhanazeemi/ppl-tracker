@@ -575,14 +575,14 @@ export function PplTrackerApp({
               <div
                 role="status"
                 aria-live="polite"
-                className="bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
+                className="bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-amber-500/20 text-amber-500 shrink-0">
+                  <div className="p-2 rounded-xl bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] shrink-0">
                     <WifiOff className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-bold text-amber-500 uppercase tracking-wider block sm:inline">
+                    <span className="font-bold text-[var(--accent-primary)] uppercase tracking-wider block sm:inline">
                       Offline Mode Active • Gym-Safe Session
                     </span>
                     <span className="text-[var(--text-secondary)] block sm:inline sm:ml-2">
@@ -590,7 +590,7 @@ export function PplTrackerApp({
                     </span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-black px-2.5 py-1 rounded-full self-start sm:self-auto shrink-0 shadow-xs">
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-[var(--accent-primary)] text-black px-2.5 py-1 rounded-full self-start sm:self-auto shrink-0 shadow-xs">
                   100% Offline Ready
                 </span>
               </div>
@@ -818,7 +818,7 @@ export function PplTrackerApp({
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2 border-b border-zinc-200/80 dark:border-zinc-800/80 gap-1">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-amber-500 uppercase">
+                          <span className="font-mono text-xs font-bold text-[var(--accent-primary)] uppercase">
                             Day {day.dayNumber}
                           </span>
                           <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
@@ -887,73 +887,6 @@ export function PplTrackerApp({
         onOpenPlateCalc={() => openPlateCalculator(60, 'Barbell Press')}
         onOpenHistory={() => setIsHistoryOpen(true)}
       />
-
-      {/* Native App-Style Mobile Bottom Navigation Bar */}
-      {activeView === 'app' && (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#090a0f]/95 backdrop-blur-lg border-t border-zinc-200/80 dark:border-zinc-800/80 px-4 py-2 sm:hidden shadow-lg transition-colors">
-          <div className="max-w-md mx-auto grid grid-cols-5 gap-1">
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              type="button"
-              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
-            >
-              <Dumbbell className="w-5 h-5 text-amber-500" />
-              <span className="text-[10px] font-bold mt-0.5">Workout</span>
-            </button>
-
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                scrollToSection(timerSectionRef);
-              }}
-              type="button"
-              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
-            >
-              <Timer className="w-5 h-5" />
-              <span className="text-[10px] font-bold mt-0.5">Timer</span>
-            </button>
-
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                scrollToSection(rigSectionRef);
-              }}
-              type="button"
-              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
-            >
-              <Boxes className="w-5 h-5" />
-              <span className="text-[10px] font-bold mt-0.5">3D Rig</span>
-            </button>
-
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                setIsHistoryOpen(true);
-              }}
-              type="button"
-              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
-            >
-              <History className="w-5 h-5" />
-              <span className="text-[10px] font-bold mt-0.5">Logs</span>
-            </button>
-
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                setIsProfileModalOpen(true);
-              }}
-              type="button"
-              className="flex flex-col items-center justify-center py-1 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-all btn-tactile cursor-pointer"
-            >
-              <User className="w-5 h-5" />
-              <span className="text-[10px] font-bold mt-0.5">Profile</span>
-            </button>
-          </div>
-        </nav>
-      )}
 
       {/* On-Demand Modals (Rendered only when open to preserve DOM performance) */}
       {isPlateCalcOpen && (

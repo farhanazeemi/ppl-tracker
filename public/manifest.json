@@ -1,13 +1,13 @@
 {
   "name": "PPL Hypertrophy Tracker",
   "short_name": "PPL Tracker",
-  "description": "Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, biomechanics kinematics, and double progression tracking.",
+  "description": "Evidence-based 6-day Push-Pull-Legs progressive overload workout app with automatic rest timers, barbell plate math, biomechanics kinematics, and substitution finder.",
   "start_url": "/tools/ppl-tracker",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#090a0f",
-  "theme_color": "#f59e0b",
+  "background_color": "#090B0F",
+  "theme_color": "#090B0F",
   "categories": ["fitness", "health", "sports"],
   "icons": [
     {
@@ -26,10 +26,10 @@
       "icons": [{ "src": "/icon.svg", "sizes": "any" }]
     },
     {
-      "name": "Barbell Plate Math",
-      "short_name": "Plate Math",
-      "description": "Calculate exact Olympic plates needed per barbell sleeve",
-      "url": "/tools/ppl-tracker",
+      "name": "Exercise Substitution Finder",
+      "short_name": "Sub Finder",
+      "description": "Find biomechanically equivalent exercise replacements",
+      "url": "/tools/workout-substitution-finder",
       "icons": [{ "src": "/icon.svg", "sizes": "any" }]
     },
     {
