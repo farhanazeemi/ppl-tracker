@@ -1,6 +1,7 @@
 {
   "name": "ppl-hypertrophy-tracker",
   "version": "0.1.0",
+  "description": "Evidence-based resistance training operating system featuring 4 periodized training splits, automated double progression tracking, deterministic workout substitution finder, Olympic barbell plate math, BMI calculator, rest timers, Supabase cloud sync, and Sanity CMS research journal.",
   "private": true,
   "scripts": {
     "dev": "next dev",

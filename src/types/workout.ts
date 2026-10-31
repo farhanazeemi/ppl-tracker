@@ -53,6 +53,16 @@ export interface ExerciseDefinition {
   equipment: 'barbell' | 'dumbbell' | 'cable' | 'machine' | 'bodyweight';
   isPriorityWeakPoint?: boolean;
   weakPointBadge?: string;
+  // Backward-compatible extensions for exercise discovery, taxonomy & substitution
+  slug?: string;
+  movementPattern?: string;
+  exerciseType?: 'compound' | 'isolation';
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  instructions?: string[];
+  aliases?: string[];
+  stabilizationDemand?: 'low' | 'moderate' | 'high';
+  stretchEmphasis?: boolean;
+  jointStressProfile?: string;
 }
 
 export interface DayWorkout {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import {
   SplitDayId,
@@ -147,6 +148,23 @@ export function PplTrackerApp({
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthModalMode>('login');
+  const [activeSubstitution, setActiveSubstitution] = useState<{
+    originalName: string;
+    substituteName: string;
+    timestamp: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem('ppl_active_substitution');
+      if (raw) {
+        setActiveSubstitution(JSON.parse(raw));
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   // Trigger modal when password recovery link is opened
   useEffect(() => {
@@ -595,6 +613,51 @@ export function PplTrackerApp({
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500 text-black px-2.5 py-1 rounded-full shrink-0 shadow-xs">
                   Synced
                 </span>
+              </div>
+            )}
+
+            {/* ACTIVE EXERCISE SUBSTITUTION BANNER */}
+            {activeSubstitution && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-amber-500/20 text-amber-500 shrink-0">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="font-bold text-amber-500 uppercase tracking-wider block sm:inline">
+                      Active Substitution:
+                    </span>
+                    <span className="text-zinc-800 dark:text-zinc-200 font-bold ml-1.5">
+                      {activeSubstitution.substituteName}
+                    </span>
+                    <span className="text-zinc-500 block sm:inline sm:ml-1.5">
+                      (replacing {activeSubstitution.originalName})
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                  <Link
+                    href={`/tools/workout-substitution-finder?exercise=${encodeURIComponent(
+                      activeSubstitution.originalName
+                    )}`}
+                    className="px-2.5 py-1 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:text-amber-500 text-[11px] font-bold transition"
+                  >
+                    Change Substitute
+                  </Link>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem('ppl_active_substitution');
+                      setActiveSubstitution(null);
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-500 hover:bg-amber-500/30 text-[11px] font-bold transition"
+                  >
+                    Restore Original
+                  </button>
+                </div>
               </div>
             )}
 

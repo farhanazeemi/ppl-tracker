@@ -7,56 +7,81 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_Database-3ecf8e?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-> **The Progressive Overload Operating System for Natural Lifters.**  
-> Built with Next.js 15 App Router, React 19, Three.js, GSAP, Sanity CMS, and Supabase.
+> **The Evidence-Based Progressive Overload Operating System & Exercise Substitution Engine for Natural Lifters.**  
+> Built with Next.js 15 App Router, React 19, Tailwind CSS, Sanity Studio v3, Supabase, and Web Audio API.
 
 ---
 
 ## 🌟 Overview
 
-**PPL Hypertrophy Tracker** is an evidence-based progressive overload web application and resistance training research journal. It eliminates guesswork in the gym by automating rep-bracket ceilings (Double Progression), rest interval timing, barbell plate math, and periodized training splits — paired with peer-reviewed biomechanics studies.
+**PPL Hypertrophy Tracker** is an evidence-based resistance training web application, biomechanical exercise substitution engine, and sports science research journal. It eliminates guesswork in the gym by automating rep-bracket ceilings (Double Progression), rest interval timing, barbell plate math, periodized training splits, and deterministic exercise substitutions when gym equipment or machines are occupied.
 
-- **Production Domain**: [https://ppltracker.web.id](https://ppltracker.web.id)
-- **Scientific Journal**: [https://ppltracker.web.id/blog](https://ppltracker.web.id/blog)
-- **Headless Content Studio**: [https://ppltracker.web.id/studio](https://ppltracker.web.id/studio)
+- **Production Application**: [https://ppltracker.web.id](https://ppltracker.web.id)
+- **PPL Workout Tracker**: [https://ppltracker.web.id/tools/ppl-tracker](https://ppltracker.web.id/tools/ppl-tracker)
+- **Workout Substitution Finder**: [https://ppltracker.web.id/tools/workout-substitution-finder](https://ppltracker.web.id/tools/workout-substitution-finder)
+- **BMI & Body Comp Calculator**: [https://ppltracker.web.id/tools/bmi-calculator](https://ppltracker.web.id/tools/bmi-calculator)
+- **Athlete Tools Directory**: [https://ppltracker.web.id/tools](https://ppltracker.web.id/tools)
+- **Scientific Research Journal**: [https://ppltracker.web.id/blog](https://ppltracker.web.id/blog)
+- **Embedded Sanity Studio**: [https://ppltracker.web.id/studio](https://ppltracker.web.id/studio)
 
 ---
 
 ## 🚀 Key Features
 
-### 1. Double Progression Protocol Engine
-- Working sets are tracked within structured rep brackets (e.g., $3 \times 8\text{--}12$ or $3 \times 10\text{--}15$).
-- When all sets hit the prescribed rep ceiling at strict form, the engine triggers an **"Earned Double Progression"** badge signaling to advance weight by the smallest incremental load ($+2.5\text{ kg} / +5\text{ lbs}$) while resetting to the lower rep floor.
-- Built-in Epley 1RM formula calculation for peak working sets.
+### 1. 🔄 Workout Substitution Finder (`/tools/workout-substitution-finder`)
+Never lose training momentum when machines, benches, or squat racks are occupied.
+- **Deterministic Biomechanical Matching Engine**: Multi-tiered scoring algorithm weighting:
+  - **Primary Muscle Overlap (30%)**: Target muscle recruitment match.
+  - **Movement Pattern Similarity (25%)**: Horizontal press, vertical pull, hip hinge, knee flexion, etc.
+  - **Equipment Availability (20%)**: Filter by open equipment (Dumbbells, Barbells, Cables, Machines, Bodyweight, Bands).
+  - **Secondary Synergist Muscles (15%)**: Assisting stabilizer and mover recruitment.
+  - **Exercise Category Match (10%)**: Compound vs. isolation alignment.
+  - **Training Goal Adaptation (5%)**: Hypertrophy, Strength, General Fitness, or Home Workout prioritization.
+- **Transparent Biomechanical Insights**: Clear "Why Recommended" explanations (joint kinematics, plane of motion) and "Key Differences" (stabilization demands, resistance curve variances).
+- **Direct Tracker Integration**: One-click "Use in PPL Tracker" button automatically swaps the alternative directly into your active workout session with banner confirmation.
+- **Single Source of Truth**: Evaluates real exercises directly from the canonical exercise catalog (74 unique exercises across all splits).
 
-### 2. Interactive 3D Anatomy & Rig Visualizer (Three.js & GSAP)
-- Procedural 3D Olympic Barbell and calibrated bumper plates rendered in WebGL.
-- **Dynamic Lighting & Ambient Atmosphere**: Shifts color states according to active split:
-  - **Push**: Amber / Orange (`#f59e0b`)
-  - **Pull**: Sky Blue (`#0ea5e9`)
-  - **Legs**: Emerald Green (`#10b981`)
-- Touch & mouse drag orbit rotation, wireframe hologram inspection, and GSAP confetti animations on workout completion.
+### 2. ⚡ Double Progression Protocol Engine (`/tools/ppl-tracker`)
+- **Automated Rep Ceilings**: Working sets are tracked within structured rep brackets (e.g., $3 \times 8\text{--}12$ or $3 \times 10\text{--}15$).
+- **Earned Progression Alert**: When all sets hit the prescribed rep ceiling with strict form, the engine triggers an **"Earned Double Progression"** indicator signaling to advance load ($+2.5\text{ kg} / +5\text{ lbs}$) while resetting to the lower rep floor.
+- **Epley 1RM Formula**: Real-time Estimated 1-Rep Max computation on top working sets.
 
-### 3. Automated Rest Interval Timers & Web Audio API
-- Automatic rest countdowns customized per movement ($60\text{s}$, $90\text{s}$, $120\text{s}$, $180\text{s}$).
-- Zero-dependency synthesizer using the browser's native **Web Audio API** for tactile button clicks, countdown chimes, and completion alerts.
+### 3. 📅 4 Periodized Split Programs & Weak-Point Tailoring
+- **4 Complete Resistance Programs**:
+  - **6-Day Push / Pull / Legs (PPL)**: Optimal hypertrophy frequency (2x per muscle group weekly).
+  - **5-Day Classic Bro Split**: High-volume body part isolation (Chest, Back, Arms, Shoulders, Legs).
+  - **4-Day Upper / Lower Split**: Balanced strength and recovery distribution.
+  - **3-Day Full Body Routine**: Maximum frequency per session for busy athletes.
+- **Lagging Muscle Specialization**: Dynamically tailors exercise selection and volume prioritization for Pecs, Lats/Upper Back, Delts, Quads/Hamstrings, or Arms.
+
+### 4. ⏱️ Automated Rest Interval Timers & Web Audio API
+- Automatic rest countdowns customized per movement category ($60\text{s}$, $90\text{s}$, $120\text{s}$, $180\text{s}$).
+- Zero-dependency sound synthesizer using the browser's native **Web Audio API** for tactile button clicks, countdown chimes, and completion alerts.
 - Dedicated sound effects toggle (mute / unmute).
 
-### 4. Olympic Barbell Plate Calculator
-- Realtime plate breakdown calculator for standard Olympic bars ($20\text{ kg} / 45\text{ lbs}$).
+### 5. 🏋️ Olympic Barbell Plate Calculator
+- Real-time plate breakdown calculator for standard Olympic bars ($20\text{ kg} / 45\text{ lbs}$).
 - Visually stacks color-coded bumper plates ($25\text{kg}$, $20\text{kg}$, $15\text{kg}$, $10\text{kg}$, $5\text{kg}$, $2.5\text{kg}$, $1.25\text{kg}$) per sleeve.
 
-### 5. Supabase Cloud Sync & Guest Athlete Mode
+### 6. ⚖️ Athlete BMI & Body Composition Calculator (`/tools/bmi-calculator`)
+- Dual-unit conversion supporting Metric ($cm / kg$) and Imperial ($ft + in / lbs$).
+- Visual WHO classification spectrum gauge with target healthy weight range estimates.
+- Evidence-based clinical caveats addressing Fat-Free Mass Index (FFMI) and muscle mass vs. fat mass for resistance-trained athletes.
+
+### 7. ☁️ Supabase Cloud Sync & Local-First Guest Athlete Mode
 - **Dual Authentication Modes**:
   - **Cloud Athlete**: Email / Password & Google OAuth sign-in with cloud history synchronization.
   - **Guest Athlete**: Instant local offline access with zero signup friction.
 - Cloud database on Supabase PostgreSQL with strict Row Level Security (RLS) policies.
-- Athlete profile customization: Bodyweight, height, age, training split, and unit preference ($kg / lbs$).
+- Athlete profile customization: Bodyweight, height, age, training split, unit preference ($kg / lbs$), and weak-point focus.
+- Password recovery and reset flow via `/auth/callback`.
 
-### 6. The Hypertrophy Science Journal & Sanity Studio (/blog & /studio)
-- Integrated headless CMS powered by **Sanity Studio v3** and **Next-Sanity**.
-- High-resolution biomechanical featured photography and contextual diagrams.
-- Instant search and category filter across 10 distinct fitness domains:
+### 8. 📚 The Hypertrophy Science Journal & Embedded Sanity Studio (`/blog` & `/studio`)
+- Integrated headless CMS powered by **Sanity Studio v3** directly embedded at `/studio`.
+- 60+ peer-reviewed biomechanics, nutrition, and programming articles.
+- Accessible interactive `<TableOfContents />` with active section highlighting via `IntersectionObserver`.
+- Accessible `<FaqAccordion />` components and rich `<ArticlePortableText />` rendering.
+- Filter across 10 distinct fitness domains:
   - Clavicular Pec / Upper Chest Hypertrophy
   - Low-Bar Squat Mechanics & Overcoming Isometrics
   - Energy Balance & Evidence-Based Body Recomposition
@@ -66,37 +91,94 @@
   - Scapular Plane Abduction & Rotator Cuff Prehab
   - Perimenopause & Women's Strength Training
   - VO2 Max Protocols & Longevity Science
-  - Overcoming Gym Anxiety & Habit Formation
+  - Gym Psychology & Habit Formation
 
-### 7. Google Search & AI Engine Optimization (SEO & GEO)
-- Comprehensive **Schema.org** structured data:
-  - `WebApplication` schema on Homepage.
-  - `BlogPosting` and `CollectionPage` schema with BreadcrumbList on the Journal.
+### 9. 🔍 Search & AI Engine Optimization (SEO, GEO & AEO)
+- Comprehensive **Schema.org** structured data graphs:
+  - `WebApplication` schema on Homepage and Tools.
+  - `BlogPosting`, `BreadcrumbList`, and `FAQPage` schemas on Journal articles.
   - `Organization` and `WebSite` sitewide identity graphs.
-- Generative Engine Optimization (**GEO**) with `public/llms.txt` for AI crawlers (ChatGPT, Perplexity, Claude, Google Gemini).
-- Dynamic `robots.ts` and automated `sitemap.ts` indexing all 48+ static routes.
+- Generative Engine Optimization (**GEO**) with `public/llms.txt` for AI answer engines (ChatGPT, Perplexity, Claude, Google Gemini).
+- Dynamic `robots.ts` and automated `sitemap.ts` indexing all 76+ static routes with crawl budget protection.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
-- **Core Library**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS v3](https://tailwindcss.com/)
-- **3D Graphics**: [Three.js](https://threejs.org/)
-- **Animations**: [GSAP (GreenSock)](https://gsap.com/)
-- **CMS / Headless Blog**: [Sanity v3](https://www.sanity.io/) & [Next-Sanity](https://github.com/sanity-io/next-sanity)
-- **Backend & Auth**: [Supabase](https://supabase.com/) (PostgreSQL + RLS + GoTrue Auth)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Deployment & Hosting**: [Vercel](https://vercel.com/)
+| Layer | Technologies |
+| :--- | :--- |
+| **Framework** | [Next.js 15 (App Router)](https://nextjs.org/) |
+| **Core Library** | [React 19](https://react.dev/) |
+| **Styling** | [Tailwind CSS v3](https://tailwindcss.com/), PostCSS, Autoprefixer |
+| **Headless CMS** | [Sanity Studio v3](https://www.sanity.io/), [Next-Sanity](https://github.com/sanity-io/next-sanity), `@portabletext/react` |
+| **Backend & Auth** | [Supabase](https://supabase.com/) (PostgreSQL + RLS + GoTrue Auth with Google OAuth) |
+| **Audio Synthesizer** | Native Browser Web Audio API |
+| **Icons & UI** | [Lucide React](https://lucide.dev/), `canvas-confetti`, `clsx`, `tailwind-merge` |
+| **Deployment & Hosting** | [Vercel](https://vercel.com/) |
+
+---
+
+## 📁 Project Architecture
+
+```text
+ppl-tracker/
+├── public/
+│   ├── favicon.ico
+│   ├── llms.txt                     # GEO / AI search engine discovery manifest
+│   ├── sw.js                        # Offline service worker
+│   └── site.webmanifest
+├── src/
+│   ├── app/
+│   │   ├── (auth)/auth/callback/    # Supabase auth token verification & password reset
+│   │   ├── about/                   # Editorial and mission statement
+│   │   ├── blog/                    # Scientific journal feed & [slug] dynamic articles
+│   │   ├── contact/                 # Contact & feedback form
+│   │   ├── privacy/ & terms/        # Legal, privacy & terms
+│   │   ├── studio/[[...tool]]/      # Embedded Sanity Studio v3 interface
+│   │   ├── tools/
+│   │   │   ├── page.tsx             # Athlete Tools Hub directory
+│   │   │   ├── bmi-calculator/      # Body Mass Index screening tool
+│   │   │   ├── ppl-tracker/         # Core PPL workout tracker interface
+│   │   │   └── workout-substitution-finder/ # Biomechanical exercise substitution engine
+│   │   ├── layout.tsx               # Root layout with navbar, footer, auth listener
+│   │   ├── page.tsx                 # High-converting landing page & quick start
+│   │   ├── robots.ts                # Crawl rules & budget protection
+│   │   └── sitemap.ts               # Dynamic XML sitemap generator
+│   ├── components/
+│   │   ├── AuthModal.tsx            # Supabase Email + Google OAuth modal
+│   │   ├── ExerciseCard.tsx         # Tracker set/rep logger with "Find Substitute" trigger
+│   │   ├── FaqAccordion.tsx         # Accessible interactive FAQ accordion
+│   │   ├── Footer.tsx & Navbar.tsx  # Global navigational chrome
+│   │   ├── PplTrackerApp.tsx        # Workout state machine & substitution banner
+│   │   ├── TableOfContents.tsx      # IntersectionObserver article table of contents
+│   │   └── tools/
+│   │       └── WorkoutSubstitutionFinder.tsx # Full interactive substitution UI
+│   ├── config/
+│   │   └── tools.ts                 # Registry of athlete tools & metadata
+│   ├── data/
+│   │   └── workouts.ts              # Canonical workouts source of truth (4 programs, 107 instances)
+│   ├── lib/
+│   │   ├── audio.ts                 # Native Web Audio sound synthesizer
+│   │   ├── sanity/                  # Sanity client, schemas, and GROQ queries
+│   │   ├── supabase/                # Supabase browser/server client initialization
+│   │   └── workout-substitution/
+│   │       ├── engine.ts            # Deterministic scoring algorithm
+│   │       └── exerciseRepository.ts# Canonical repository adapter & biomechanical inference
+│   └── types/
+│       ├── substitution.ts          # Types for exercises, filters, weights, and matches
+│       └── workout.ts               # ExerciseDefinition, WorkoutDay, and AthleteProfile types
+├── sanity.config.ts                 # Sanity Studio project configuration
+├── tailwind.config.ts               # Design system tokens and color themes
+└── package.json
+```
 
 ---
 
 ## 💻 Getting Started
 
 ### Prerequisites
-- Node.js 18.17+ or 20+ installed
-- npm or yarn
+- **Node.js**: `18.17+` or `20+`
+- **Package Manager**: `npm`, `pnpm`, or `yarn`
 
 ### 1. Clone the Repository
 ```bash
@@ -110,13 +192,13 @@ npm install
 ```
 
 ### 3. Configure Environment Variables
-Create a `.env.local` file in the root directory:
-```bash
-# Supabase
+Create a `.env.local` file in the project root:
+```env
+# Supabase Authentication & Database
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
-# Sanity Studio & Blog CMS
+# Sanity Studio & Headless Blog CMS
 NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
@@ -128,7 +210,7 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 5. Production Build
+### 5. Production Build & Static Generation
 ```bash
 npm run build
 npm run start
@@ -136,11 +218,12 @@ npm run start
 
 ---
 
-## 🔒 Security & Data Privacy
+## 🔒 Security & Data Integrity
 
-- **Zero Credentials in Git**: All API keys, tokens, and local configuration are strictly isolated in `.env.local` and ignored via `.gitignore`.
-- **Row Level Security (RLS)**: User workout logs and profiles in Supabase are isolated by user UUID; athletes can only access their own logs.
-- **Export / Import**: Full JSON export and import options ensure users own their data with zero platform lock-in.
+- **Row Level Security (RLS)**: Athlete profiles and workout logs in Supabase are isolated by user UUID; athletes can strictly access only their own records.
+- **Local-First Architecture**: Guest mode keeps workout data in browser `localStorage`, ensuring zero data loss during network disruptions.
+- **Zero Hardcoded Secrets**: All authentication keys and environment configurations are strictly isolated in `.env.local` and excluded via `.gitignore`.
+- **Crawl Budget Protection**: Non-indexable administrative routes (`/studio/`, `/api/`, `/auth/callback`) are disallowed in `robots.ts`.
 
 ---
 

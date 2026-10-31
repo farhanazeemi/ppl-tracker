@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Check,
   ChevronDown,
@@ -12,6 +13,7 @@ import {
   Flame,
   Award,
   Zap,
+  Sparkles,
 } from 'lucide-react';
 import { ExerciseDefinition, ExerciseSet } from '../types/workout';
 import { calculateEstimated1RM, checkDoubleProgression } from '../utils/helpers';
@@ -399,18 +401,30 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
           )}
         </div>
 
-        {/* Collapsible Form & Biomechanics Cues Toggle */}
-        <button
-          type="button"
-          onClick={() => {
-            playTabSound(soundEnabled);
-            setShowCues(!showCues);
-          }}
-          className="flex items-center gap-1 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition btn-tactile cursor-pointer font-mono"
-        >
-          <span>Biomechanics & Cues</span>
-          {showCues ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-        </button>
+        <div className="flex items-center gap-3">
+          {/* Workout Substitution Finder Shortcut */}
+          <Link
+            href={`/tools/workout-substitution-finder?exercise=${encodeURIComponent(exercise.name)}`}
+            className="flex items-center gap-1 text-xs font-bold text-amber-500 hover:text-amber-400 transition font-mono"
+            title={`Find equipment alternatives for ${exercise.name}`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline">Find</span> Substitute
+          </Link>
+
+          {/* Collapsible Form & Biomechanics Cues Toggle */}
+          <button
+            type="button"
+            onClick={() => {
+              playTabSound(soundEnabled);
+              setShowCues(!showCues);
+            }}
+            className="flex items-center gap-1 text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition btn-tactile cursor-pointer font-mono"
+          >
+            <span>Biomechanics & Cues</span>
+            {showCues ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+        </div>
       </div>
 
       {/* Collapsible Form Cues Section */}

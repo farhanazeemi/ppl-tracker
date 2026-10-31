@@ -131,6 +131,15 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
+                  href="/tools/workout-substitution-finder"
+                  onClick={() => handleClick()}
+                  className="hover:text-amber-500 transition-colors"
+                >
+                  Workout Substitution Finder
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools"
                   onClick={() => handleClick()}
                   className="hover:text-amber-500 transition-colors font-bold text-amber-500"

@@ -77,6 +77,39 @@ export const FITNESS_TOOLS: FitnessTool[] = [
     isFeatured: true,
     ctaText: 'Calculate BMI',
   },
+  {
+    id: 'workout-substitution-finder',
+    name: 'Workout Substitution Finder',
+    slug: 'workout-substitution-finder',
+    href: '/tools/workout-substitution-finder',
+    badge: 'Biomechanical Engine',
+    category: 'Workout Tracking',
+    categorySlug: 'tracking',
+    shortDescription:
+      'Deterministic gym exercise alternative engine matching target muscles, movement patterns, and open gym equipment.',
+    fullDescription:
+      'Never lose workout momentum when machines or squat racks are taken. Find instant, biomechanically matched exercise substitutes filtered by available equipment, target muscles, and training goals.',
+    iconName: 'Sparkles',
+    features: [
+      'Deterministic matching engine weighting muscle recruitment, patterns, and equipment',
+      'Configurable equipment filters (Dumbbells, Barbells, Cables, Machines, Bodyweight, Bands)',
+      'Training goal prioritization (Hypertrophy, Max Strength, General Fitness, Home Workout)',
+      'Biomechanical explanations explaining joint kinematics and resistance curve nuances',
+      'Detailed form execution instructions, critical cues, and stabilization profiles',
+      'One-click integration to substitute exercises directly into the PPL Workout Tracker',
+    ],
+    stats: [
+      'Database: 50+ Exercises',
+      'Filter Modes: Multi-Equipment',
+      'Algorithm: Deterministic',
+    ].map((s) => {
+      const [label, value] = s.split(': ');
+      return { label, value };
+    }),
+    isAvailable: true,
+    isFeatured: true,
+    ctaText: 'Find Substitutes',
+  },
 ];
 
 export const UPCOMING_TOOLS: Array<{
