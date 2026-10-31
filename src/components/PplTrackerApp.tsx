@@ -233,8 +233,18 @@ export function PplTrackerApp({
 
     // Build initial sets state for all exercises in the active split
     const initialSets: Record<string, ExerciseSet[]> = {};
-    const legacyChecked = JSON.parse(localStorage.getItem('ppl_checked') || '{}');
-    const savedSets = JSON.parse(localStorage.getItem('ppl_sets_v2') || '{}');
+    let legacyChecked: Record<string, boolean> = {};
+    let savedSets: Record<string, ExerciseSet[]> = {};
+    try {
+      legacyChecked = JSON.parse(localStorage.getItem('ppl_checked') || '{}');
+    } catch (e) {
+      console.error('Failed to parse legacy checked state:', e);
+    }
+    try {
+      savedSets = JSON.parse(localStorage.getItem('ppl_sets_v2') || '{}');
+    } catch (e) {
+      console.error('Failed to parse saved sets:', e);
+    }
 
     splitWorkouts.forEach((day) => {
       day.exercises.forEach((ex, exIdx) => {

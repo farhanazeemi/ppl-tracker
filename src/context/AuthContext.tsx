@@ -13,33 +13,7 @@ import {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    // Synchronously initialize with guest or local profile to prevent any loading flash or layout shift
-    if (typeof window !== 'undefined') {
-      try {
-        let savedLocal: any = {};
-        const raw = localStorage.getItem('ppl_guest_profile');
-        if (raw) savedLocal = JSON.parse(raw);
-        return {
-          id: 'guest-athlete',
-          name: savedLocal.name || 'Athlete (Guest)',
-          email: 'local@hypertrophy.app',
-          preferredUnit: savedLocal.preferredUnit || 'kg',
-          fitnessGoal: savedLocal.fitnessGoal || 'Hypertrophy',
-          createdAt: new Date().toISOString().split('T')[0],
-          onboardingCompleted: true,
-          selectedSplit: savedLocal.selectedSplit || 'ppl',
-          weakPoints: savedLocal.weakPoints || [],
-          experienceLevel: savedLocal.experienceLevel || 'Intermediate',
-          barbellBaseWeight: savedLocal.barbellBaseWeight || 20,
-          isGuest: true,
-        };
-      } catch {
-        // Fallback below
-      }
-    }
-    return null;
-  });
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
 
