@@ -38,13 +38,13 @@ function parseMarkdownTable(text: string) {
 export const articlePortableTextComponents: PortableTextComponents = {
   block: {
     h1: ({ children, value }) => {
-      // Avoid duplicate H1 inside the body content
+      // Prevent duplicate H1 inside the body content per AGENTS.md single H1 rule
       const text = extractPlainText(value || children);
       const id = slugifyHeading(text);
       return (
         <h2
           id={id}
-          className="scroll-mt-24 text-2xl sm:text-3xl font-display font-black uppercase tracking-tight text-zinc-900 dark:text-white pt-8 pb-3 border-b border-zinc-200 dark:border-zinc-800 mb-4"
+          className="scroll-mt-24 text-2xl sm:text-3xl font-display font-black uppercase tracking-tight text-[var(--text-primary)] pt-8 pb-3 border-b border-[var(--border-subtle)] mb-4"
         >
           {children}
         </h2>
@@ -56,7 +56,7 @@ export const articlePortableTextComponents: PortableTextComponents = {
       return (
         <h2
           id={id}
-          className="scroll-mt-24 text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-zinc-900 dark:text-white pt-8 pb-2"
+          className="scroll-mt-24 text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-[var(--text-primary)] pt-8 pb-2"
         >
           {children}
         </h2>
@@ -68,7 +68,7 @@ export const articlePortableTextComponents: PortableTextComponents = {
       return (
         <h3
           id={id}
-          className="scroll-mt-24 text-lg sm:text-xl font-display font-bold uppercase tracking-tight text-zinc-900 dark:text-white pt-6 pb-2 text-amber-500/90 dark:text-amber-400"
+          className="scroll-mt-24 text-lg sm:text-xl font-display font-bold uppercase tracking-tight text-[var(--accent-primary)] pt-6 pb-2"
         >
           {children}
         </h3>
@@ -80,14 +80,14 @@ export const articlePortableTextComponents: PortableTextComponents = {
       return (
         <h4
           id={id}
-          className="scroll-mt-24 text-base sm:text-lg font-display font-bold uppercase tracking-tight text-zinc-900 dark:text-white pt-4 pb-1"
+          className="scroll-mt-24 text-base sm:text-lg font-display font-bold uppercase tracking-tight text-[var(--text-primary)] pt-4 pb-1"
         >
           {children}
         </h4>
       );
     },
     blockquote: ({ children }) => (
-      <blockquote className="p-4 sm:p-5 my-6 rounded-2xl bg-zinc-100 dark:bg-zinc-900/60 border-l-4 border-amber-500 italic text-zinc-800 dark:text-zinc-200 text-sm sm:text-base leading-relaxed">
+      <blockquote className="p-4 sm:p-5 my-6 rounded-2xl bg-[var(--bg-elevated)] border-l-4 border-[var(--accent-primary)] italic text-[var(--text-primary)] text-sm sm:text-base leading-relaxed">
         {children}
       </blockquote>
     ),
@@ -98,25 +98,25 @@ export const articlePortableTextComponents: PortableTextComponents = {
         const tableData = parseMarkdownTable(rawText);
         if (tableData) {
           return (
-            <div className="my-6 overflow-x-auto rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-[#12141c]">
-              <table className="w-full text-left text-xs sm:text-sm border-collapse">
-                <thead className="bg-zinc-100 dark:bg-zinc-800/80 text-zinc-900 dark:text-white font-display font-bold uppercase tracking-wider text-[11px]">
+            <div className="my-6 overflow-x-auto rounded-2xl border border-[var(--border-subtle)] shadow-sm bg-[var(--bg-card)]">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse font-mono tabular-nums">
+                <thead className="bg-[var(--bg-elevated)] text-[var(--text-primary)] font-display font-bold uppercase tracking-wider text-[11px]">
                   <tr>
                     {tableData.headers.map((h, i) => (
                       <th
                         key={i}
-                        className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700"
+                        className="px-4 py-3 border-b border-[var(--border-subtle)]"
                       >
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300 font-sans">
+                <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-secondary)]">
                   {tableData.rows.map((row, rIdx) => (
                     <tr
                       key={rIdx}
-                      className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
+                      className="hover:bg-[var(--bg-elevated)]/50 transition-colors"
                     >
                       {row.map((cell, cIdx) => (
                         <td key={cIdx} className="px-4 py-3 leading-relaxed">
@@ -133,7 +133,7 @@ export const articlePortableTextComponents: PortableTextComponents = {
       }
 
       return (
-        <p className="leading-relaxed text-zinc-800 dark:text-zinc-300 font-sans text-sm sm:text-base my-4">
+        <p className="leading-relaxed text-[var(--text-secondary)] font-sans text-sm sm:text-base my-4">
           {children}
         </p>
       );
@@ -141,12 +141,12 @@ export const articlePortableTextComponents: PortableTextComponents = {
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 my-4 pl-2 text-zinc-800 dark:text-zinc-300 text-sm sm:text-base font-sans leading-relaxed">
+      <ul className="list-disc list-inside space-y-2 my-4 pl-2 text-[var(--text-secondary)] text-sm sm:text-base font-sans leading-relaxed">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 my-4 pl-2 text-zinc-800 dark:text-zinc-300 text-sm sm:text-base font-sans leading-relaxed">
+      <ol className="list-decimal list-inside space-y-2 my-4 pl-2 text-[var(--text-secondary)] text-sm sm:text-base font-sans leading-relaxed">
         {children}
       </ol>
     ),
@@ -157,11 +157,11 @@ export const articlePortableTextComponents: PortableTextComponents = {
   },
   marks: {
     strong: ({ children }) => (
-      <strong className="font-bold text-zinc-950 dark:text-white">{children}</strong>
+      <strong className="font-bold text-[var(--text-primary)]">{children}</strong>
     ),
     em: ({ children }) => <em className="italic">{children}</em>,
     code: ({ children }) => (
-      <code className="px-1.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-amber-500 font-mono text-xs border border-zinc-200 dark:border-zinc-700">
+      <code className="px-1.5 py-0.5 rounded-md bg-[var(--bg-elevated)] text-[var(--accent-primary)] font-mono text-xs border border-[var(--border-subtle)]">
         {children}
       </code>
     ),
@@ -178,7 +178,7 @@ export const articlePortableTextComponents: PortableTextComponents = {
         return (
           <Link
             href={cleanHref}
-            className="text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300 font-semibold underline underline-offset-4 decoration-amber-500/40 hover:decoration-amber-500 transition-colors"
+            className="text-[var(--accent-primary)] font-semibold underline underline-offset-4 decoration-[var(--accent-primary)]/40 hover:decoration-[var(--accent-primary)] hover:opacity-90 transition-all"
           >
             {children}
           </Link>
@@ -190,7 +190,7 @@ export const articlePortableTextComponents: PortableTextComponents = {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300 font-medium underline underline-offset-4 decoration-zinc-400 hover:decoration-amber-500 transition-colors"
+          className="text-[var(--accent-secondary)] font-medium underline underline-offset-4 decoration-[var(--border-strong)] hover:decoration-[var(--accent-secondary)] transition-colors"
         >
           {children}
         </a>
@@ -203,11 +203,11 @@ export const articlePortableTextComponents: PortableTextComponents = {
       const url = value.asset?.url || value.imageUrl;
       const alt = value.alt || 'PPL Hypertrophy Exercise Analysis';
       return (
-        <figure className="my-8 overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 shadow-lg">
+        <figure className="my-8 overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={url} alt={alt} className="w-full max-h-[460px] object-cover" />
           {value.caption && (
-            <figcaption className="p-3.5 text-xs font-mono text-zinc-600 dark:text-zinc-400 bg-white dark:bg-[#12141c] border-t border-zinc-200 dark:border-zinc-800">
+            <figcaption className="p-3.5 text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)]">
               {value.caption}
             </figcaption>
           )}
