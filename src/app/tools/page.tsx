@@ -1,21 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
-  Sparkles,
   LayoutGrid,
   ChevronRight,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Dumbbell,
-  Scale,
-  Flame,
-  Activity,
-  Timer
 } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
-import { FITNESS_TOOLS, UPCOMING_TOOLS, FitnessTool } from '../../config/tools';
+import { FITNESS_TOOLS, UPCOMING_TOOLS } from '../../config/tools';
 import { ToolsDirectoryList } from './ToolsDirectoryList';
 
 const baseUrl = 'https://ppltracker.web.id';
@@ -69,7 +60,7 @@ export default function ToolsDirectoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(directorySchema) }}
@@ -77,25 +68,25 @@ export default function ToolsDirectoryPage() {
 
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-16">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-12">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-          <Link href="/" className="hover:text-amber-500 transition-colors">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
+          <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">
             Home
           </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-          <span className="text-zinc-900 dark:text-white font-bold">Tools Directory</span>
+          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" />
+          <span className="text-[var(--text-primary)] font-bold">Tools Directory</span>
         </nav>
 
         {/* Directory Editorial Hero */}
-        <div className="space-y-5 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-mono font-semibold">
+        <div className="space-y-4 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-bold tracking-wider uppercase">
             <LayoutGrid className="w-3.5 h-3.5" /> Evidence-Based Athlete Utilities
           </div>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
             Fitness Tools & Calculators
           </h1>
-          <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
+          <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed">
             Eliminate guesswork from your resistance training and body composition management. Every tool in our suite is free to use, privacy-conscious, local-first, and engineered for high-performance lifters.
           </p>
         </div>

@@ -7,9 +7,10 @@ import {
   CheckCircle2,
   ArrowRight,
   Zap,
-  Play
+  Sparkles,
+  Info,
 } from 'lucide-react';
-import { playClickSound, playSetCompleteSound } from '../utils/audio';
+import { playSetCompleteSound } from '../utils/audio';
 
 export const HomeInteractiveDemo: React.FC = () => {
   const [demoSets, setDemoSets] = useState([
@@ -32,7 +33,7 @@ export const HomeInteractiveDemo: React.FC = () => {
     .filter((s) => s.completed && typeof s.reps === 'number')
     .reduce((acc, curr) => acc + curr.weight * Number(curr.reps), 0);
 
-  // Plate math calculation
+  // Olympic plate math calculation
   const calculatePlates = (totalKg: number) => {
     const bar = 20;
     let rem = Math.max(0, (totalKg - bar) / 2);
@@ -54,161 +55,183 @@ export const HomeInteractiveDemo: React.FC = () => {
   const plates = calculatePlates(demoPlateWeight);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      {/* Live Interactive Exercise Card */}
-      <div className="lg:col-span-7 bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-7 shadow-xl space-y-5">
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-zinc-100 dark:border-zinc-800">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
-                ⚡ Weak Point Priority: Upper Chest
-              </span>
-              <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400">
-                Rest: 2 min
-              </span>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-display font-bold uppercase text-zinc-900 dark:text-white mt-1">
-              Incline Dumbbell Bench Press
-            </h3>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
-              Target: 8–10 Reps • Bench Angle: 15°–30° • Clavicular Pec Bias
-            </p>
-          </div>
-
-          <div className="text-right">
-            <div className="text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400">Session Volume</div>
-            <div className="text-2xl font-display font-black text-amber-500">
-              {demoTotalVolume} <span className="text-xs font-sans text-zinc-400">kg</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Set rows */}
-        <div className="space-y-2.5">
-          <div className="grid grid-cols-12 gap-2 text-[11px] font-mono text-zinc-600 dark:text-zinc-400 uppercase tracking-wider px-2">
-            <div className="col-span-2">Set</div>
-            <div className="col-span-4">Weight (kg)</div>
-            <div className="col-span-3">Reps</div>
-            <div className="col-span-3 text-right">Log Set</div>
-          </div>
-
-          {demoSets.map((s) => (
-            <div
-              key={s.id}
-              className={`grid grid-cols-12 gap-2 items-center p-3 rounded-2xl border transition-all ${
-                s.completed
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
-              }`}
-            >
-              <div className="col-span-2 font-mono font-bold text-xs">
-                #{s.id}
-              </div>
-              <div className="col-span-4 font-mono font-bold text-sm">
-                {s.weight} kg
-              </div>
-              <div className="col-span-3 font-mono font-bold text-sm">
-                {s.reps || '—'}
-              </div>
-              <div className="col-span-3 text-right">
-                <button
-                  type="button"
-                  onClick={() => toggleDemoSet(s.id)}
-                  className={`w-8 h-8 rounded-xl border flex items-center justify-center ml-auto transition-transform active:scale-90 cursor-pointer ${
-                    s.completed
-                      ? 'bg-emerald-500 border-emerald-500 text-black shadow-md shadow-emerald-500/20'
-                      : 'border-zinc-300 dark:border-zinc-700 hover:border-amber-500'
-                  }`}
-                  aria-label={`Toggle demo set ${s.id}`}
-                >
-                  {s.completed && <CheckCircle2 className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-between text-xs">
-          <span className="font-mono text-amber-500 font-semibold">
-            {completedCount === 4 ? '🎉 Double Progression Cleared! Add 2.5kg next session.' : `Completed ${completedCount}/4 sets.`}
-          </span>
-          <span className="text-zinc-600 dark:text-zinc-400">
-            {completedCount === 4 ? 'Ready to Overload' : 'Rest timer triggers on tap'}
+    <div className="space-y-4">
+      {/* Explicit Demo Disclaimer Badge */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-mono">
+        <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+          <Info className="w-4 h-4 text-[#B7FF4A] shrink-0" />
+          <span>
+            <strong className="text-[var(--text-primary)]">Interactive Preview:</strong> Built with live workout tracker components using sample session data.
           </span>
         </div>
+        <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[#B7FF4A]/10 text-[#B7FF4A] border border-[#B7FF4A]/25">
+          Sample Data Mode
+        </span>
       </div>
 
-      {/* Live Interactive Olympic Plate Math */}
-      <div className="lg:col-span-5 bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-7 shadow-xl space-y-5">
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
-          <div className="flex items-center gap-2">
-            <Scale className="w-5 h-5 text-amber-500" />
-            <h3 className="font-display font-bold uppercase text-lg text-zinc-900 dark:text-white">
-              Olympic Barbell Math
-            </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Live Interactive Exercise Card */}
+        <div className="lg:col-span-7 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-6 sm:p-7 shadow-xl space-y-5 transition-all">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[var(--border-subtle)]">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-bold text-[#B7FF4A] bg-[#B7FF4A]/10 px-2.5 py-0.5 rounded-full border border-[#B7FF4A]/25">
+                  ⚡ Lagging Muscle Focus: Upper Chest
+                </span>
+                <span className="text-[11px] font-mono text-[var(--text-muted)]">
+                  Rest: 120s
+                </span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-display font-bold uppercase text-[var(--text-primary)] mt-1.5">
+                Incline Dumbbell Bench Press
+              </h3>
+              <p className="text-xs text-[var(--text-secondary)]">
+                Rep Ceiling: 8–10 Reps • Bench Angle: 15°–30° • Clavicular Pec Bias
+              </p>
+            </div>
+
+            <div className="text-right">
+              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)]">Session Volume</div>
+              <div className="text-2xl font-display font-black text-[#B7FF4A] font-mono tnum">
+                {demoTotalVolume} <span className="text-xs font-sans text-[var(--text-muted)]">kg</span>
+              </div>
+            </div>
           </div>
-          <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400">20kg Bar</span>
-        </div>
 
-        <div>
-          <label className="block text-xs font-mono uppercase text-zinc-600 dark:text-zinc-400 mb-1.5">
-            Target Weight: {demoPlateWeight} kg
-          </label>
-          <input
-            type="range"
-            min="30"
-            max="180"
-            step="2.5"
-            value={demoPlateWeight}
-            onChange={(e) => setDemoPlateWeight(Number(e.target.value))}
-            className="w-full accent-amber-500 cursor-pointer"
-          />
-        </div>
+          {/* Set rows */}
+          <div className="space-y-2">
+            <div className="grid grid-cols-12 gap-2 text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider px-2">
+              <div className="col-span-2">Set</div>
+              <div className="col-span-4">Load (kg)</div>
+              <div className="col-span-3">Reps</div>
+              <div className="col-span-3 text-right">Logged</div>
+            </div>
 
-        {/* Visual Plates Display */}
-        <div className="space-y-2">
-          <div className="text-xs font-mono text-zinc-600 dark:text-zinc-400 uppercase">
-            Plates per collar side:
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(plates).map(([plate, count]) => {
-              const pNum = Number(plate);
-              const colorClass =
-                pNum === 25
-                  ? 'bg-red-500 text-white'
-                  : pNum === 20
-                  ? 'bg-blue-600 text-white'
-                  : pNum === 15
-                  ? 'bg-amber-500 text-black'
-                  : pNum === 10
-                  ? 'bg-emerald-600 text-white'
-                  : pNum === 5
-                  ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white'
-                  : 'bg-zinc-400 text-black';
-
-              return (
-                <div
-                  key={plate}
-                  className={`px-3 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm ${colorClass}`}
-                >
-                  <span>{plate} kg</span>
-                  <span className="text-[10px] bg-black/30 text-white px-1.5 py-0.5 rounded-md">
-                    ×{count}
-                  </span>
+            {demoSets.map((s) => (
+              <div
+                key={s.id}
+                className={`grid grid-cols-12 gap-2 items-center p-3 rounded-2xl border transition-all ${
+                  s.completed
+                    ? 'bg-[#B7FF4A]/10 border-[#B7FF4A]/30 text-[var(--text-primary)]'
+                    : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-secondary)]'
+                }`}
+              >
+                <div className="col-span-2 font-mono font-bold text-xs tnum">
+                  #{s.id}
                 </div>
-              );
-            })}
+                <div className="col-span-4 font-mono font-bold text-sm tnum">
+                  {s.weight} kg
+                </div>
+                <div className="col-span-3 font-mono font-bold text-sm tnum">
+                  {s.reps || '—'}
+                </div>
+                <div className="col-span-3 text-right">
+                  <button
+                    type="button"
+                    onClick={() => toggleDemoSet(s.id)}
+                    className={`w-8 h-8 rounded-xl border flex items-center justify-center ml-auto transition-transform active:scale-90 cursor-pointer ${
+                      s.completed
+                        ? 'bg-[#B7FF4A] border-[#B7FF4A] text-[#090B0F] shadow-md shadow-[#B7FF4A]/25'
+                        : 'border-[var(--border-strong)] hover:border-[#B7FF4A]'
+                    }`}
+                    aria-label={`Toggle demo set ${s.id}`}
+                  >
+                    {s.completed && <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-3.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl flex items-center justify-between text-xs">
+            <span className="font-mono text-[#B7FF4A] font-semibold">
+              {completedCount === 4
+                ? '🎉 Double Progression Cleared! Advance +2.5kg next session.'
+                : `Logged ${completedCount}/4 target sets.`}
+            </span>
+            <span className="text-[var(--text-muted)] text-[11px] font-mono">
+              {completedCount === 4 ? 'Ready to Overload' : 'Tap checkmark to test rest chime'}
+            </span>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800">
-          <Link
-            href="/tools/ppl-tracker"
-            className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-display font-black uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-all shadow-md shadow-amber-500/20"
-          >
-            <span>Open In Full Workout App</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        {/* Live Interactive Olympic Plate Math */}
+        <div className="lg:col-span-5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-6 sm:p-7 shadow-xl space-y-5 transition-all">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)]">
+            <div className="flex items-center gap-2">
+              <Scale className="w-5 h-5 text-[#36D6B0]" />
+              <h3 className="font-display font-bold uppercase text-lg text-[var(--text-primary)]">
+                Olympic Plate Math
+              </h3>
+            </div>
+            <span className="text-xs font-mono text-[var(--text-muted)]">20kg Standard Bar</span>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-mono uppercase text-[var(--text-muted)]">
+                Total Bar Weight:
+              </span>
+              <span className="text-lg font-mono font-bold text-[#B7FF4A] tnum">
+                {demoPlateWeight} kg
+              </span>
+            </div>
+            <input
+              type="range"
+              min="30"
+              max="180"
+              step="2.5"
+              value={demoPlateWeight}
+              onChange={(e) => setDemoPlateWeight(Number(e.target.value))}
+              className="w-full accent-[#B7FF4A] cursor-pointer"
+            />
+          </div>
+
+          {/* Visual Plates Display */}
+          <div className="space-y-2">
+            <div className="text-[11px] font-mono text-[var(--text-muted)] uppercase">
+              Plates Per Sleeve Collar:
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(plates).map(([plate, count]) => {
+                const pNum = Number(plate);
+                const colorClass =
+                  pNum === 25
+                    ? 'bg-red-600 text-white'
+                    : pNum === 20
+                    ? 'bg-blue-600 text-white'
+                    : pNum === 15
+                    ? 'bg-yellow-500 text-black'
+                    : pNum === 10
+                    ? 'bg-emerald-600 text-white'
+                    : pNum === 5
+                    ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white'
+                    : 'bg-zinc-400 text-black';
+
+                return (
+                  <div
+                    key={plate}
+                    className={`px-3 py-2 rounded-2xl text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm ${colorClass}`}
+                  >
+                    <span className="tnum">{plate} kg</span>
+                    <span className="text-[10px] bg-black/30 text-white px-1.5 py-0.5 rounded-full font-mono">
+                      ×{count}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-[var(--border-subtle)]">
+            <Link
+              href="/tools/ppl-tracker"
+              className="w-full py-3.5 px-4 rounded-2xl bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] font-display font-black uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-all btn-tactile shadow-md shadow-[#B7FF4A]/20"
+            >
+              <span>Launch Full PPL Workout Tracker</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>
