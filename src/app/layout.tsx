@@ -4,6 +4,7 @@ import './globals.css';
 import { Providers } from '../components/Providers';
 import { GoogleAnalytics } from '../components/GoogleAnalytics';
 import { ServiceWorkerRegistration } from '../components/ServiceWorkerRegistration';
+import { MobileBottomNav } from '../components/MobileBottomNav';
 import { getRootWebSiteSchema } from '../lib/schema';
 
 const geistSans = localFont({
@@ -166,10 +167,13 @@ export default function RootLayout({
         <GoogleAnalytics />
       </head>
       <body
-        className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] antialiased selection:bg-[#B7FF4A] selection:text-[#090B0F] transition-colors duration-200"
+        className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] antialiased selection:bg-[#B7FF4A] selection:text-[#090B0F] transition-colors duration-200 pb-16 md:pb-0"
         suppressHydrationWarning
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <MobileBottomNav />
+        </Providers>
         <ServiceWorkerRegistration />
       </body>
     </html>

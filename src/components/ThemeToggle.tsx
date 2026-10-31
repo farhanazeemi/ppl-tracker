@@ -10,7 +10,10 @@ interface ThemeToggleProps {
   soundEnabled?: boolean;
 }
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', soundEnabled = true }) => {
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({
+  className = '',
+  soundEnabled = true,
+}) => {
   const { theme, toggleTheme, isDark } = useTheme();
 
   const handleToggle = () => {
@@ -23,18 +26,14 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', soundE
       type="button"
       onClick={handleToggle}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      className={`relative inline-flex items-center justify-center min-w-[40px] min-h-[40px] p-2 rounded-xl border btn-tactile transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 active:scale-95 ${
-        isDark
-          ? 'bg-zinc-900 border-zinc-800 text-amber-400 hover:bg-zinc-800 hover:text-amber-300 shadow-xs'
-          : 'bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 shadow-xs'
-      } ${className}`}
+      className={`relative inline-flex items-center justify-center min-w-[42px] min-h-[42px] p-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all duration-200 cursor-pointer active:scale-95 ${className}`}
       title={`Toggle theme (currently ${theme})`}
     >
-      <div className="relative w-5 h-5 flex items-center justify-center">
+      <div className="relative w-4 h-4 flex items-center justify-center">
         {isDark ? (
-          <Sun className="w-5 h-5 transition-transform duration-300 rotate-0 scale-100" />
+          <Sun className="w-4 h-4 text-[#B7FF4A] transition-transform duration-300" />
         ) : (
-          <Moon className="w-5 h-5 transition-transform duration-300 rotate-0 scale-100 text-indigo-600" />
+          <Moon className="w-4 h-4 text-[var(--accent-secondary)] transition-transform duration-300" />
         )}
       </div>
     </button>
