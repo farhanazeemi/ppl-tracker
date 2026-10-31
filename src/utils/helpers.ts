@@ -3,9 +3,10 @@ import { ExerciseSet } from '../types/workout';
 /**
  * Calculates estimated One-Rep Max using the Epley formula:
  * 1RM = Weight * (1 + Reps / 30)
+ * Sanitizes against negative values, non-finite values, and NaN.
  */
 export function calculateEstimated1RM(weight: number, reps: number): number {
-  if (!weight || !reps || reps <= 0) return 0;
+  if (!Number.isFinite(weight) || weight <= 0 || !Number.isFinite(reps) || reps <= 0) return 0;
   if (reps === 1) return weight;
   return Math.round(weight * (1 + reps / 30) * 10) / 10;
 }
@@ -17,15 +18,26 @@ export function calculateEstimated1RM(weight: number, reps: number): number {
 export function checkDoubleProgression(sets: ExerciseSet[], maxReps: number): boolean {
   const workingSets = sets.filter(s => !s.isWarmup);
   if (workingSets.length === 0) return false;
-  return workingSets.every(s => s.completed && typeof s.reps === 'number' && s.reps >= maxReps);
+  return workingSets.every(
+    s => s.completed && typeof s.reps === 'number' && Number.isFinite(s.reps) && s.reps >= maxReps
+  );
 }
 
 /**
- * Calculate total volume for a list of sets: sum of weight * reps
+ * Calculate total volume for a list of sets: sum of weight * reps.
+ * Strictly ignores non-completed sets, NaN, negative, or non-finite values.
  */
 export function calculateExerciseVolume(sets: ExerciseSet[]): number {
   return sets.reduce((acc, curr) => {
-    if (curr.completed && typeof curr.weight === 'number' && typeof curr.reps === 'number') {
+    if (
+      curr.completed &&
+      typeof curr.weight === 'number' &&
+      Number.isFinite(curr.weight) &&
+      curr.weight > 0 &&
+      typeof curr.reps === 'number' &&
+      Number.isFinite(curr.reps) &&
+      curr.reps > 0
+    ) {
       return acc + curr.weight * curr.reps;
     }
     return acc;
@@ -48,17 +60,20 @@ export function calculatePlates(
   barWeight: number = 20,
   availablePlates: number[] = [25, 20, 15, 10, 5, 2.5, 1.25]
 ): PlateCalculationResult {
-  if (targetWeight <= barWeight) {
+  const safeTarget = Number.isFinite(targetWeight) && targetWeight > 0 ? targetWeight : 0;
+  const safeBar = Number.isFinite(barWeight) && barWeight >= 0 ? barWeight : 20;
+
+  if (safeTarget <= safeBar) {
     return {
-      targetWeight,
-      barWeight,
+      targetWeight: safeTarget,
+      barWeight: safeBar,
       weightPerSide: 0,
       platesPerSide: [],
       remainder: 0,
     };
   }
 
-  let sideWeight = (targetWeight - barWeight) / 2;
+  let sideWeight = (safeTarget - safeBar) / 2;
   const platesPerSide: { weight: number; count: number }[] = [];
 
   for (const plate of availablePlates) {
@@ -72,16 +87,17 @@ export function calculatePlates(
   }
 
   return {
-    targetWeight,
-    barWeight,
-    weightPerSide: (targetWeight - barWeight) / 2,
+    targetWeight: safeTarget,
+    barWeight: safeBar,
+    weightPerSide: (safeTarget - safeBar) / 2,
     platesPerSide,
     remainder: sideWeight,
   };
 }
 
 export function formatTime(seconds: number): string {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
+  const safeSecs = Number.isFinite(seconds) && seconds > 0 ? Math.floor(seconds) : 0;
+  const mins = Math.floor(safeSecs / 60);
+  const secs = safeSecs % 60;
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
