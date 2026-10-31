@@ -1,5 +1,6 @@
 'use client';
 
+import { useModalAccessibility } from '../utils/useModalAccessibility';
 import { validateAndSanitizeHistory } from '../utils/historyValidation';
 
 import React, { useState, useMemo } from 'react';
@@ -34,6 +35,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
   onImportData,
   soundEnabled = true,
 }) => {
+  useModalAccessibility(isOpen, onClose);
   const [activeTab, setActiveTab] = useState<'sessions' | 'prs'>('sessions');
 
   // Exercise and Day names lookup across all training splits

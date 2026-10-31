@@ -1,5 +1,6 @@
 'use client';
 
+import { useModalAccessibility } from '../utils/useModalAccessibility';
 import React, { useState, useEffect } from 'react';
 import { X, Dumbbell, Info } from 'lucide-react';
 import { calculatePlates } from '../utils/helpers';
@@ -21,7 +22,8 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
   soundEnabled = true,
 }) => {
   const [targetWeight, setTargetWeight] = useState<number>(initialWeight);
-  const [barWeight, setBarWeight] = useState<number>(20); // Standard Olympic Bar = 20kg
+  const [barWeight, setBarWeight] = useState<number>(20);
+  useModalAccessibility(isOpen, onClose); // Standard Olympic Bar = 20kg
 
   useEffect(() => {
     if (initialWeight && initialWeight > 0) {

@@ -241,13 +241,15 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                     <div className="relative flex items-center gap-1.5">
                       <input
                         type="number"
+                        id={`set-${set.id}-weight`}
+                        name={`set-${set.id}-weight`}
                         placeholder="kg"
                         step="0.5"
                         min="0"
                         aria-label={`${exercise.name} Set ${idx + 1} weight in kg`}
                         value={set.weight}
                         onChange={(e) => handleUpdateField(set.id, 'weight', e.target.value)}
-                        className={`w-20 sm:w-24 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 focus:border-[var(--accent-primary)] transition ${
+                        className={`w-20 sm:w-24 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-base sm:text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 focus:border-[var(--accent-primary)] transition ${
                           set.completed
                             ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/5'
                             : 'border-[var(--border-subtle)]'
@@ -289,12 +291,14 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                     <div className="flex items-center gap-1.5">
                       <input
                         type="number"
+                        id={`set-${set.id}-reps`}
+                        name={`set-${set.id}-reps`}
                         placeholder={exercise.targetReps}
                         min="0"
                         aria-label={`${exercise.name} Set ${idx + 1} completed reps`}
                         value={set.reps}
                         onChange={(e) => handleUpdateField(set.id, 'reps', e.target.value)}
-                        className={`w-18 sm:w-20 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 focus:border-[var(--accent-primary)] transition ${
+                        className={`w-18 sm:w-20 bg-[var(--bg-elevated)] border rounded-xl px-2.5 py-2 font-mono text-base sm:text-sm font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:bg-[var(--bg-card)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 focus:border-[var(--accent-primary)] transition ${
                           set.completed
                             ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/5'
                             : 'border-[var(--border-subtle)]'
