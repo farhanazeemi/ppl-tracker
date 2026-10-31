@@ -25,37 +25,54 @@ export const RestTimer: React.FC<RestTimerProps> = ({
   const [isRunning, setIsRunning] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const targetEndTimeRef = useRef<number | null>(null);
 
   // Auto-start timer when an external trigger (like set completed) occurs
   useEffect(() => {
     if (autoStartedTimestamp && autoSeconds) {
       setTotalSeconds(autoSeconds);
       setRemaining(autoSeconds);
+      targetEndTimeRef.current = Date.now() + autoSeconds * 1000;
       setIsRunning(true);
       setIsDone(false);
     }
   }, [autoStartedTimestamp, autoSeconds]);
 
   useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setRemaining((prev) => {
-          if (prev <= 1) {
-            clearInterval(intervalRef.current!);
-            setIsRunning(false);
-            setIsDone(true);
-            playTimerDoneSound(soundEnabled);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else {
+    if (!isRunning) {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
     }
+
+    const checkRemaining = () => {
+      if (!targetEndTimeRef.current) return;
+      const diff = Math.ceil((targetEndTimeRef.current - Date.now()) / 1000);
+      if (diff <= 0) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        targetEndTimeRef.current = null;
+        setRemaining(0);
+        setIsRunning(false);
+        setIsDone(true);
+        playTimerDoneSound(soundEnabled);
+      } else {
+        setRemaining(diff);
+      }
+    };
+
+    checkRemaining();
+    intervalRef.current = setInterval(checkRemaining, 500);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkRemaining();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [isRunning, soundEnabled]);
 
@@ -63,6 +80,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
     playClickSound(soundEnabled);
     setTotalSeconds(seconds);
     setRemaining(seconds);
+    targetEndTimeRef.current = Date.now() + seconds * 1000;
     setIsRunning(true);
     setIsDone(false);
   };
@@ -71,8 +89,12 @@ export const RestTimer: React.FC<RestTimerProps> = ({
     playClickSound(soundEnabled);
     if (remaining === 0) {
       handleStart(totalSeconds);
+    } else if (isRunning) {
+      setIsRunning(false);
+      targetEndTimeRef.current = null;
     } else {
-      setIsRunning(!isRunning);
+      targetEndTimeRef.current = Date.now() + remaining * 1000;
+      setIsRunning(true);
     }
   };
 
@@ -80,6 +102,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
     playClickSound(soundEnabled);
     setIsRunning(false);
     setIsDone(false);
+    targetEndTimeRef.current = null;
     setRemaining(totalSeconds);
   };
 
@@ -88,6 +111,9 @@ export const RestTimer: React.FC<RestTimerProps> = ({
     setRemaining((prev) => {
       const next = Math.max(0, prev + delta);
       if (next > totalSeconds) setTotalSeconds(next);
+      if (targetEndTimeRef.current) {
+        targetEndTimeRef.current += delta * 1000;
+      }
       return next;
     });
   };
