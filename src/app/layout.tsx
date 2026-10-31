@@ -1,3 +1,4 @@
+import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
@@ -161,7 +162,7 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(websiteSchema) }}
         />
         {/* Google Analytics & GTM loaded on idle, excludes internal Sanity Studio routes */}
         <GoogleAnalytics />

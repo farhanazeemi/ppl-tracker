@@ -16,7 +16,7 @@ export const DEFAULT_MATCHING_WEIGHTS: MatchingWeights = {
   primaryMuscle: 0.30,
   movementPattern: 0.25,
   equipment: 0.20,
-  secondaryMuscle: 0.15,
+  secondaryMuscle: 0.10,
   exerciseType: 0.10,
   goalBonus: 0.05
 };
@@ -434,8 +434,8 @@ export function findExerciseSubstitutes(
     }
   }
 
-  // Sort ranked results descending by score
-  results.sort((a, b) => b.score - a.score);
+  // Sort ranked results descending by score with deterministic alphabetical tie-breaker
+  results.sort((a, b) => b.score - a.score || a.exercise.name.localeCompare(b.exercise.name));
 
   return results;
 }

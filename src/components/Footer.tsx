@@ -192,7 +192,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
-                  href="/blog/low-incline-dumbbell-press-upper-chest-hypertrophy"
+                  href="/blog/biomechanics-upper-chest-growth-clavicular-head"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >
@@ -201,7 +201,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
-                  href="/blog/cable-lateral-raise-scapular-plane-3d-delts"
+                  href="/blog/scapular-plane-lateral-raise-delt-hypertrophy"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >

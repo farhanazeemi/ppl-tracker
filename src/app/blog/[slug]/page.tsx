@@ -1,3 +1,4 @@
+import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -113,7 +114,7 @@ export default async function BlogPostDetailPage({
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleJsonLd) }}
       />
 
       {/* Top Global Navigation Bar */}

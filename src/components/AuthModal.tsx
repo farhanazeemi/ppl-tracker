@@ -1,5 +1,6 @@
 'use client';
 
+import { useModalAccessibility } from '../utils/useModalAccessibility';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -32,6 +33,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 }) => {
   const { login, signup, signInWithGoogle, resetPassword, updatePassword } = useAuth();
   const [mode, setMode] = useState<AuthModalMode>(initialMode);
+  useModalAccessibility(isOpen, onClose);
 
   // Sync mode whenever modal opens or initialMode changes
   useEffect(() => {

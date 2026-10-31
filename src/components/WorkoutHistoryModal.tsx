@@ -1,5 +1,8 @@
 'use client';
 
+import { useModalAccessibility } from '../utils/useModalAccessibility';
+import { validateAndSanitizeHistory } from '../utils/historyValidation';
+
 import React, { useState, useMemo } from 'react';
 import {
   X,
@@ -32,6 +35,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
   onImportData,
   soundEnabled = true,
 }) => {
+  useModalAccessibility(isOpen, onClose);
   const [activeTab, setActiveTab] = useState<'sessions' | 'prs'>('sessions');
 
   // Exercise and Day names lookup across all training splits
@@ -91,15 +95,19 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (Array.isArray(parsed)) {
-          onImportData(parsed);
-          alert('Workout history imported successfully!');
+        const { validLogs, isValid, errorMessage } = validateAndSanitizeHistory(parsed);
+        if (!isValid) {
+          alert(errorMessage || 'Invalid JSON file format.');
+          return;
         }
-      } catch (err) {
+        onImportData(validLogs);
+        alert(`Successfully imported ${validLogs.length} workout session(s)!`);
+      } catch {
         alert('Invalid JSON file format.');
       }
     };
     reader.readAsText(file);
+    e.target.value = '';
   };
 
   return (

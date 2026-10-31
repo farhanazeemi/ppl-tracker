@@ -1,3 +1,4 @@
+import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, BookOpen, Layers, Activity } from 'lucide-react';
@@ -51,7 +52,7 @@ export default async function BlogIndexPage() {
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(blogJsonLd) }}
       />
 
       {/* Top Universal Navbar */}

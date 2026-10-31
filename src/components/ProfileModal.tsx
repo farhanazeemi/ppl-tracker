@@ -1,5 +1,6 @@
 'use client';
 
+import { useModalAccessibility } from '../utils/useModalAccessibility';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -56,6 +57,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 }) => {
   const { user, updateProfile, updateEmail, updatePassword, logout } = useAuth();
 
+  useModalAccessibility(isOpen, onClose);
   const [activeTab, setActiveTab] = useState<'info' | 'split' | 'security'>('info');
 
   // Personal Info form

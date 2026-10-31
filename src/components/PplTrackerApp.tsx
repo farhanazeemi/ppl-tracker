@@ -15,6 +15,7 @@ import {
   getScheduledDayForToday,
   applyWeakPointPriorities,
 } from '../data/workouts';
+import { findCanonicalExercise } from '../lib/workout-substitution/exerciseRepository';
 import { calculateExerciseVolume, checkDoubleProgression } from '../utils/helpers';
 import { playClickSound, playTabSound, playPopSound } from '../utils/audio';
 import { Navbar } from './Navbar';
@@ -149,9 +150,11 @@ export function PplTrackerApp({
   const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthModalMode>('login');
   const [activeSubstitution, setActiveSubstitution] = useState<{
+    originalId?: string;
     originalName: string;
+    substituteId?: string;
     substituteName: string;
-    timestamp: number;
+    timestamp?: number;
   } | null>(null);
 
   useEffect(() => {
@@ -230,8 +233,18 @@ export function PplTrackerApp({
 
     // Build initial sets state for all exercises in the active split
     const initialSets: Record<string, ExerciseSet[]> = {};
-    const legacyChecked = JSON.parse(localStorage.getItem('ppl_checked') || '{}');
-    const savedSets = JSON.parse(localStorage.getItem('ppl_sets_v2') || '{}');
+    let legacyChecked: Record<string, boolean> = {};
+    let savedSets: Record<string, ExerciseSet[]> = {};
+    try {
+      legacyChecked = JSON.parse(localStorage.getItem('ppl_checked') || '{}');
+    } catch (e) {
+      console.error('Failed to parse legacy checked state:', e);
+    }
+    try {
+      savedSets = JSON.parse(localStorage.getItem('ppl_sets_v2') || '{}');
+    } catch (e) {
+      console.error('Failed to parse saved sets:', e);
+    }
 
     splitWorkouts.forEach((day) => {
       day.exercises.forEach((ex, exIdx) => {
@@ -259,9 +272,11 @@ export function PplTrackerApp({
 
   const defaultFallbackSets = (saved: any) => saved || {};
 
+  const isCloudUser = (u: any): u is { id: string; isGuest?: boolean } => !!u?.id && !u.isGuest && u.id !== 'guest-athlete';
+
   // Sync workout history with Supabase when user logs in
   useEffect(() => {
-    if (!user?.id) return;
+    if (!isCloudUser(user)) return;
 
     async function syncCloudWorkouts() {
       try {
@@ -339,8 +354,35 @@ export function PplTrackerApp({
       : splitWorkouts.filter((d) => d.id === activeDayId);
 
     // Run each day through weak-point priority engine
-    return rawDays.map((day) => applyWeakPointPriorities(day, user?.weakPoints || []));
-  }, [activeDayId, splitWorkouts, user?.weakPoints]);
+    return rawDays.map((day) => {
+      const prioritized = applyWeakPointPriorities(day, user?.weakPoints || []);
+      if (!activeSubstitution) return prioritized;
+
+      return {
+        ...prioritized,
+        exercises: prioritized.exercises.map((ex) => {
+          const isMatch =
+            ex.id === activeSubstitution.originalId ||
+            ex.name.toLowerCase() === activeSubstitution.originalName.toLowerCase();
+          if (!isMatch) return ex;
+
+          const sub =
+            (activeSubstitution.substituteId ? findCanonicalExercise(activeSubstitution.substituteId) : undefined) ||
+            findCanonicalExercise(activeSubstitution.substituteName);
+          if (!sub) return ex;
+
+          return {
+            ...ex,
+            id: sub.id,
+            name: sub.name,
+            target: sub.primaryMuscles.join(', ') || ex.target,
+            cue: sub.cues?.[0] || sub.biomechanics?.resistanceProfile || ex.cue,
+            equipment: (sub.equipment?.[0] as any) || ex.equipment,
+          };
+        }),
+      };
+    });
+  }, [activeDayId, splitWorkouts, user?.weakPoints, activeSubstitution]);
 
   const activeDayObject = useMemo(() => {
     if (activeDayId === 'all') return activeDaysList[0] || splitWorkouts[0];
@@ -351,25 +393,25 @@ export function PplTrackerApp({
     let volume = 0;
     activeDaysList.forEach((day) => {
       day.exercises.forEach((ex) => {
-        const sets = setsState[ex.id] || [];
+        const sets = setsState[ex.id] || (activeSubstitution && activeSubstitution.originalId && ex.id === activeSubstitution.substituteId ? setsState[activeSubstitution.originalId] : []) || [];
         volume += calculateExerciseVolume(sets);
       });
     });
     return volume;
-  }, [activeDaysList, setsState]);
+  }, [activeDaysList, setsState, activeSubstitution]);
 
   const { completedSetsCount, totalSetsCount } = useMemo(() => {
     let done = 0;
     let total = 0;
     activeDaysList.forEach((day) => {
       day.exercises.forEach((ex) => {
-        const sets = setsState[ex.id] || [];
+        const sets = setsState[ex.id] || (activeSubstitution && activeSubstitution.originalId && ex.id === activeSubstitution.substituteId ? setsState[activeSubstitution.originalId] : []) || [];
         total += sets.length;
         done += sets.filter((s) => s.completed).length;
       });
     });
     return { completedSetsCount: done, totalSetsCount: total };
-  }, [activeDaysList, setsState]);
+  }, [activeDaysList, setsState, activeSubstitution]);
 
   // Finish Workout
   const handleFinishWorkout = () => {
@@ -380,7 +422,7 @@ export function PplTrackerApp({
     const doubleProgressionsEarned: string[] = [];
     activeDaysList.forEach((day) => {
       day.exercises.forEach((ex) => {
-        const sets = setsState[ex.id] || [];
+        const sets = setsState[ex.id] || (activeSubstitution && activeSubstitution.originalId && ex.id === activeSubstitution.substituteId ? setsState[activeSubstitution.originalId] : []) || [];
         if (checkDoubleProgression(sets, ex.maxReps)) {
           doubleProgressionsEarned.push(ex.name);
         }
@@ -412,7 +454,7 @@ export function PplTrackerApp({
     }
 
     // Persist workout to Supabase if authenticated
-    if (user?.id) {
+    if (isCloudUser(user)) {
       supabase
         .from('workout_sessions')
         .insert({
@@ -837,7 +879,21 @@ export function PplTrackerApp({
                     {/* Exercise Cards Grid */}
                     <div className="grid grid-cols-1 gap-4">
                       {filteredExercises.map((exercise) => {
-                        const currentSets = setsState[exercise.id] || [];
+                        const currentSets: ExerciseSet[] =
+                          setsState[exercise.id] && setsState[exercise.id].length > 0
+                            ? setsState[exercise.id]
+                            : activeSubstitution &&
+                              (exercise.id === activeSubstitution.substituteId || exercise.name === activeSubstitution.substituteName) &&
+                              activeSubstitution.originalId &&
+                              setsState[activeSubstitution.originalId]?.length
+                            ? setsState[activeSubstitution.originalId]
+                            : Array.from({ length: exercise.sets || 3 }).map((_, idx) => ({
+                                id: `${exercise.id}-set-${idx + 1}`,
+                                setNumber: idx + 1,
+                                weight: '' as const,
+                                reps: '' as const,
+                                completed: false,
+                              }));
 
                         return (
                           <ExerciseCard
@@ -909,14 +965,22 @@ export function PplTrackerApp({
             if (typeof window !== 'undefined') {
               localStorage.removeItem('ppl_history_v2');
             }
-            if (user?.id) {
+            if (isCloudUser(user)) {
               await supabase.from('workout_sessions').delete().eq('user_id', user.id);
             }
           }}
           onImportData={(imported) => {
             setHistoryLogs(imported);
             if (typeof window !== 'undefined') {
-              localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
+              try {
+                localStorage.setItem('ppl_history_v2', JSON.stringify(imported));
+              } catch (e: any) {
+                if (e?.name === 'QuotaExceededError' || e?.code === 22) {
+                  alert('Storage quota exceeded. Your workout history could not be saved to local storage.');
+                } else {
+                  console.error('Failed to save imported history:', e);
+                }
+              }
             }
           }}
           soundEnabled={soundEnabled}

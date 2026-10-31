@@ -1,5 +1,6 @@
 'use client';
 
+import { useModalAccessibility } from '../utils/useModalAccessibility';
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Trophy, Flame, CheckCircle2, Award, Clock, ArrowRight } from 'lucide-react';
@@ -26,6 +27,7 @@ export const CelebrationModal: React.FC<CelebrationModalProps> = ({
   doubleProgressions,
   soundEnabled,
 }) => {
+  useModalAccessibility(isOpen, onClose);
   useEffect(() => {
     if (isOpen) {
       playCelebrationSound(soundEnabled);
