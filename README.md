@@ -1,14 +1,16 @@
-# 🏋️ PPL Hypertrophy Tracker (Push • Pull • Legs)
+# 🏋️ PPL Hypertrophy Tracker (Push • Pull • Legs) — UI/UX v2
 
-[![Live Web Application](https://img.shields.io/badge/Production-ppltracker.web.id-amber?style=for-the-badge&logo=vercel)](https://ppltracker.web.id)
+[![Live Web Application](https://img.shields.io/badge/Production-ppltracker.web.id-10141b?style=for-the-badge&logo=vercel&logoColor=B7FF4A)](https://ppltracker.web.id)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.0-61dafb?style=for-the-badge&logo=react)](https://react.dev/)
+[![Design System](https://img.shields.io/badge/UI_Design-Athletic_Bento_v2-B7FF4A?style=for-the-badge&logoColor=black)](https://ppltracker.web.id)
+[![WCAG AA](https://img.shields.io/badge/Accessibility-WCAG_AA_Compliant-36D6B0?style=for-the-badge)](https://www.w3.org/WAI/WCAG2AA-Conformance)
 [![Sanity Studio v3](https://img.shields.io/badge/Sanity_CMS-v3-f03e2f?style=for-the-badge&logo=sanity)](https://www.sanity.io/)
 [![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_Database-3ecf8e?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-> **The Evidence-Based Progressive Overload Operating System & Exercise Substitution Engine for Natural Lifters.**  
-> Built with Next.js 15 App Router, React 19, Tailwind CSS, Sanity Studio v3, Supabase, and Web Audio API.
+> **The Evidence-Based Progressive Overload Operating System & Biomechanical Exercise Substitution Engine for Serious Natural Athletes.**  
+> Fusing Apple Fitness+ visual sophistication, Linear's clean ergonomics, and editorial sports-science precision. Built with Next.js 15 App Router, React 19, Tailwind CSS, self-hosted Geist typography, Sanity Studio v3, and Supabase.
 
 ---
 
@@ -16,17 +18,42 @@
 
 **PPL Hypertrophy Tracker** is an evidence-based resistance training web application, biomechanical exercise substitution engine, and sports science research journal. It eliminates guesswork in the gym by automating rep-bracket ceilings (Double Progression), rest interval timing, barbell plate math, periodized training splits, and deterministic exercise substitutions when gym equipment or machines are occupied.
 
+With the **v2 Athletic Redesign**, the entire interface has been upgraded to a dark-mode native, thumb-zone optimized mobile web application featuring an asymmetric Bento Grid architecture, strict WCAG AA contrast compliance, zero-FOUC theme persistence, and tactile micro-interactions.
+
 - **Production Application**: [https://ppltracker.web.id](https://ppltracker.web.id)
 - **PPL Workout Tracker**: [https://ppltracker.web.id/tools/ppl-tracker](https://ppltracker.web.id/tools/ppl-tracker)
 - **Workout Substitution Finder**: [https://ppltracker.web.id/tools/workout-substitution-finder](https://ppltracker.web.id/tools/workout-substitution-finder)
-- **BMI & Body Comp Calculator**: [https://ppltracker.web.id/tools/bmi-calculator](https://ppltracker.web.id/tools/bmi-calculator)
+- **Athlete BMI & Body Comp Calculator**: [https://ppltracker.web.id/tools/bmi-calculator](https://ppltracker.web.id/tools/bmi-calculator)
 - **Athlete Tools Directory**: [https://ppltracker.web.id/tools](https://ppltracker.web.id/tools)
 - **Scientific Research Journal**: [https://ppltracker.web.id/blog](https://ppltracker.web.id/blog)
 - **Embedded Sanity Studio**: [https://ppltracker.web.id/studio](https://ppltracker.web.id/studio)
 
 ---
 
-## 🚀 Key Features
+## 🎨 Design System & UX Architecture (v2)
+
+### 1. Athletic Bento Grid Architecture
+- **Asymmetric Visual Hierarchy**: Modern bento cards (`card-bento`) featuring 1px high-contrast structural borders, subtle radial gradient illumination, and smooth 220ms lift on interaction.
+- **Glassmorphic HUD Elements**: Controlled backdrop blur (`backdrop-blur-md`) applied to top sticky workout summary bars, desktop navigation chrome, and floating mobile navigation.
+
+### 2. High-Performance Typography
+- **Geist & Geist Mono**: Self-hosted variable fonts loaded via `next/font/local` for zero external network roundtrips and zero layout shifts (CLS = 0).
+- **Tabular Numerals**: Every workout statistic, timer countdown, rep count, barbell load, and 1RM calculation is styled with `tabular-nums` (`font-feature-settings: "tnum" 1`) to eliminate character jitter during live updates.
+
+### 3. Thumb-Zone Mobile Navigation
+- **Persistent Bottom Navigation**: Fixed, glassmorphic 5-destination bottom navigation bar (`Home`, `Tracker`, `Tools`, `Journal`, `Profile`) mapped to existing application routes and modals with active indicator pills and safe-area insets (`pb-safe`).
+- **Tactile Touch Targets**: All primary interactive elements, steppers, and completion checkboxes feature minimum 44×44px hitboxes for effortless single-handed gym operation.
+
+### 4. 100% WCAG AA Contrast Compliance
+- **Dark Mode (Default)**: Deep layered surfaces (`#090B0F` base, `#10141B` secondary, `#151B24` card, `#1B2330` elevated) with high-contrast text (`#F5F7FA` primary, `#A0A9B8` secondary, `#8291A5` muted: 4.92:1 on elevated surfaces). Electric Volt (`#B7FF4A`) and Cyan-Teal (`#36D6B0`) sports accents.
+- **Light Mode**: Crisp editorial surfaces (`#F5F7FA` base, `#FFFFFF` cards, `#EDF1F5` elevated) with recalibrated high-contrast text (`#10141B` primary, `#586273` secondary, `#5F6B7A` muted: 4.78:1) and darkened accent tokens (`#496E0F` text/border: 5.26:1; `#6B9F19` solid buttons).
+
+### 5. Zero-FOUC Theme Persistence
+- Blocking pre-paint `<script>` injected directly in `<head>` inspecting `localStorage` and `prefers-color-scheme`, ensuring zero white-flash on page load while defaulting new visitors to Dark Mode.
+
+---
+
+## 🚀 Core Application Features
 
 ### 1. 🔄 Workout Substitution Finder (`/tools/workout-substitution-finder`)
 Never lose training momentum when machines, benches, or squat racks are occupied.
@@ -57,15 +84,15 @@ Never lose training momentum when machines, benches, or squat racks are occupied
 ### 4. ⏱️ Automated Rest Interval Timers & Web Audio API
 - Automatic rest countdowns customized per movement category ($60\text{s}$, $90\text{s}$, $120\text{s}$, $180\text{s}$).
 - Zero-dependency sound synthesizer using the browser's native **Web Audio API** for tactile button clicks, countdown chimes, and completion alerts.
-- Dedicated sound effects toggle (mute / unmute).
+- Dedicated sound effects toggle (mute / unmute) with persistent user preference.
 
 ### 5. 🏋️ Olympic Barbell Plate Calculator
 - Real-time plate breakdown calculator for standard Olympic bars ($20\text{ kg} / 45\text{ lbs}$).
-- Visually stacks color-coded bumper plates ($25\text{kg}$, $20\text{kg}$, $15\text{kg}$, $10\text{kg}$, $5\text{kg}$, $2.5\text{kg}$, $1.25\text{kg}$) per sleeve.
+- Visually stacks calibrated bumper plates ($25\text{kg}$, $20\text{kg}$, $15\text{kg}$, $10\text{kg}$, $5\text{kg}$, $2.5\text{kg}$, $1.25\text{kg}$) per sleeve.
 
 ### 6. ⚖️ Athlete BMI & Body Composition Calculator (`/tools/bmi-calculator`)
 - Dual-unit conversion supporting Metric ($cm / kg$) and Imperial ($ft + in / lbs$).
-- Visual WHO classification spectrum gauge with target healthy weight range estimates.
+- Visual WHO classification spectrum gauge with animated needle and target healthy weight range estimates.
 - Evidence-based clinical caveats addressing Fat-Free Mass Index (FFMI) and muscle mass vs. fat mass for resistance-trained athletes.
 
 ### 7. ☁️ Supabase Cloud Sync & Local-First Guest Athlete Mode
@@ -74,24 +101,13 @@ Never lose training momentum when machines, benches, or squat racks are occupied
   - **Guest Athlete**: Instant local offline access with zero signup friction.
 - Cloud database on Supabase PostgreSQL with strict Row Level Security (RLS) policies.
 - Athlete profile customization: Bodyweight, height, age, training split, unit preference ($kg / lbs$), and weak-point focus.
-- Password recovery and reset flow via `/auth/callback`.
 
 ### 8. 📚 The Hypertrophy Science Journal & Embedded Sanity Studio (`/blog` & `/studio`)
 - Integrated headless CMS powered by **Sanity Studio v3** directly embedded at `/studio`.
 - 60+ peer-reviewed biomechanics, nutrition, and programming articles.
 - Accessible interactive `<TableOfContents />` with active section highlighting via `IntersectionObserver`.
 - Accessible `<FaqAccordion />` components and rich `<ArticlePortableText />` rendering.
-- Filter across 10 distinct fitness domains:
-  - Clavicular Pec / Upper Chest Hypertrophy
-  - Low-Bar Squat Mechanics & Overcoming Isometrics
-  - Energy Balance & Evidence-Based Body Recomposition
-  - Protein Timing & MPS Window Distribution
-  - Zone 2 Low-Intensity Aerobic Base Conditioning
-  - Gymnastic Rings & Calisthenics Leverage Progressions
-  - Scapular Plane Abduction & Rotator Cuff Prehab
-  - Perimenopause & Women's Strength Training
-  - VO2 Max Protocols & Longevity Science
-  - Gym Psychology & Habit Formation
+- Real-time category filtering across 10 fitness pillars and integrated live search.
 
 ### 9. 🔍 Search & AI Engine Optimization (SEO, GEO & AEO)
 - Comprehensive **Schema.org** structured data graphs:
@@ -110,6 +126,7 @@ Never lose training momentum when machines, benches, or squat racks are occupied
 | **Framework** | [Next.js 15 (App Router)](https://nextjs.org/) |
 | **Core Library** | [React 19](https://react.dev/) |
 | **Styling** | [Tailwind CSS v3](https://tailwindcss.com/), PostCSS, Autoprefixer |
+| **Typography** | Geist Sans & Geist Mono via `next/font/local` |
 | **Headless CMS** | [Sanity Studio v3](https://www.sanity.io/), [Next-Sanity](https://github.com/sanity-io/next-sanity), `@portabletext/react` |
 | **Backend & Auth** | [Supabase](https://supabase.com/) (PostgreSQL + RLS + GoTrue Auth with Google OAuth) |
 | **Audio Synthesizer** | Native Browser Web Audio API |
@@ -124,11 +141,13 @@ Never lose training momentum when machines, benches, or squat racks are occupied
 ppl-tracker/
 ├── public/
 │   ├── favicon.ico
+│   ├── icon.svg                     # Electric volt & cyan SVG favicon
 │   ├── llms.txt                     # GEO / AI search engine discovery manifest
 │   ├── sw.js                        # Offline service worker
 │   └── site.webmanifest
 ├── src/
 │   ├── app/
+│   │   ├── fonts/                   # Self-hosted Geist-Variable & GeistMono-Variable
 │   │   ├── (auth)/auth/callback/    # Supabase auth token verification & password reset
 │   │   ├── about/                   # Editorial and mission statement
 │   │   ├── blog/                    # Scientific journal feed & [slug] dynamic articles
@@ -136,25 +155,39 @@ ppl-tracker/
 │   │   ├── privacy/ & terms/        # Legal, privacy & terms
 │   │   ├── studio/[[...tool]]/      # Embedded Sanity Studio v3 interface
 │   │   ├── tools/
-│   │   │   ├── page.tsx             # Athlete Tools Hub directory
+│   │   │   ├── page.tsx             # Athlete Tools Hub bento directory
 │   │   │   ├── bmi-calculator/      # Body Mass Index screening tool
 │   │   │   ├── ppl-tracker/         # Core PPL workout tracker interface
 │   │   │   └── workout-substitution-finder/ # Biomechanical exercise substitution engine
-│   │   ├── layout.tsx               # Root layout with navbar, footer, auth listener
-│   │   ├── page.tsx                 # High-converting landing page & quick start
+│   │   ├── layout.tsx               # Root layout with pre-paint theme script, mobile bottom nav
+│   │   ├── page.tsx                 # Bento landing page with interactive sample tracker preview
 │   │   ├── robots.ts                # Crawl rules & budget protection
 │   │   └── sitemap.ts               # Dynamic XML sitemap generator
 │   ├── components/
+│   │   ├── ui/
+│   │   │   ├── BentoCard.tsx        # Polymorphic bento grid container with glow
+│   │   │   ├── BottomSheet.tsx      # Accessible mobile bottom sheet drawer
+│   │   │   └── Skeleton.tsx         # Accessible shimmer loading state
 │   │   ├── AuthModal.tsx            # Supabase Email + Google OAuth modal
-│   │   ├── ExerciseCard.tsx         # Tracker set/rep logger with "Find Substitute" trigger
+│   │   ├── CelebrationModal.tsx     # Session completion modal with confetti
+│   │   ├── ExerciseCard.tsx         # Tracker set/rep logger with 44px hitboxes & plate math
 │   │   ├── FaqAccordion.tsx         # Accessible interactive FAQ accordion
-│   │   ├── Footer.tsx & Navbar.tsx  # Global navigational chrome
+│   │   ├── Footer.tsx & Navbar.tsx  # Global navigational chrome with tools mega-menu
+│   │   ├── HomeInteractiveDemo.tsx  # Clearly badged interactive preview with sample data
+│   │   ├── MobileBottomNav.tsx      # Thumb-zone 5-destination persistent bottom bar
+│   │   ├── OnboardingModal.tsx      # 4-step athlete setup wizard
+│   │   ├── PlateCalculatorModal.tsx # Calibrated Olympic plate visualizer modal
 │   │   ├── PplTrackerApp.tsx        # Workout state machine & substitution banner
+│   │   ├── ProfileModal.tsx         # Athlete preferences and split manager
+│   │   ├── RestTimer.tsx            # Digital countdown HUD with Web Audio alerts
 │   │   ├── TableOfContents.tsx      # IntersectionObserver article table of contents
+│   │   ├── WorkoutHistoryModal.tsx  # PRs and training session log history
 │   │   └── tools/
 │   │       └── WorkoutSubstitutionFinder.tsx # Full interactive substitution UI
 │   ├── config/
 │   │   └── tools.ts                 # Registry of athlete tools & metadata
+│   ├── context/
+│   │   └── ThemeContext.tsx         # Zero-FOUC theme state & colorScheme synchronization
 │   ├── data/
 │   │   └── workouts.ts              # Canonical workouts source of truth (4 programs, 107 instances)
 │   ├── lib/
@@ -210,8 +243,10 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 5. Production Build & Static Generation
+### 5. Verification & Production Build
 ```bash
+npx tsc --noEmit
+npm run lint
 npm run build
 npm run start
 ```
