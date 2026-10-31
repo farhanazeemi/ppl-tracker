@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ChevronRight, Sparkles, BookOpen, Layers, CheckCircle2, ArrowRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Navbar } from '../../../components/Navbar';
 import { Footer } from '../../../components/Footer';
 import { WorkoutSubstitutionFinder } from '../../../components/tools/WorkoutSubstitutionFinder';
@@ -138,7 +138,7 @@ export default function WorkoutSubstitutionFinderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 transition-colors duration-200">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
@@ -148,16 +148,16 @@ export default function WorkoutSubstitutionFinderPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-          <Link href="/" className="hover:text-amber-500 transition-colors">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
+          <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">
             Home
           </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-          <Link href="/tools" className="hover:text-amber-500 transition-colors">
+          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" />
+          <Link href="/tools" className="hover:text-[var(--accent-primary)] transition-colors">
             Tools
           </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-          <span className="text-zinc-900 dark:text-white font-bold">
+          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" />
+          <span className="text-[var(--text-primary)] font-bold">
             Workout Substitution Finder
           </span>
         </nav>
@@ -168,57 +168,57 @@ export default function WorkoutSubstitutionFinderPage() {
         {/* =========================================================================
             EDITORIAL GUIDE & SPORTS SCIENCE FOUNDATION
             ========================================================================= */}
-        <section className="space-y-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+        <section className="space-y-12 pt-8 border-t border-[var(--border-subtle)]">
           {/* Section 1: Biomechanics Overview */}
           <div className="space-y-4 max-w-4xl">
-            <span className="text-xs font-mono uppercase tracking-widest text-amber-500 font-bold">
-              // Exercise Physiology & Biomechanics
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-primary)] font-bold">
+              {"// Exercise Physiology & Biomechanics"}
             </span>
-            <h2 className="text-2xl sm:text-4xl font-display font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-tight">
+            <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
               The Biomechanics of Exercise Substitution: When and How to Swap Movements
             </h2>
-            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed">
               In a crowded commercial gym, waiting fifteen minutes for a single cable station or squat rack ruins session pacing and diminishes muscular density. However, blindly swapping exercises based solely on high-level muscle names—such as replacing a <strong>Lat Pulldown</strong> with a <strong>Barbell Bent-Over Row</strong> simply because &quot;both work the back&quot;—fundamentally alters the motor recruitment pattern and joint torque angles of your workout.
             </p>
-            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
-              Empirical exercise science confirms that skeletal muscle responds primarily to <strong>mechanical tension</strong>, <strong>active range of motion</strong>, and <strong>length-dependent muscle recruitment</strong> (Helms et al., 2018). Effective substitutions must mirror the original movement&apos;s line of drive, sagittal or frontal plane excursion, and stabilization requirements. When you <Link href="/tools/ppl-tracker" className="text-amber-500 font-bold hover:underline">track your progressive overload with PPL Tracker</Link>, maintaining movement pattern consistency ensures that volume markers (MEV, MAV, and MRV) remain scientifically valid week over week.
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed">
+              Empirical exercise science confirms that skeletal muscle responds primarily to <strong className="text-[var(--text-primary)]">mechanical tension</strong>, <strong className="text-[var(--text-primary)]">active range of motion</strong>, and <strong className="text-[var(--text-primary)]">length-dependent muscle recruitment</strong> (Helms et al., 2018). Effective substitutions must mirror the original movement&apos;s line of drive, sagittal or frontal plane excursion, and stabilization requirements. When you <Link href="/tools/ppl-tracker" className="text-[var(--accent-primary)] font-bold hover:underline">track your progressive overload with PPL Tracker</Link>, maintaining movement pattern consistency ensures that volume markers (MEV, MAV, and MRV) remain scientifically valid week over week.
             </p>
           </div>
 
           {/* Section 2: Movement Pattern Hierarchy */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-mono font-bold text-sm">
+            <div className="card-bento p-6 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] flex items-center justify-center font-mono font-bold text-sm">
                 01
               </div>
-              <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white">
+              <h3 className="text-lg font-bold uppercase text-[var(--text-primary)]">
                 Match the Vector & Angle
               </h3>
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-sans leading-relaxed">
                 Horizontal pushes (bench press, push-ups) prioritize sternal pec fibers, whereas vertical pushes (overhead press) shift tension to anterior delts. Always replace horizontal with horizontal and vertical with vertical.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-mono font-bold text-sm">
+            <div className="card-bento p-6 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] flex items-center justify-center font-mono font-bold text-sm">
                 02
               </div>
-              <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white">
+              <h3 className="text-lg font-bold uppercase text-[var(--text-primary)]">
                 Assess Stabilization Demand
               </h3>
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-sans leading-relaxed">
                 Free-weight barbells require systemic core and stabilizer brace, whereas selectorized machines guide the path. If moving from a machine to free weights, reduce baseline load by 15–20% to account for balance overhead.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white dark:bg-[#12141c] border border-zinc-200 dark:border-zinc-800 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-mono font-bold text-sm">
+            <div className="card-bento p-6 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] flex items-center justify-center font-mono font-bold text-sm">
                 03
               </div>
-              <h3 className="text-lg font-display font-bold uppercase text-zinc-900 dark:text-white">
+              <h3 className="text-lg font-bold uppercase text-[var(--text-primary)]">
                 Preserve Lengthened Tension
               </h3>
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-sans leading-relaxed">
                 Contemporary hypertrophy research confirms that exercises exerting peak tension in the stretched position (e.g., incline dumbbell curls, Romanian deadlifts, overhead cable extensions) yield robust sarcomere genesis. Choose alternatives that preserve deep stretch.
               </p>
             </div>
@@ -226,57 +226,57 @@ export default function WorkoutSubstitutionFinderPage() {
 
           {/* Section 3: Structured Substitution Reference Table */}
           <div className="space-y-4">
-            <h2 className="text-xl sm:text-2xl font-display font-black uppercase text-zinc-900 dark:text-white">
+            <h2 className="text-xl sm:text-2xl font-black uppercase text-[var(--text-primary)]">
               Common Gym Substitutions Reference Guide
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-sans">
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-sans">
               Use this structured matrix when common gym equipment stations are unavailable during peak workout hours:
             </p>
 
-            <div className="overflow-x-auto rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#12141c]">
+            <div className="overflow-x-auto rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)]">
               <table className="w-full text-left text-xs font-sans">
-                <thead className="bg-zinc-100 dark:bg-[#181a24] border-b border-zinc-200 dark:border-zinc-800 font-mono text-[11px] uppercase text-zinc-500">
+                <thead className="bg-[var(--bg-elevated)]/60 border-b border-[var(--border-subtle)] font-mono text-[11px] uppercase text-[var(--text-muted)]">
                   <tr>
-                    <th className="p-4 font-bold text-zinc-900 dark:text-white">Original Exercise</th>
-                    <th className="p-4 font-bold text-zinc-900 dark:text-white">Best Alternative</th>
-                    <th className="p-4 font-bold text-zinc-900 dark:text-white">Equipment Shift</th>
-                    <th className="p-4 font-bold text-zinc-900 dark:text-white">Biomechanical Nuance</th>
+                    <th className="p-4 font-bold text-[var(--text-primary)]">Original Exercise</th>
+                    <th className="p-4 font-bold text-[var(--text-primary)]">Best Alternative</th>
+                    <th className="p-4 font-bold text-[var(--text-primary)]">Equipment Shift</th>
+                    <th className="p-4 font-bold text-[var(--text-primary)]">Biomechanical Nuance</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
-                  <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">Wide-Grip Lat Pulldown</td>
-                    <td className="p-4 text-amber-500 font-bold">Assisted Pull-Up or Single-Arm Pulldown</td>
+                <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-secondary)]">
+                  <tr className="hover:bg-[var(--bg-elevated)]/40 transition-colors">
+                    <td className="p-4 font-bold text-[var(--text-primary)]">Wide-Grip Lat Pulldown</td>
+                    <td className="p-4 text-[var(--accent-primary)] font-bold">Assisted Pull-Up or Single-Arm Pulldown</td>
                     <td className="p-4 font-mono text-[11px]">Cable → Bodyweight / Machine</td>
                     <td className="p-4">Higher core recruitment; identical vertical adduction of the shoulder girdle.</td>
                   </tr>
-                  <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">Flat Barbell Bench Press</td>
-                    <td className="p-4 text-amber-500 font-bold">Flat Dumbbell Press or Machine Press</td>
+                  <tr className="hover:bg-[var(--bg-elevated)]/40 transition-colors">
+                    <td className="p-4 font-bold text-[var(--text-primary)]">Flat Barbell Bench Press</td>
+                    <td className="p-4 text-[var(--accent-primary)] font-bold">Flat Dumbbell Press or Machine Press</td>
                     <td className="p-4 font-mono text-[11px]">Barbell → Dumbbells / Machine</td>
                     <td className="p-4">Allows deeper bottom stretch; wrist rotation relieves acromioclavicular stress.</td>
                   </tr>
-                  <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">45-Degree Leg Press</td>
-                    <td className="p-4 text-amber-500 font-bold">Hack Squat or Dumbbell Goblet Squat</td>
+                  <tr className="hover:bg-[var(--bg-elevated)]/40 transition-colors">
+                    <td className="p-4 font-bold text-[var(--text-primary)]">45-Degree Leg Press</td>
+                    <td className="p-4 text-[var(--accent-primary)] font-bold">Hack Squat or Dumbbell Goblet Squat</td>
                     <td className="p-4 font-mono text-[11px]">Machine → Dumbbell / Machine</td>
                     <td className="p-4">Anterior weight carriage promotes upright torso, sparing the lumbar spine.</td>
                   </tr>
-                  <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">Standing Cable Fly</td>
-                    <td className="p-4 text-amber-500 font-bold">Pec Deck Machine or Dumbbell Fly</td>
+                  <tr className="hover:bg-[var(--bg-elevated)]/40 transition-colors">
+                    <td className="p-4 font-bold text-[var(--text-primary)]">Standing Cable Fly</td>
+                    <td className="p-4 text-[var(--accent-primary)] font-bold">Pec Deck Machine or Dumbbell Fly</td>
                     <td className="p-4 font-mono text-[11px]">Cable → Machine / Dumbbells</td>
                     <td className="p-4">Pec deck provides fixed transverse adduction; dumbbell fly peaks tension at stretch.</td>
                   </tr>
-                  <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">Barbell Back Squat</td>
-                    <td className="p-4 text-amber-500 font-bold">Bulgarian Split Squat or Leg Press</td>
+                  <tr className="hover:bg-[var(--bg-elevated)]/40 transition-colors">
+                    <td className="p-4 font-bold text-[var(--text-primary)]">Barbell Back Squat</td>
+                    <td className="p-4 text-[var(--accent-primary)] font-bold">Bulgarian Split Squat or Leg Press</td>
                     <td className="p-4 font-mono text-[11px]">Barbell → Dumbbell / Machine</td>
                     <td className="p-4">Eliminates spinal axial compression while matching knee extension torque.</td>
                   </tr>
-                  <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors">
-                    <td className="p-4 font-bold text-zinc-900 dark:text-white">Barbell Romanian Deadlift</td>
-                    <td className="p-4 text-amber-500 font-bold">Dumbbell RDL or 45° Hyperextension</td>
+                  <tr className="hover:bg-[var(--bg-elevated)]/40 transition-colors">
+                    <td className="p-4 font-bold text-[var(--text-primary)]">Barbell Romanian Deadlift</td>
+                    <td className="p-4 text-[var(--accent-primary)] font-bold">Dumbbell RDL or 45° Hyperextension</td>
                     <td className="p-4 font-mono text-[11px]">Barbell → Dumbbells / Bench</td>
                     <td className="p-4">Freedom to trace dumbbells along thighs keeps load centered over mid-foot.</td>
                   </tr>
@@ -286,29 +286,29 @@ export default function WorkoutSubstitutionFinderPage() {
           </div>
 
           {/* Section 4: Progressive Overload & Cluster Linking */}
-          <div className="p-8 rounded-3xl bg-amber-500/10 border border-amber-500/25 space-y-4">
-            <h2 className="text-xl sm:text-2xl font-display font-black uppercase text-zinc-900 dark:text-white">
+          <div className="p-8 rounded-3xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/25 space-y-4">
+            <h2 className="text-xl sm:text-2xl font-black uppercase text-[var(--text-primary)]">
               How to Maintain Progressive Overload When Swapping Exercises
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 font-sans leading-relaxed">
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-sans leading-relaxed">
               When substituting an exercise, never attempt to lift identical weight pound-for-pound on a new apparatus. Instead, establish a fresh baseline and use the double progression method: lock in your working weight, progress from the lower rep limit to the upper rep ceiling across all sets, and only increment resistance once every target rep is achieved with clean technical control.
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href="/tools/ppl-tracker"
-                className="px-5 py-2.5 rounded-xl bg-amber-500 text-black text-xs font-mono font-bold hover:bg-amber-400 shadow-md shadow-amber-500/20 inline-flex items-center gap-1.5 transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-[var(--accent-primary)] text-black text-xs font-mono font-bold hover:bg-[var(--accent-hover)] shadow-md shadow-[var(--accent-primary)]/20 inline-flex items-center gap-1.5 transition-colors btn-tactile"
               >
                 Launch PPL Progressive Overload Tracker →
               </Link>
               <Link
                 href="/blog/double-progression-hypertrophy-overload-guide"
-                className="text-xs font-mono text-zinc-700 dark:text-zinc-300 hover:text-amber-500 underline"
+                className="text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] underline"
               >
                 Read Double Progression Hypertrophy Guide
               </Link>
               <Link
                 href="/blog/scapular-plane-lateral-raise-delt-hypertrophy"
-                className="text-xs font-mono text-zinc-700 dark:text-zinc-300 hover:text-amber-500 underline"
+                className="text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] underline"
               >
                 Read Scapular Plane Deltoid Mechanics
               </Link>

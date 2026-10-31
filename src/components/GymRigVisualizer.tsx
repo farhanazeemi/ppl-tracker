@@ -61,7 +61,7 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
 
   return (
     <div
-      className="relative w-full h-[250px] sm:h-[280px] bg-gradient-to-b from-white to-zinc-50 dark:from-[#12141c] dark:to-[#0d0f17] border border-zinc-200/90 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm group select-none transition-colors duration-200"
+      className="relative w-full h-[250px] sm:h-[280px] bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl overflow-hidden shadow-sm group select-none transition-colors duration-200"
       style={{
         boxShadow: `0 4px 24px -6px ${accent.glow}`,
       }}
@@ -69,7 +69,7 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
       {/* Background SVG Grid Pattern */}
       <svg
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full stroke-zinc-200/50 dark:stroke-zinc-800/40 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] pointer-events-none"
+        className="absolute inset-0 w-full h-full stroke-[var(--border-subtle)]/40 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] pointer-events-none"
       >
         <defs>
           <pattern id="rig-grid-pat" width="24" height="24" patternUnits="userSpaceOnUse">
@@ -86,7 +86,7 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
             className="w-2.5 h-2.5 rounded-full animate-pulse"
             style={{ backgroundColor: themeColorHex }}
           />
-          <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-600 dark:text-zinc-400 font-bold">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-muted)] font-bold">
             Biomechanics Rig
           </span>
           <span
@@ -107,7 +107,7 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
             type="button"
             onClick={toggleViewMode}
             title={viewMode === 'rig' ? 'Switch to Biomechanics Vectors' : 'Switch to Barbell Rig'}
-            className="px-2.5 py-1 bg-white/90 dark:bg-zinc-800/90 hover:bg-zinc-100 dark:hover:bg-zinc-750 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-xl text-[11px] font-mono font-semibold transition-all shadow-xs active:scale-95 cursor-pointer flex items-center gap-1.5"
+            className="px-2.5 py-1 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-[var(--border-subtle)] rounded-xl text-[11px] font-mono font-semibold transition-all shadow-xs active:scale-95 cursor-pointer flex items-center gap-1.5"
             aria-label="Toggle visualizer mode"
           >
             {viewMode === 'rig' ? (
@@ -325,13 +325,13 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
                 fontFamily="ui-monospace, monospace"
                 fontWeight="bold"
               >
-                // TARGET MECHANICS
+                {"// TARGET MECHANICS"}
               </text>
               <text
                 x="14"
                 y="48"
                 fill="currentColor"
-                className="text-zinc-900 dark:text-zinc-100"
+                className="text-[var(--text-primary)]"
                 fontSize="12"
                 fontWeight="bold"
               >
@@ -341,7 +341,7 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
                 x="14"
                 y="68"
                 fill="currentColor"
-                className="text-zinc-600 dark:text-zinc-400"
+                className="text-[var(--text-muted)]"
                 fontSize="10"
                 fontFamily="ui-monospace, monospace"
               >
@@ -351,7 +351,7 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
                 x="14"
                 y="84"
                 fill="currentColor"
-                className="text-zinc-600 dark:text-zinc-400"
+                className="text-[var(--text-muted)]"
                 fontSize="10"
                 fontFamily="ui-monospace, monospace"
               >
@@ -363,14 +363,14 @@ export const GymRigVisualizer: React.FC<GymRigVisualizerProps> = ({
       </div>
 
       {/* Bottom Focus Spec Overlay */}
-      <div className="absolute bottom-3 left-4 right-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pointer-events-none bg-white/95 dark:bg-zinc-900/95 border border-zinc-200/90 dark:border-zinc-800 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xs">
+      <div className="absolute bottom-3 left-4 right-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pointer-events-none bg-[var(--bg-card)]/95 border border-[var(--border-subtle)] backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xs">
         <div className="flex items-center gap-2 min-w-0">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span className="text-xs text-zinc-600 dark:text-zinc-400 font-medium truncate">
-            Target Focus: <strong className="text-zinc-900 dark:text-white font-bold">{focusText}</strong>
+          <Sparkles className="w-3.5 h-3.5 text-[var(--accent-primary)] shrink-0" />
+          <span className="text-xs text-[var(--text-secondary)] font-medium truncate">
+            Target Focus: <strong className="text-[var(--text-primary)] font-bold">{focusText}</strong>
           </span>
         </div>
-        <div className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 self-end sm:self-auto shrink-0 flex items-center gap-1">
+        <div className="text-[10px] font-mono text-[var(--text-muted)] self-end sm:self-auto shrink-0 flex items-center gap-1">
           <Target className="w-3 h-3 text-emerald-500" />
           <span>{accent.cue}</span>
         </div>

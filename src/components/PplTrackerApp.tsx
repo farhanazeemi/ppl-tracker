@@ -296,7 +296,7 @@ export function PplTrackerApp({
     }
 
     syncCloudWorkouts();
-  }, [user?.id]);
+  }, [user]);
 
   // Save sets state to localStorage
   const handleUpdateSets = (exerciseId: string, nextSets: ExerciseSet[]) => {
@@ -487,7 +487,7 @@ export function PplTrackerApp({
   const needsOnboarding = (user && !user.onboardingCompleted && !user.isGuest) || isOnboardingModalOpen;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#090a0f] text-zinc-900 dark:text-zinc-100 flex flex-col selection:bg-amber-500 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] flex flex-col selection:bg-[var(--accent-primary)] selection:text-black transition-colors duration-200">
       {/* Onboarding Wizard Modal */}
       <OnboardingModal
         isOpen={needsOnboarding}
@@ -585,7 +585,7 @@ export function PplTrackerApp({
                     <span className="font-bold text-amber-500 uppercase tracking-wider block sm:inline">
                       Offline Mode Active • Gym-Safe Session
                     </span>
-                    <span className="text-zinc-600 dark:text-zinc-400 block sm:inline sm:ml-2">
+                    <span className="text-[var(--text-secondary)] block sm:inline sm:ml-2">
                       All sets, weights, reps & timers are securely saving locally on this device.
                     </span>
                   </div>
@@ -621,20 +621,20 @@ export function PplTrackerApp({
               <div
                 role="status"
                 aria-live="polite"
-                className="bg-amber-500/10 border border-amber-500/30 text-amber-500 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
+                className="bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono shadow-xs animate-in fade-in"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-amber-500/20 text-amber-500 shrink-0">
+                  <div className="p-2 rounded-xl bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] shrink-0">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-bold text-amber-500 uppercase tracking-wider block sm:inline">
+                    <span className="font-bold uppercase tracking-wider block sm:inline">
                       Active Substitution:
                     </span>
-                    <span className="text-zinc-800 dark:text-zinc-200 font-bold ml-1.5">
+                    <span className="text-[var(--text-primary)] font-bold ml-1.5">
                       {activeSubstitution.substituteName}
                     </span>
-                    <span className="text-zinc-500 block sm:inline sm:ml-1.5">
+                    <span className="text-[var(--text-muted)] block sm:inline sm:ml-1.5">
                       (replacing {activeSubstitution.originalName})
                     </span>
                   </div>
@@ -644,7 +644,7 @@ export function PplTrackerApp({
                     href={`/tools/workout-substitution-finder?exercise=${encodeURIComponent(
                       activeSubstitution.originalName
                     )}`}
-                    className="px-2.5 py-1 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:text-amber-500 text-[11px] font-bold transition"
+                    className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:text-[var(--accent-primary)] text-[11px] font-bold transition border border-[var(--border-subtle)]"
                   >
                     Change Substitute
                   </Link>
@@ -653,7 +653,7 @@ export function PplTrackerApp({
                       localStorage.removeItem('ppl_active_substitution');
                       setActiveSubstitution(null);
                     }}
-                    className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-500 hover:bg-amber-500/30 text-[11px] font-bold transition"
+                    className="px-2.5 py-1 rounded-lg bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/30 text-[11px] font-bold transition cursor-pointer"
                   >
                     Restore Original
                   </button>
@@ -662,28 +662,28 @@ export function PplTrackerApp({
             )}
 
             {/* DAY-SPECIFIC SMART SCHEDULING BANNER */}
-            <section className="bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-5 shadow-xs">
+            <section className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-5 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-start sm:items-center gap-3">
-                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-2xl shrink-0">
+                  <div className="p-3 bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] rounded-2xl shrink-0">
                     <Calendar className="w-5 h-5" />
                   </div>
                   <div className="space-y-0.5">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-mono font-bold uppercase text-amber-500 flex items-center gap-1.5">
+                      <span className="text-xs font-mono font-bold uppercase text-[var(--accent-primary)] flex items-center gap-1.5">
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                         Today is {scheduleInfo.dayOfWeekName}
                       </span>
-                      <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400">
-                        • Scheduled: <strong className="text-zinc-900 dark:text-white">{scheduleInfo.scheduledWorkout.title}</strong>
+                      <span className="text-xs font-mono text-[var(--text-secondary)]">
+                        • Scheduled: <strong className="text-[var(--text-primary)]">{scheduleInfo.scheduledWorkout.title}</strong>
                       </span>
                       {scheduleInfo.isRestDay && (
-                        <span className="px-2 py-0.2 rounded-full bg-sky-500/15 text-sky-500 text-[10px] font-mono font-bold">
+                        <span className="px-2 py-0.2 rounded-full bg-sky-500/15 text-sky-400 text-[10px] font-mono font-bold">
                           Active Recovery Day
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-sans">
+                    <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-sans">
                       {scheduleInfo.statusMessage}
                     </p>
                   </div>
@@ -697,7 +697,7 @@ export function PplTrackerApp({
                         playClickSound(soundEnabled);
                         setActiveDayId(scheduleInfo.scheduledDayId);
                       }}
-                      className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-black text-xs font-mono font-bold uppercase rounded-xl transition-all btn-tactile cursor-pointer flex items-center gap-1"
+                      className="px-3.5 py-1.5 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-black text-xs font-mono font-bold uppercase rounded-xl transition-all btn-tactile cursor-pointer flex items-center gap-1 shadow-sm shadow-[var(--accent-primary)]/20"
                     >
                       <Zap className="w-3.5 h-3.5" /> Jump to Today
                     </button>
@@ -708,7 +708,7 @@ export function PplTrackerApp({
                       playClickSound(soundEnabled);
                       setIsProfileModalOpen(true);
                     }}
-                    className="px-3.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 text-xs font-mono font-semibold rounded-xl transition-all btn-tactile cursor-pointer"
+                    className="px-3.5 py-1.5 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] text-xs font-mono font-semibold rounded-xl transition-all btn-tactile cursor-pointer"
                   >
                     Change Split
                   </button>
@@ -738,14 +738,14 @@ export function PplTrackerApp({
                 />
 
                 {/* Quick Split Insight Pill */}
-                <div className="mt-3 bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-4 shadow-xs">
+                <div className="mt-3 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-4 shadow-xs">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
-                    <h4 className="text-xs font-display font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
+                    <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" />
+                    <h4 className="text-xs font-display font-bold uppercase tracking-wider text-[var(--text-primary)]">
                       {activeDayObject.title} Focus
                     </h4>
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">
+                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                     {activeDayObject.subtitle}
                   </p>
                 </div>
@@ -756,22 +756,22 @@ export function PplTrackerApp({
             <GoldenRulesSection />
 
             {/* Search & Muscle Filters Bar */}
-            <section className="bg-white dark:bg-[#12141c] border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+            <section className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
               {/* Search Input */}
               <div className="relative flex-1">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                 <input
                   type="text"
                   placeholder="Search exercise, target muscle, or cue..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-amber-500 transition font-medium"
+                  className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl pl-10 pr-4 py-2.5 text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition font-medium"
                 />
               </div>
 
               {/* Muscle Chips Filter */}
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-                <Filter className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-1 mr-0.5" />
+                <Filter className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0 ml-1 mr-0.5" />
                 {muscleGroups.map((mg) => (
                   <button
                     key={mg}
@@ -782,8 +782,8 @@ export function PplTrackerApp({
                     type="button"
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all btn-tactile border cursor-pointer ${
                       muscleFilter === mg
-                        ? 'bg-amber-500 text-black border-amber-500 shadow-xs'
-                        : 'bg-zinc-50 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border-zinc-200 dark:border-zinc-800'
+                        ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)] shadow-xs'
+                        : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-[var(--border-subtle)]'
                     }`}
                   >
                     {mg}

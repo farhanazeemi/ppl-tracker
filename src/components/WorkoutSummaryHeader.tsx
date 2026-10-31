@@ -1,21 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import {
   Flame,
   CheckCircle2,
   Clock,
-  History,
   RotateCcw,
   Sparkles,
   Trophy,
-  User,
-  LogIn,
-  BookOpen,
-  Calendar,
-  Layers,
-  Zap
 } from 'lucide-react';
 import { SplitDayId, DayWorkout } from '../types/workout';
 import { WORKOUT_DAYS } from '../data/workouts';
@@ -58,7 +50,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
   dayOfWeekName,
   soundEnabled = true,
 }) => {
-  const { user, isAuthenticated, isGuest } = useAuth();
+  const { user } = useAuth();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
@@ -101,46 +93,46 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
   }[user?.selectedSplit || 'ppl'] || 'Push-Pull-Legs';
 
   return (
-    <div className="bg-white/80 dark:bg-[#090a0f]/80 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 py-3 sm:py-3.5 transition-colors duration-200">
+    <div className="bg-[var(--bg-card)]/90 backdrop-blur-md border-b border-[var(--border-subtle)] px-4 py-3 sm:py-3.5 transition-colors duration-200 sticky top-16 z-30">
       <div className="max-w-6xl mx-auto space-y-3">
         {/* Main Title Row */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-500 border border-amber-500/25 rounded-md font-mono">
+              <span className="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/25 rounded-md font-mono">
                 {splitDisplayTitle}
               </span>
               {dayOfWeekName && (
-                <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/25 rounded-md font-mono flex items-center gap-1">
+                <span className="px-2.5 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/25 rounded-md font-mono flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Today is {dayOfWeekName}
                 </span>
               )}
               {user?.weakPoints && user.weakPoints.length > 0 && (
-                <span className="hidden sm:inline-flex text-[10px] font-mono text-zinc-500 dark:text-zinc-400">
+                <span className="hidden sm:inline-flex text-[10px] font-mono text-[var(--text-muted)]">
                   Focus: {user.weakPoints.join(', ')}
                 </span>
               )}
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-zinc-900 dark:text-white uppercase flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[var(--text-primary)] uppercase flex items-center gap-2">
               Active Workout Session
-              <Sparkles className="w-4 h-4 text-amber-500 shrink-0 hidden sm:inline" />
+              <Sparkles className="w-4 h-4 text-[var(--accent-primary)] shrink-0 hidden sm:inline" />
             </h1>
           </div>
 
           {/* Quick Metrics Bar & Action Buttons */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             {/* Volume Metric */}
-            <div className="px-3 py-1.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl flex items-center gap-2 shadow-xs">
-              <Flame className="w-4 h-4 text-amber-500" />
+            <div className="px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl flex items-center gap-2 shadow-xs">
+              <Flame className="w-4 h-4 text-[var(--accent-primary)]" />
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-600 dark:text-zinc-400 block font-bold font-mono">
+                <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-bold font-mono">
                   Volume
                 </span>
-                <span className="font-mono text-xs sm:text-sm font-extrabold text-zinc-900 dark:text-zinc-100">
+                <span className="font-mono text-xs sm:text-sm font-bold text-[var(--text-primary)] tabular-nums">
                   {totalVolume.toLocaleString()}{' '}
-                  <span className="text-zinc-600 dark:text-zinc-400 text-[10px]">
+                  <span className="text-[var(--text-muted)] text-[10px]">
                     {user?.preferredUnit ? user.preferredUnit.toUpperCase() : 'KG'}
                   </span>
                 </span>
@@ -148,26 +140,26 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             </div>
 
             {/* Sets Done Metric */}
-            <div className="px-3 py-1.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl flex items-center gap-2 shadow-xs">
+            <div className="px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl flex items-center gap-2 shadow-xs">
               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-600 dark:text-zinc-400 block font-bold font-mono">
+                <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-bold font-mono">
                   Sets Done
                 </span>
-                <span className="font-mono text-xs sm:text-sm font-extrabold text-zinc-900 dark:text-zinc-100">
+                <span className="font-mono text-xs sm:text-sm font-bold text-[var(--text-primary)] tabular-nums">
                   {completedSetsCount}/{totalSetsCount} ({progressPercent}%)
                 </span>
               </div>
             </div>
 
             {/* Duration Timer */}
-            <div className="hidden lg:flex px-3 py-1.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl items-center gap-2 shadow-xs">
-              <Clock className="w-4 h-4 text-sky-500" />
+            <div className="hidden lg:flex px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl items-center gap-2 shadow-xs">
+              <Clock className="w-4 h-4 text-sky-400" />
               <div>
-                <span className="text-[9px] uppercase tracking-wider text-zinc-600 dark:text-zinc-400 block font-bold font-mono">
+                <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] block font-bold font-mono">
                   Duration
                 </span>
-                <span className="font-mono text-xs sm:text-sm font-extrabold text-zinc-900 dark:text-zinc-100">
+                <span className="font-mono text-xs sm:text-sm font-bold text-[var(--text-primary)] tabular-nums">
                   {formatTime(elapsedSeconds)}
                 </span>
               </div>
@@ -177,7 +169,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             <button
               type="button"
               onClick={handleReset}
-              className="p-2 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-xl transition-all btn-tactile cursor-pointer"
+              className="p-2 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl transition-all btn-tactile cursor-pointer"
               title="Reset current session progress"
               aria-label="Reset session progress"
             >
@@ -188,7 +180,7 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
             <button
               type="button"
               onClick={handleFinish}
-              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-display font-black text-xs uppercase tracking-wider rounded-xl shadow-xs flex items-center gap-1.5 transition-all btn-tactile cursor-pointer"
+              className="px-4 py-2 bg-[var(--accent-primary)] hover:bg-[var(--accent-hover)] text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-[var(--accent-primary)]/20 flex items-center gap-1.5 transition-all btn-tactile cursor-pointer"
             >
               <Trophy className="w-4 h-4" />
               <span>Finish Workout</span>
@@ -197,14 +189,14 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
         </div>
 
         {/* Minimalist Day Tabs Strip (Push A, Pull A, Legs A, etc.) */}
-        <div className="flex gap-1.5 overflow-x-auto no-scrollbar p-1 bg-zinc-100 dark:bg-zinc-900/80 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80">
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar p-1 bg-[var(--bg-elevated)]/60 rounded-xl border border-[var(--border-subtle)]">
           <button
             type="button"
             onClick={() => handleDaySelect('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider whitespace-nowrap transition-all btn-tactile cursor-pointer ${
               activeDayId === 'all'
-                ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border border-zinc-200/80 dark:border-zinc-700/80'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-xs border border-[var(--border-strong)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
             }`}
           >
             All Days ({daysList.length})
@@ -221,15 +213,15 @@ export const WorkoutSummaryHeader: React.FC<WorkoutSummaryHeaderProps> = ({
                 onClick={() => handleDaySelect(day.id)}
                 className={`relative px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider whitespace-nowrap transition-all btn-tactile flex items-center gap-1.5 cursor-pointer ${
                   isActive
-                    ? 'bg-amber-500 text-black shadow-xs font-black'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-zinc-800/60'
+                    ? 'bg-[var(--accent-primary)] text-black shadow-xs font-black'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]'
                 }`}
               >
                 <span>{day.title}</span>
                 {isTodayScheduled && (
                   <span
                     className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full ${
-                      isActive ? 'bg-black text-amber-400' : 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/30'
+                      isActive ? 'bg-black text-[var(--accent-primary)]' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                     }`}
                   >
                     Today
