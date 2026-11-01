@@ -69,11 +69,12 @@ https://ppltracker.web.id/tools/ppl-tracker
 - Every article should feature 3–5 targeted frequently asked questions addressing common reader objections, edge cases, and troubleshooting.
 - FAQs must render as accessible interactive accordions (`<button aria-expanded aria-controls>`) with visible focus outlines and complete HTML in the DOM for search bot indexing.
 
-### Schema.org Structured Data (`src/lib/schema.ts`)
+### Schema.org Structured Data (`src/lib/schema.ts`) & Subscribe with Google (SwG)
 Every article page must emit an integrated `@graph` array containing:
-1. `BlogPosting`: Headline, description, author (`Person`), publisher (`Organization`), datePublished, dateModified, image, mainEntityOfPage.
+1. `BlogPosting`: Headline, description, author (`Person`), publisher (`Organization`), datePublished, dateModified, image, mainEntityOfPage, `isPartOf` referencing Google Publication Product `CAowpcXODA:openaccess`, and `isAccessibleForFree: true`.
 2. `BreadcrumbList`: Home (`/`) → Blog (`/blog`) → Current Article (`/blog/{slug}`).
 3. `FAQPage`: Dynamically extracted from visible FAQs, ensuring 100% parity between rendered DOM text and JSON-LD markup.
+4. `Subscribe with Google (SwG Basic)`: All published article pages load `https://news.google.com/swg/js/v1/swg-basic.js` and initialize `basicSubscriptions.init` with product `CAowpcXODA:openaccess` (`type: "NewsArticle"`).
 
 ---
 
@@ -81,4 +82,4 @@ Every article page must emit an integrated `@graph` array containing:
 
 - **Author Assignment**: All published articles must be explicitly linked to verified author documents (e.g., `author-dr-marcus-vance`), never left as orphan strings.
 - **Split Category Accuracy**: Ensure `splitCategory` is set to the specific fitness pillar (`Push (Chest)`, `Legs (Squat)`, `Fat Loss & Recomp`, `Sports Nutrition`, `Endurance & Cardio`, `Calisthenics`, `Prehab & Mobility`, `Women's Strength`, `Longevity & Health`, `Gym Mindset`), never generic placeholders.
-- **Slug Stability**: Do not modify existing slugs or delete published articles without explicit redirection plans approved by engineering. All 60 live URLs must be preserved to maintain established crawl equity.
+- **Slug Stability**: Do not modify existing slugs or delete published articles without explicit redirection plans approved by engineering. All 80 live URLs must be preserved to maintain established crawl equity.

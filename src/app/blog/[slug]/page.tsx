@@ -23,6 +23,7 @@ import { TableOfContents } from '../../../components/TableOfContents';
 import { FaqAccordion } from '../../../components/FaqAccordion';
 import { ArticlePortableText } from '../../../components/ArticlePortableText';
 import { ArticleComments } from '../../../components/ArticleComments';
+import { SubscribeWithGoogle } from '../../../components/SubscribeWithGoogle';
 import { processArticleBody } from '../../../utils/articleContent';
 
 const baseUrl = 'https://ppltracker.web.id';
@@ -121,6 +122,9 @@ export default async function BlogPostDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(articleJsonLd) }}
       />
+
+      {/* Subscribe with Google (SwG Basic) */}
+      <SubscribeWithGoogle />
 
       {/* Top Global Navigation Bar */}
       <Navbar />

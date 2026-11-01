@@ -205,6 +205,9 @@ export function getArticleSchema(post: {
       '@type': 'BlogPosting',
       '@id': `${postUrl}#article`,
       isPartOf: {
+        '@type': ['CreativeWork', 'Product'],
+        name: 'PPL Hypertrophy Tracker',
+        productID: 'CAowpcXODA:openaccess',
         '@id': `${BASE_URL}/blog#collection`,
       },
       headline: post.title,

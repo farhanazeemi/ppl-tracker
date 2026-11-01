@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { getArticleSchema, getAuthorProfileSchema, BASE_URL } from '../src/lib/schema';
 import { getAuthorBySlug, getAllAuthors } from '../src/sanity/getPosts';
+import { SubscribeWithGoogle } from '../src/components/SubscribeWithGoogle';
 
 describe('Author and Schema E-E-A-T Architecture', () => {
   it('generates rich ProfilePage and Person Schema.org markup for authors', () => {
@@ -55,6 +58,12 @@ describe('Author and Schema E-E-A-T Architecture', () => {
 
     // Verify Farhan Azeemi is completely removed as author from article schema
     expect(JSON.stringify(schema)).not.toContain('author-farhan-azeemi');
+
+    // Verify Subscribe with Google (SwG Basic) Schema Product & isAccessibleForFree mapping
+    expect(blogPosting.isAccessibleForFree).toBe(true);
+    expect(blogPosting.isPartOf).toBeDefined();
+    expect(blogPosting.isPartOf.productID).toBe('CAowpcXODA:openaccess');
+    expect(blogPosting.isPartOf['@type']).toContain('Product');
   });
 
   it('retrieves authors correctly by slug with fallback handling', async () => {
@@ -65,5 +74,13 @@ describe('Author and Schema E-E-A-T Architecture', () => {
     const authorAlternate = await getAuthorBySlug('marcus-vance');
     expect(authorAlternate).toBeDefined();
     expect(authorAlternate?.name).toBe('Dr. Marcus Vance, Ph.D.');
+  });
+
+  it('renders Subscribe with Google (SwG Basic) script tags with exact publication ID', () => {
+    const html = renderToStaticMarkup(React.createElement(SubscribeWithGoogle));
+    expect(html).toContain('https://news.google.com/swg/js/v1/swg-basic.js');
+    expect(html).toContain('CAowpcXODA:openaccess');
+    expect(html).toContain('SWG_BASIC');
+    expect(html).toContain('NewsArticle');
   });
 });
