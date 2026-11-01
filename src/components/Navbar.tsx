@@ -442,8 +442,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 title="Athlete Account Profile"
                 aria-label="User profile settings"
               >
-                <div className="w-7 h-7 rounded-xl bg-[#B7FF4A] text-[#090B0F] font-bold text-xs flex items-center justify-center font-display">
-                  {getInitials(user.name)}
+                <div className="w-7 h-7 rounded-xl bg-[#B7FF4A] text-[#090B0F] font-bold text-xs flex items-center justify-center font-display overflow-hidden">
+                  {user.avatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(user.name)
+                  )}
                 </div>
                 <span className="text-xs font-mono font-semibold hidden md:inline text-[var(--text-primary)] truncate max-w-[80px]">
                   {user.name.split(' ')[0]}

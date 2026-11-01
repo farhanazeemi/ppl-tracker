@@ -16,6 +16,7 @@ import {
   KeyRound,
   ShieldCheck,
   Loader2,
+  AtSign,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { AuthModalMode } from '../types/auth';
@@ -46,6 +47,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   // Form states
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -75,9 +77,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           setErrorMsg(res.error || 'Login failed. Please check credentials.');
         }
       } else if (mode === 'signup') {
-        const res = await signup(name, email, password, {
-          onboardingCompleted: false, // will trigger onboarding flow right after!
-        });
+        const cleanUser = username.trim().toLowerCase().replace(/^@/, '');
+        if (cleanUser && !/^[a-zA-Z0-9_]{3,24}$/.test(cleanUser)) {
+          setErrorMsg('Username must be 3-24 characters containing only letters, numbers, and underscores.');
+          setIsSubmitting(false);
+          return;
+        }
+
+        const res = await signup(
+          name,
+          email,
+          password,
+          {
+            username: cleanUser,
+            onboardingCompleted: false,
+          },
+          cleanUser
+        );
         if (res.success) {
           onClose();
         } else {
@@ -140,6 +156,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleDemoFill = async () => {
     const demoEmail = 'alex.athlete@example.com';
     const demoPass = 'PplHypertrophy2026!';
+    setName('Demo Athlete');
+    setUsername('alex_demo');
     setEmail(demoEmail);
     setPassword(demoPass);
     setIsSubmitting(true);
@@ -148,15 +166,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       let res = await login(demoEmail, demoPass);
       if (!res.success) {
         res = await signup('Demo Athlete', demoEmail, demoPass, {
-          age: 25,
-          height: 180,
-          weight: 80,
-          preferredUnit: 'kg',
-          fitnessGoal: 'Hypertrophy',
+          username: 'alex_demo',
           onboardingCompleted: true,
-          selectedSplit: 'ppl',
-          weakPoints: ['Upper Chest', 'Lateral Delts'],
-        });
+        }, 'alex_demo');
       }
       if (res.success) {
         onClose();
@@ -164,68 +176,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         setErrorMsg(res.error || 'Demo login failed.');
       }
     } catch {
-      setErrorMsg('Demo login failed.');
+      setErrorMsg('Failed to run demo fill.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getHeaderTitle = () => {
-    switch (mode) {
-      case 'signup':
-        return 'Unlock Workout Tracker';
-      case 'forgot':
-        return 'Reset Athlete Password';
-      case 'reset-password':
-        return 'Set New Password';
-      case 'login':
-      default:
-        return 'Athlete Sign In';
-    }
-  };
-
-  const getHeaderSubtitle = () => {
-    switch (mode) {
-      case 'signup':
-        return 'Get customized splits and lagging muscle focus';
-      case 'forgot':
-        return 'Enter your email to receive a secure recovery link';
-      case 'reset-password':
-        return 'Choose a new password with at least 6 characters';
-      case 'login':
-      default:
-        return 'Access your saved workouts & double progressions';
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bezel-outer">
-        <div className="bezel-inner p-6 sm:p-7 space-y-4 text-[var(--text-primary)] relative overflow-hidden">
-          {/* Modal Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-[var(--border-subtle)] relative z-10">
+      <div className="relative w-full max-w-md flex flex-col bezel-outer">
+        <div className="bezel-inner p-6 sm:p-7 flex flex-col flex-1 space-y-4 text-[var(--text-primary)]">
+          {/* Header */}
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] relative z-10">
             <div className="flex items-center gap-2.5">
-              <div className="p-2.5 bg-[#B7FF4A]/10 text-[#B7FF4A] rounded-2xl border border-[#B7FF4A]/25">
-                {mode === 'forgot' ? (
-                  <KeyRound className="w-5 h-5" />
-                ) : mode === 'reset-password' ? (
-                  <ShieldCheck className="w-5 h-5 text-[#36D6B0]" />
-                ) : (
-                  <Sparkles className="w-5 h-5" />
-                )}
+              <div className="w-8 h-8 rounded-xl bg-[#B7FF4A]/15 border border-[#B7FF4A]/30 flex items-center justify-center text-[#B7FF4A]">
+                {mode === 'login' && <User className="w-4 h-4" />}
+                {mode === 'signup' && <Sparkles className="w-4 h-4" />}
+                {mode === 'forgot' && <KeyRound className="w-4 h-4" />}
+                {mode === 'reset-password' && <ShieldCheck className="w-4 h-4" />}
               </div>
               <div>
                 <h3 className="text-base font-display font-black text-[var(--text-primary)] uppercase tracking-tight">
-                  {getHeaderTitle()}
+                  {mode === 'login' && 'Sign In to Tracker'}
+                  {mode === 'signup' && 'Create Lifter Account'}
+                  {mode === 'forgot' && 'Reset Password'}
+                  {mode === 'reset-password' && 'Choose New Password'}
                 </h3>
-                <p className="text-xs text-[var(--text-secondary)] font-medium font-sans">
-                  {getHeaderSubtitle()}
+                <p className="text-[11px] text-[var(--text-secondary)] font-mono">
+                  {mode === 'login' && 'Sync your hypertrophy logs & 1RM records'}
+                  {mode === 'signup' && 'Claim username & track double progression'}
+                  {mode === 'forgot' && 'We will send a recovery token to your email'}
+                  {mode === 'reset-password' && 'Enter and confirm your new secure password'}
                 </p>
               </div>
             </div>
+
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition cursor-pointer btn-tactile"
+              className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition cursor-pointer btn-tactile"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -324,7 +312,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </div>
                 <div className="relative flex justify-center text-[10px] uppercase tracking-wider">
                   <span className="bg-[var(--bg-card)] px-3 text-[var(--text-muted)] font-mono">
-                    Or continue with email
+                    {mode === 'login' ? 'Or sign in with email/username' : 'Or sign up with email'}
                   </span>
                 </div>
               </div>
@@ -456,36 +444,64 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {(mode === 'login' || mode === 'signup') && (
             <form onSubmit={handleSubmit} className="space-y-3.5 relative z-10">
               {mode === 'signup' && (
-                <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Alex Johnson"
-                      className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-base sm:text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A] transition font-sans"
-                    />
+                <>
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
+                      Full Name
+                    </label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. Alex Johnson"
+                        className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-base sm:text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A] transition font-sans"
+                      />
+                    </div>
                   </div>
-                </div>
+
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
+                      Choose Username
+                    </label>
+                    <div className="relative">
+                      <AtSign className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        required
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                        placeholder="alex_lifts"
+                        minLength={3}
+                        maxLength={24}
+                        className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-base sm:text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A] transition font-mono"
+                      />
+                    </div>
+                    <span className="text-[10px] text-[var(--text-muted)] font-mono mt-0.5 block">
+                      3-24 characters (letters, numbers, underscore). You can log in with this later.
+                    </span>
+                  </div>
+                </>
               )}
 
               <div>
                 <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
-                  Email Address
+                  {mode === 'login' ? 'Email Address or Username' : 'Email Address'}
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  {mode === 'login' && !email.includes('@') ? (
+                    <AtSign className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  ) : (
+                    <Mail className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  )}
                   <input
-                    type="email"
+                    type={mode === 'login' ? 'text' : 'email'}
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="athlete@domain.com"
+                    placeholder={mode === 'login' ? 'athlete@domain.com or @alex_lifts' : 'athlete@domain.com'}
                     className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-base sm:text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A] transition font-mono"
                   />
                 </div>

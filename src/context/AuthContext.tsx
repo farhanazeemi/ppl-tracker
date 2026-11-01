@@ -12,6 +12,28 @@ import {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Local username-to-email mapping helper for offline/instant username login
+const getUsernameMap = (): Record<string, string> => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem('ppl_username_map');
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const saveUsernameMapping = (username: string, email: string) => {
+  if (typeof window === 'undefined' || !username || !email) return;
+  try {
+    const map = getUsernameMap();
+    map[username.toLowerCase().trim().replace(/^@/, '')] = email.toLowerCase().trim();
+    localStorage.setItem('ppl_username_map', JSON.stringify(map));
+  } catch {
+    // ignore local storage error
+  }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,9 +52,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return {
       id: 'guest-athlete',
       name: savedLocal.name || 'Athlete (Guest)',
+      username: savedLocal.username || 'guest_lifter',
+      avatarUrl: savedLocal.avatarUrl || undefined,
       email: 'local@hypertrophy.app',
+      age: savedLocal.age ? Number(savedLocal.age) : undefined,
+      height: savedLocal.height ? Number(savedLocal.height) : undefined,
+      weight: savedLocal.weight ? Number(savedLocal.weight) : undefined,
       preferredUnit: savedLocal.preferredUnit || 'kg',
       fitnessGoal: savedLocal.fitnessGoal || 'Hypertrophy',
+      selectedExercise: savedLocal.selectedExercise || 'Barbell Bench Press',
       createdAt: new Date().toISOString().split('T')[0],
       onboardingCompleted: true,
       selectedSplit: savedLocal.selectedSplit || 'ppl',
@@ -93,16 +121,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           authMetadata?.name ||
           (authEmail ? authEmail.split('@')[0] : 'Athlete');
 
+        const resolvedUsername =
+          data?.username ||
+          authMetadata?.username ||
+          localMeta.username ||
+          (authEmail ? authEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g, '_') : 'athlete');
+
+        const resolvedAvatar =
+          data?.avatar_url ||
+          authMetadata?.avatar_url ||
+          authMetadata?.picture ||
+          localMeta.avatarUrl ||
+          undefined;
+
+        const resolvedExercise =
+          data?.selected_exercise ||
+          authMetadata?.selected_exercise ||
+          localMeta.selectedExercise ||
+          'Barbell Bench Press';
+
         if (data) {
           return {
             id: data.id,
             name: resolvedName,
+            username: resolvedUsername,
+            avatarUrl: resolvedAvatar,
             email: data.email || authEmail || '',
-            age: data.age ?? localMeta.age ?? undefined,
+            age: data.age !== undefined && data.age !== null ? Number(data.age) : (localMeta.age ?? undefined),
             height: data.height ? Number(data.height) : (localMeta.height ?? undefined),
             weight: data.weight ? Number(data.weight) : (localMeta.weight ?? undefined),
             preferredUnit: (data.preferred_unit as 'kg' | 'lbs') || localMeta.preferredUnit || 'kg',
             fitnessGoal: (data.fitness_goal as any) || localMeta.fitnessGoal || 'Hypertrophy',
+            selectedExercise: resolvedExercise,
             createdAt: data.created_at ? data.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
             onboardingCompleted: localMeta.onboardingCompleted ?? (data.onboarding_completed || false),
             selectedSplit: localMeta.selectedSplit || data.selected_split || 'ppl',
@@ -116,9 +166,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const defaultProfile: UserProfile = {
           id: userId,
           name: resolvedName,
+          username: resolvedUsername,
+          avatarUrl: resolvedAvatar,
           email: authEmail || '',
+          age: localMeta.age ?? undefined,
+          height: localMeta.height ?? undefined,
+          weight: localMeta.weight ?? undefined,
           preferredUnit: localMeta.preferredUnit || 'kg',
           fitnessGoal: localMeta.fitnessGoal || 'Hypertrophy',
+          selectedExercise: resolvedExercise,
           createdAt: new Date().toISOString().split('T')[0],
           onboardingCompleted: localMeta.onboardingCompleted || false,
           selectedSplit: localMeta.selectedSplit || 'ppl',
@@ -131,9 +187,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await supabase.from('profiles').upsert({
             id: userId,
             name: resolvedName,
+            username: resolvedUsername,
             email: authEmail || '',
+            avatar_url: resolvedAvatar || null,
             preferred_unit: defaultProfile.preferredUnit,
             fitness_goal: defaultProfile.fitnessGoal,
+            selected_exercise: resolvedExercise,
             updated_at: new Date().toISOString(),
           });
         } catch {
@@ -203,9 +262,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
 
         if (session?.user) {
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('ppl_guest_mode');
-          }
           const profile = await fetchProfile(session.user.id, session.user.email, session.user.user_metadata);
           if (mounted) setUser(profile);
         } else {
@@ -222,14 +278,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [fetchProfile, isPasswordRecovery]);
 
   const login = async (
-    email: string,
+    identifier: string,
     password: string
   ): Promise<{ success: boolean; error?: string }> => {
-    const cleanEmail = email.trim().toLowerCase();
+    const rawId = identifier.trim().toLowerCase();
+    const cleanId = rawId.replace(/^@/, '');
+
+    if (!cleanId) {
+      return { success: false, error: 'Please enter your email or username.' };
+    }
+
+    let targetEmail = rawId;
+
+    // Check if user entered a username instead of email
+    if (!cleanId.includes('@')) {
+      // 1. Query Supabase profiles table for matching username
+      try {
+        const { data: profileRow } = await supabase
+          .from('profiles')
+          .select('email')
+          .ilike('username', cleanId)
+          .maybeSingle();
+
+        if (profileRow?.email) {
+          targetEmail = profileRow.email;
+        }
+      } catch {
+        // Fallback to local map
+      }
+
+      // 2. Check local username map if query didn't find it
+      if (!targetEmail.includes('@')) {
+        const localMap = getUsernameMap();
+        if (localMap[cleanId]) {
+          targetEmail = localMap[cleanId];
+        }
+      }
+
+      // 3. If still not resolved to an email
+      if (!targetEmail.includes('@')) {
+        return {
+          success: false,
+          error: `No account found with username @${cleanId}. Please verify your username or sign in with your email address.`,
+        };
+      }
+    }
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
+        email: targetEmail,
         password,
       });
 
@@ -256,10 +353,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     name: string,
     email: string,
     password: string,
-    additional?: Partial<UpdateProfileInput>
+    additional?: Partial<UpdateProfileInput>,
+    username?: string
   ): Promise<{ success: boolean; error?: string }> => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = name.trim();
+    const rawUsername = (username || additional?.username || '').trim().toLowerCase().replace(/^@/, '');
+    const cleanUsername = rawUsername || cleanEmail.split('@')[0].replace(/[^a-z0-9_]/g, '_');
 
     if (!cleanName) {
       return { success: false, error: 'Please enter your full name.' };
@@ -273,6 +373,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'Password must be at least 6 characters long.' };
     }
 
+    if (cleanUsername && !/^[a-zA-Z0-9_]{3,24}$/.test(cleanUsername)) {
+      return { success: false, error: 'Username must be 3-24 characters containing only letters, numbers, and underscores.' };
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email: cleanEmail,
@@ -280,11 +384,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         options: {
           data: {
             name: cleanName,
+            username: cleanUsername,
+            avatar_url: additional?.avatarUrl,
             age: additional?.age,
             height: additional?.height,
             weight: additional?.weight,
             preferred_unit: additional?.preferredUnit || 'kg',
             fitness_goal: additional?.fitnessGoal || 'Hypertrophy',
+            selected_exercise: additional?.selectedExercise || 'Barbell Bench Press',
           },
         },
       });
@@ -294,8 +401,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (data.user) {
+        // Save username mapping locally
+        if (cleanUsername) {
+          saveUsernameMapping(cleanUsername, cleanEmail);
+        }
+
         // Save locally first
         saveLocalProfileMeta(data.user.id, {
+          name: cleanName,
+          username: cleanUsername,
+          avatarUrl: additional?.avatarUrl,
+          age: additional?.age,
+          height: additional?.height,
+          weight: additional?.weight,
+          preferredUnit: additional?.preferredUnit || 'kg',
+          fitnessGoal: additional?.fitnessGoal || 'Hypertrophy',
+          selectedExercise: additional?.selectedExercise || 'Barbell Bench Press',
           onboardingCompleted: additional?.onboardingCompleted ?? false,
           selectedSplit: additional?.selectedSplit ?? 'ppl',
           weakPoints: additional?.weakPoints ?? [],
@@ -304,13 +425,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         // Upsert into public.profiles
-        const profilePayload = {
+        const profilePayload: Record<string, any> = {
           id: data.user.id,
           name: cleanName,
+          username: cleanUsername,
           email: cleanEmail,
+          avatar_url: additional?.avatarUrl ?? null,
           age: additional?.age ?? null,
           height: additional?.height ?? null,
           weight: additional?.weight ?? null,
+          selected_exercise: additional?.selectedExercise ?? 'Barbell Bench Press',
           preferred_unit: additional?.preferredUnit || 'kg',
           fitness_goal: additional?.fitnessGoal || 'Hypertrophy',
           updated_at: new Date().toISOString(),
@@ -361,15 +485,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<{ success: boolean; error?: string }> => {
     if (!user) return { success: false, error: 'User is not authenticated.' };
 
+    const cleanUsername = data.username !== undefined
+      ? data.username.trim().toLowerCase().replace(/^@/, '')
+      : user.username;
+
+    if (cleanUsername && !/^[a-zA-Z0-9_]{3,24}$/.test(cleanUsername)) {
+      return { success: false, error: 'Username must be 3-24 characters containing only letters, numbers, and underscores.' };
+    }
+
     if (user.isGuest) {
       const updatedGuest: UserProfile = {
         ...user,
         name: data.name?.trim() || user.name,
-        age: data.age ?? user.age,
-        height: data.height ?? user.height,
-        weight: data.weight ?? user.weight,
+        username: cleanUsername || user.username,
+        avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : user.avatarUrl,
+        age: data.age !== undefined ? (typeof data.age === 'number' ? data.age : undefined) : user.age,
+        height: data.height !== undefined ? (typeof data.height === 'number' ? data.height : undefined) : user.height,
+        weight: data.weight !== undefined ? (typeof data.weight === 'number' ? data.weight : undefined) : user.weight,
         preferredUnit: data.preferredUnit ?? user.preferredUnit,
         fitnessGoal: data.fitnessGoal ?? user.fitnessGoal,
+        selectedExercise: data.selectedExercise !== undefined ? data.selectedExercise : user.selectedExercise,
         onboardingCompleted: data.onboardingCompleted ?? user.onboardingCompleted,
         selectedSplit: data.selectedSplit ?? user.selectedSplit,
         weakPoints: data.weakPoints ?? user.weakPoints,
@@ -384,14 +519,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     try {
+      if (cleanUsername && user.email) {
+        saveUsernameMapping(cleanUsername, user.email);
+      }
+
       // Save locally to guarantee offline / immediate availability
       saveLocalProfileMeta(user.id, {
         name: data.name?.trim() || user.name,
+        username: cleanUsername || user.username,
+        avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : user.avatarUrl,
         age: data.age !== undefined ? data.age : user.age,
         height: data.height !== undefined ? data.height : user.height,
         weight: data.weight !== undefined ? data.weight : user.weight,
         preferredUnit: data.preferredUnit !== undefined ? data.preferredUnit : user.preferredUnit,
         fitnessGoal: data.fitnessGoal !== undefined ? data.fitnessGoal : user.fitnessGoal,
+        selectedExercise: data.selectedExercise !== undefined ? data.selectedExercise : user.selectedExercise,
         onboardingCompleted: data.onboardingCompleted ?? user.onboardingCompleted,
         selectedSplit: data.selectedSplit ?? user.selectedSplit,
         weakPoints: data.weakPoints ?? user.weakPoints,
@@ -403,14 +545,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: data.name?.trim() || user.name,
         updated_at: new Date().toISOString(),
       };
+      if (cleanUsername !== undefined) updates.username = cleanUsername;
+      if (data.avatarUrl !== undefined) updates.avatar_url = data.avatarUrl;
       if (data.age !== undefined) updates.age = typeof data.age === 'number' ? data.age : null;
       if (data.height !== undefined) updates.height = typeof data.height === 'number' ? data.height : null;
       if (data.weight !== undefined) updates.weight = typeof data.weight === 'number' ? data.weight : null;
       if (data.preferredUnit !== undefined) updates.preferred_unit = data.preferredUnit;
       if (data.fitnessGoal !== undefined) updates.fitness_goal = data.fitnessGoal;
+      if (data.selectedExercise !== undefined) updates.selected_exercise = data.selectedExercise;
       if (data.selectedSplit !== undefined) updates.selected_split = data.selectedSplit;
       if (data.weakPoints !== undefined) updates.weak_points = data.weakPoints;
       if (data.experienceLevel !== undefined) updates.experience_level = data.experienceLevel;
+      if (data.barbellBaseWeight !== undefined) updates.barbell_base_weight = data.barbellBaseWeight;
 
       try {
         await supabase
@@ -435,11 +581,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ? {
               ...prev,
               name: data.name?.trim() || prev.name,
+              username: cleanUsername || prev.username,
+              avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : prev.avatarUrl,
               age: data.age !== undefined ? data.age : prev.age,
               height: data.height !== undefined ? data.height : prev.height,
               weight: data.weight !== undefined ? data.weight : prev.weight,
               preferredUnit: data.preferredUnit !== undefined ? data.preferredUnit : prev.preferredUnit,
               fitnessGoal: data.fitnessGoal !== undefined ? data.fitnessGoal : prev.fitnessGoal,
+              selectedExercise: data.selectedExercise !== undefined ? data.selectedExercise : prev.selectedExercise,
               onboardingCompleted: data.onboardingCompleted ?? prev.onboardingCompleted,
               selectedSplit: data.selectedSplit ?? prev.selectedSplit,
               weakPoints: data.weakPoints ?? prev.weakPoints,

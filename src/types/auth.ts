@@ -5,12 +5,15 @@ export type AuthModalMode = 'login' | 'signup' | 'forgot' | 'reset-password';
 export interface UserProfile {
   id: string;
   name: string;
+  username?: string;
+  avatarUrl?: string;
   email: string;
   age?: number;
   height?: number; // in cm
   weight?: number; // in kg
   preferredUnit: 'kg' | 'lbs';
   fitnessGoal: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
+  selectedExercise?: string;
   createdAt: string;
   onboardingCompleted?: boolean;
   selectedSplit?: TrainingSplitId;
@@ -30,12 +33,13 @@ export interface AuthContextType {
   continueAsGuest: () => void;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (
     name: string,
     email: string,
     password: string,
-    additional?: Partial<UpdateProfileInput>
+    additional?: Partial<UpdateProfileInput>,
+    username?: string
   ) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateProfile: (data: UpdateProfileInput) => Promise<{ success: boolean; error?: string }>;
@@ -46,11 +50,14 @@ export interface AuthContextType {
 
 export interface UpdateProfileInput {
   name?: string;
+  username?: string;
+  avatarUrl?: string;
   age?: number;
   height?: number;
   weight?: number;
   preferredUnit?: 'kg' | 'lbs';
   fitnessGoal?: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
+  selectedExercise?: string;
   onboardingCompleted?: boolean;
   selectedSplit?: TrainingSplitId;
   weakPoints?: string[];

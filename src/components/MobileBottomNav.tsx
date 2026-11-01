@@ -135,8 +135,15 @@ export const MobileBottomNav: React.FC = () => {
             className="flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors active:scale-90"
           >
             {isAuthenticated ? (
-              <div className="w-6 h-6 rounded-full bg-[#B7FF4A]/15 border border-[#B7FF4A]/40 text-[#B7FF4A] flex items-center justify-center text-[11px] font-bold font-mono">
-                {user?.name ? user.name.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
+              <div className="w-6 h-6 rounded-full bg-[#B7FF4A]/15 border border-[#B7FF4A]/40 text-[#B7FF4A] flex items-center justify-center text-[11px] font-bold font-mono overflow-hidden">
+                {user?.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                ) : user?.name ? (
+                  user.name.charAt(0).toUpperCase()
+                ) : (
+                  <User className="w-3.5 h-3.5" />
+                )}
               </div>
             ) : (
               <LogIn className="w-5 h-5" />
