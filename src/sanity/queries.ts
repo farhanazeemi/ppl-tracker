@@ -19,8 +19,11 @@ export const ALL_POSTS_QUERY = `
       alt
     },
     author-> {
+      _id,
       name,
       role,
+      bio,
+      "slug": slug.current,
       "avatar": avatar.asset->url
     },
     categories[]-> {
@@ -51,9 +54,11 @@ export const POST_BY_SLUG_QUERY = `
       alt
     },
     author-> {
+      _id,
       name,
       role,
       bio,
+      "slug": slug.current,
       "avatar": avatar.asset->url
     },
     categories[]-> {
@@ -81,5 +86,58 @@ export const RECENT_POSTS_QUERY = `
     readTime,
     splitCategory,
     excerpt
+  }
+`;
+
+export const ALL_AUTHORS_QUERY = `
+  *[_type == "author"] | order(name asc) {
+    _id,
+    name,
+    role,
+    bio,
+    "slug": slug.current,
+    "avatar": avatar.asset->url
+  }
+`;
+
+export const AUTHOR_BY_SLUG_QUERY = `
+  *[_type == "author" && (slug.current == $slug || _id == $slug || slug.current == "dr-" + $slug || "dr-" + slug.current == $slug)][0] {
+    _id,
+    name,
+    role,
+    bio,
+    "slug": slug.current,
+    "avatar": avatar.asset->url
+  }
+`;
+
+export const POSTS_BY_AUTHOR_QUERY = `
+  *[_type == "post" && defined(slug.current) && (author->slug.current == $slug || author._ref == $authorId || author->slug.current == "dr-" + $slug || "dr-" + author->slug.current == $slug)] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    "excerpt": coalesce(excerpt, seo.metaDescription, ""),
+    "readTime": coalesce(readTime, string(readingTimeMinutes) + " min read", "5 min read"),
+    splitCategory,
+    imageUrl,
+    imageAlt,
+    mainImage {
+      asset-> {
+        _id,
+        url
+      },
+      alt
+    },
+    author-> {
+      name,
+      role,
+      "slug": slug.current,
+      "avatar": avatar.asset->url
+    },
+    categories[]-> {
+      title,
+      "slug": slug.current
+    }
   }
 `;

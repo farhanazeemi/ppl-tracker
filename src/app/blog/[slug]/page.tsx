@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Calendar,
   ChevronRight,
+  Tag,
 } from 'lucide-react';
 import { getBlogPostBySlug, getRecentPosts, getAllBlogPosts } from '../../../sanity/getPosts';
 import { getArticleSchema } from '../../../lib/schema';
@@ -21,6 +22,7 @@ import { Footer } from '../../../components/Footer';
 import { TableOfContents } from '../../../components/TableOfContents';
 import { FaqAccordion } from '../../../components/FaqAccordion';
 import { ArticlePortableText } from '../../../components/ArticlePortableText';
+import { ArticleComments } from '../../../components/ArticleComments';
 import { processArticleBody } from '../../../utils/articleContent';
 
 const baseUrl = 'https://ppltracker.web.id';
@@ -52,6 +54,8 @@ export async function generateMetadata({
 
   const postUrl = `${baseUrl}/blog/${post.slug}`;
   const modifiedDate = post.modifiedAt || post.publishedAt;
+  const authorSlug = post.author.slug || 'dr-marcus-vance';
+  const authorUrl = `${baseUrl}/author/${authorSlug}`;
 
   return {
     title: `${post.title} | PPL Hypertrophy Tracker`,
@@ -59,7 +63,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `/blog/${post.slug}`,
     },
-    authors: [{ name: post.author.name }],
+    authors: [{ name: post.author.name, url: authorUrl }],
     openGraph: {
       title: post.title,
       description: post.excerpt,
@@ -67,7 +71,7 @@ export async function generateMetadata({
       type: 'article',
       publishedTime: post.publishedAt,
       modifiedTime: modifiedDate,
-      authors: [post.author.name],
+      authors: [authorUrl],
       tags: (post.categories || []).map((c) => c.title),
       siteName: 'PPL Hypertrophy Tracker',
       images: [
@@ -84,7 +88,6 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt,
       images: [post.mainImage || '/icon.svg'],
-      creator: '@farhanazeemi',
     },
   };
 }
@@ -110,6 +113,8 @@ export default async function BlogPostDetailPage({
     modifiedAt: post.modifiedAt,
   });
 
+  const authorSlug = post.author?.slug || 'dr-marcus-vance';
+
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
       <script
@@ -134,17 +139,26 @@ export default async function BlogPostDetailPage({
 
         {/* Article Header */}
         <article className="space-y-6">
+          {/* Clickable Split Category & Tags */}
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 text-xs font-mono font-bold">
-              {post.splitCategory}
-            </span>
-            {(post.categories || []).map((c, idx) => (
-              <span
-                key={c?.slug || c?.title || idx}
-                className="px-3 py-1 rounded-full bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-[var(--border-subtle)] text-xs font-mono font-medium"
+            {post.splitCategory && (
+              <Link
+                href={`/blog?category=${encodeURIComponent(post.splitCategory)}`}
+                className="px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 hover:bg-[var(--accent-primary)]/25 text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 hover:border-[var(--accent-primary)]/40 text-xs font-mono font-bold transition-all btn-tactile cursor-pointer"
+                title={`Filter articles by split: ${post.splitCategory}`}
               >
-                {c?.title}
-              </span>
+                {post.splitCategory}
+              </Link>
+            )}
+            {(post.categories || []).map((c, idx) => (
+              <Link
+                key={c?.slug || c?.title || idx}
+                href={`/blog?category=${encodeURIComponent(c?.title || c?.slug || '')}`}
+                className="px-3 py-1 rounded-full bg-[var(--bg-elevated)] hover:bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/30 text-xs font-mono font-medium transition-all btn-tactile cursor-pointer"
+                title={`View articles in ${c?.title}`}
+              >
+                #{c?.title}
+              </Link>
             ))}
             <span className="flex items-center gap-1.5 text-xs font-mono tabular-nums text-[var(--text-muted)] ml-auto">
               <Clock className="w-3.5 h-3.5" /> {post.readTime}
@@ -156,30 +170,37 @@ export default async function BlogPostDetailPage({
             {post.title}
           </h1>
 
-          {/* Author info card with Post Date and Modification Date */}
+          {/* Clickable Author Card & Publication Date for Google E-E-A-T */}
           <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-[var(--border-subtle)]">
-            <div className="flex items-center gap-3">
+            <Link
+              href={`/author/${authorSlug}`}
+              className="flex items-center gap-3 group/author hover:opacity-90 transition-opacity cursor-pointer"
+              title={`Read author profile and research by ${post.author.name}`}
+            >
               {post.author.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={post.author.avatar}
                   alt={post.author.name}
-                  className="w-11 h-11 rounded-full object-cover border border-[var(--border-subtle)]"
+                  className="w-11 h-11 rounded-full object-cover border border-[var(--border-subtle)] group-hover/author:border-[var(--accent-primary)] transition-colors"
                 />
               ) : (
-                <div className="w-11 h-11 rounded-full bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center font-display font-bold text-[var(--accent-primary)] text-base">
+                <div className="w-11 h-11 rounded-full bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 flex items-center justify-center font-display font-bold text-[var(--accent-primary)] text-base group-hover/author:scale-105 transition-transform">
                   {post.author.name.charAt(0)}
                 </div>
               )}
               <div>
-                <div className="text-sm font-bold text-[var(--text-primary)]">
+                <div className="text-sm font-bold text-[var(--text-primary)] group-hover/author:text-[var(--accent-primary)] transition-colors flex items-center gap-1">
                   {post.author.name}
+                  <span className="text-[10px] font-mono font-normal text-[var(--accent-primary)] bg-[var(--accent-primary)]/10 px-1.5 py-0.2 rounded">
+                    Author
+                  </span>
                 </div>
                 <div className="text-xs text-[var(--text-muted)] font-medium">
                   {post.author.role}
                 </div>
               </div>
-            </div>
+            </Link>
 
             <div className="flex items-center gap-1.5 text-xs font-mono tabular-nums text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-xl border border-[var(--border-subtle)]">
               <Calendar className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
@@ -250,6 +271,35 @@ export default async function BlogPostDetailPage({
 
           {/* Interactive Accessible FAQ Accordion */}
           {faqs.length > 0 && <FaqAccordion items={faqs} />}
+
+          {/* Clickable Topics Footer Section */}
+          {post.categories && post.categories.length > 0 && (
+            <div className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-[var(--text-muted)]">
+                <Tag className="w-3.5 h-3.5 text-[var(--accent-primary)]" /> Related Training Topics
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href={`/blog?category=${encodeURIComponent(post.splitCategory)}`}
+                  className="px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 hover:bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] border border-[var(--accent-primary)]/20 text-xs font-mono font-bold transition-colors cursor-pointer"
+                >
+                  {post.splitCategory}
+                </Link>
+                {post.categories.map((c, idx) => (
+                  <Link
+                    key={idx}
+                    href={`/blog?category=${encodeURIComponent(c.title)}`}
+                    className="px-3 py-1 rounded-full bg-[var(--bg-elevated)] hover:bg-[var(--bg-main)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] border border-[var(--border-subtle)] text-xs font-mono transition-colors cursor-pointer"
+                  >
+                    #{c.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Interactive Comments & Discussions on Article */}
+          <ArticleComments articleSlug={post.slug} articleTitle={post.title} />
         </article>
 
         {/* Action Callout for Workout Tracker per AGENTS.md Mandatory Internal Linking */}
@@ -289,13 +339,12 @@ export default async function BlogPostDetailPage({
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               {recent.map((rec) => (
-                <Link
+                <div
                   key={rec._id}
-                  href={`/blog/${rec.slug}`}
                   className="rounded-3xl overflow-hidden bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/40 transition-all flex flex-col justify-between group shadow-sm hover:shadow-md card-bento"
                 >
                   {/* Related Article Thumbnail */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--bg-elevated)]">
+                  <Link href={`/blog/${rec.slug}`} className="block relative aspect-[16/10] w-full overflow-hidden bg-[var(--bg-elevated)]">
                     {rec.mainImage ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -311,7 +360,7 @@ export default async function BlogPostDetailPage({
                     <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[var(--accent-primary)] border border-[var(--accent-primary)]/30 text-[10px] font-mono font-bold">
                       {rec.splitCategory}
                     </span>
-                  </div>
+                  </Link>
 
                   <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                     <div className="space-y-1.5">
@@ -326,22 +375,30 @@ export default async function BlogPostDetailPage({
                         </span>
                       </div>
 
-                      <h4 className="text-sm font-display font-bold uppercase text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">
-                        {rec.title}
-                      </h4>
+                      <Link href={`/blog/${rec.slug}`}>
+                        <h4 className="text-sm font-display font-bold uppercase text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">
+                          {rec.title}
+                        </h4>
+                      </Link>
                       <p className="text-xs text-[var(--text-secondary)] line-clamp-2">{rec.excerpt}</p>
                     </div>
 
                     <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs">
-                      <span className="text-xs text-[var(--text-muted)] font-medium truncate max-w-[120px]">
+                      <Link
+                        href={`/author/${rec.author.slug || 'dr-marcus-vance'}`}
+                        className="text-xs text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors font-medium truncate max-w-[120px]"
+                      >
                         {rec.author.name}
-                      </span>
-                      <span className="font-mono font-bold text-[var(--accent-primary)] flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
+                      </Link>
+                      <Link
+                        href={`/blog/${rec.slug}`}
+                        className="font-mono font-bold text-[var(--accent-primary)] flex items-center gap-0.5 group-hover:translate-x-1 transition-transform"
+                      >
                         Study <ChevronRight className="w-3 h-3" />
-                      </span>
+                      </Link>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </section>

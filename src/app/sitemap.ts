@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next';
-import { getAllBlogPosts } from '../sanity/getPosts';
+import { getAllBlogPosts, getAllAuthors } from '../sanity/getPosts';
 
 export const revalidate = 60;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://ppltracker.web.id';
 
-  const posts = await getAllBlogPosts();
+  const [posts, authors] = await Promise.all([getAllBlogPosts(), getAllAuthors()]);
 
   const blogUrls: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
@@ -14,6 +14,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
+
+  const authorUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/author`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    ...authors.map((author) => ({
+      url: `${baseUrl}/author/${author.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+  ];
 
   const toolsPages: MetadataRoute.Sitemap = [
     {
@@ -84,6 +99,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...toolsPages,
     ...staticCompliancePages,
+    ...authorUrls,
     ...blogUrls,
   ];
 }

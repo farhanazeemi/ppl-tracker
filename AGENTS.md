@@ -79,6 +79,6 @@ Every article page must emit an integrated `@graph` array containing:
 
 ## 5. Sanity CMS Content Operations
 
-- **Author Assignment**: All published articles must be explicitly linked to verified author documents (e.g., `author-farhan-azeemi`), never left as orphan strings.
+- **Author Assignment**: All published articles must be explicitly linked to verified author documents (e.g., `author-dr-marcus-vance`), never left as orphan strings.
 - **Split Category Accuracy**: Ensure `splitCategory` is set to the specific fitness pillar (`Push (Chest)`, `Legs (Squat)`, `Fat Loss & Recomp`, `Sports Nutrition`, `Endurance & Cardio`, `Calisthenics`, `Prehab & Mobility`, `Women's Strength`, `Longevity & Health`, `Gym Mindset`), never generic placeholders.
 - **Slug Stability**: Do not modify existing slugs or delete published articles without explicit redirection plans approved by engineering. All 60 live URLs must be preserved to maintain established crawl equity.

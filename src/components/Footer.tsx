@@ -183,6 +183,15 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs font-mono text-[var(--text-secondary)]">
               <li>
                 <Link
+                  href="/author"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors font-bold text-[#B7FF4A]"
+                >
+                  Authors & Editorial Board →
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/blog"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors"

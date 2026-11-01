@@ -1,6 +1,14 @@
 import { client, isSanityConfigured } from './client';
-import { ALL_POSTS_QUERY, POST_BY_SLUG_QUERY, CATEGORIES_QUERY, RECENT_POSTS_QUERY } from './queries';
-import { MOCK_BLOG_POSTS, BlogPost } from '../data/mockBlogPosts';
+import {
+  ALL_POSTS_QUERY,
+  POST_BY_SLUG_QUERY,
+  CATEGORIES_QUERY,
+  RECENT_POSTS_QUERY,
+  ALL_AUTHORS_QUERY,
+  AUTHOR_BY_SLUG_QUERY,
+  POSTS_BY_AUTHOR_QUERY,
+} from './queries';
+import { MOCK_BLOG_POSTS, MOCK_AUTHORS, BlogPost, AuthorProfile } from '../data/mockBlogPosts';
 
 // Curated pool of high-resolution fitness photography to ensure every article gets a distinct image
 const DIVERSE_FITNESS_GALLERY: Array<{ url: string; alt: string }> = [
@@ -203,9 +211,11 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
             mainImage: img.url,
             imageAlt: img.alt,
             author: {
-              name: p.author?.name || 'Science Contributor',
-              role: p.author?.role || 'Fitness Specialist',
+              name: p.author?.name || 'Dr. Marcus Vance, Ph.D.',
+              role: p.author?.role || 'Lead Biomechanics Researcher',
+              slug: p.author?.slug || 'dr-marcus-vance',
               avatar: p.author?.avatar,
+              bio: p.author?.bio,
             },
             categories: p.categories || [],
             content: {
@@ -257,8 +267,9 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
           mainImage: img.url,
           imageAlt: img.alt,
           author: {
-            name: post.author?.name || 'Science Contributor',
-            role: post.author?.role || 'Fitness Specialist',
+            name: post.author?.name || 'Dr. Marcus Vance, Ph.D.',
+            role: post.author?.role || 'Lead Biomechanics Researcher',
+            slug: post.author?.slug || 'dr-marcus-vance',
             avatar: post.author?.avatar,
             bio: post.author?.bio,
           },
@@ -293,4 +304,73 @@ export async function getRecentPosts(currentSlug: string): Promise<BlogPost[]> {
   } catch {
     return MOCK_BLOG_POSTS.filter((p) => p.slug !== currentSlug).slice(0, 3);
   }
+}
+
+export async function getAllAuthors(): Promise<AuthorProfile[]> {
+  if (isSanityConfigured && client) {
+    try {
+      const sanityAuthors = await client.fetch(ALL_AUTHORS_QUERY);
+      if (Array.isArray(sanityAuthors) && sanityAuthors.length > 0) {
+        return sanityAuthors.map((a: any) => {
+          const matchedMock = MOCK_AUTHORS.find(
+            (m) =>
+              m.slug === a.slug ||
+              m._id === a._id ||
+              m.name.toLowerCase() === (a.name || '').toLowerCase()
+          );
+          return {
+            _id: a._id,
+            name: a.name || 'Scientific Contributor',
+            role: a.role || matchedMock?.role || 'Biomechanics Researcher',
+            slug: a.slug || matchedMock?.slug || 'dr-marcus-vance',
+            bio: a.bio || matchedMock?.bio || 'Evidence-based exercise science researcher.',
+            avatar: a.avatar || matchedMock?.avatar,
+            credentials: matchedMock?.credentials || [
+              'Evidence-Based Exercise Physiology',
+              'NSCA Resistance Training Principles',
+            ],
+            education: matchedMock?.education || ['Graduate Training in Exercise & Sports Science'],
+            editorialRole: matchedMock?.editorialRole || 'Peer Review & Science Contributor',
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('Sanity getAllAuthors error:', err);
+    }
+  }
+
+  return MOCK_AUTHORS;
+}
+
+export async function getAuthorBySlug(slug: string): Promise<AuthorProfile | null> {
+  const normalizedSlug = slug.toLowerCase().trim();
+  const authors = await getAllAuthors();
+
+  const found = authors.find(
+    (a) =>
+      a.slug.toLowerCase() === normalizedSlug ||
+      `dr-${a.slug.toLowerCase()}` === normalizedSlug ||
+      a.slug.toLowerCase() === `dr-${normalizedSlug}` ||
+      a._id.toLowerCase() === normalizedSlug ||
+      a._id.toLowerCase() === `author-${normalizedSlug}`
+  );
+
+  return found || null;
+}
+
+export async function getPostsByAuthor(authorSlug: string): Promise<BlogPost[]> {
+  const allPosts = await getAllBlogPosts();
+  const normalizedSlug = authorSlug.toLowerCase().trim();
+
+  return allPosts.filter((post) => {
+    const pSlug = (post.author?.slug || '').toLowerCase();
+    const pName = (post.author?.name || '').toLowerCase();
+
+    return (
+      pSlug === normalizedSlug ||
+      `dr-${pSlug}` === normalizedSlug ||
+      pSlug === `dr-${normalizedSlug}` ||
+      pName.includes(normalizedSlug.replace(/-/g, ' '))
+    );
+  });
 }

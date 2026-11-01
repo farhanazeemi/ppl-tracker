@@ -43,9 +43,9 @@ export const metadata: Metadata = {
     'bodybuilding routine app',
     'minimalist workout app',
   ],
-  authors: [{ name: 'Farhan Azeemi', url: 'https://github.com/farhanazeemi' }],
-  creator: 'Farhan Azeemi',
-  publisher: 'Farhan Azeemi',
+  authors: [{ name: 'PPL Sports Science & Engineering Team', url: 'https://ppltracker.web.id/author' }],
+  creator: 'PPL Hypertrophy Tracker',
+  publisher: 'PPL Hypertrophy Tracker',
   applicationName: 'PPL Hypertrophy Tracker',
   generator: 'Next.js',
   formatDetection: {
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     description:
       'Science-backed 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, plate math, and double progression tracking.',
     images: ['/icon.svg'],
-    creator: '@farhanazeemi',
+    creator: '@ppltracker',
   },
   icons: {
     icon: [

@@ -1,3 +1,51 @@
+export interface AuthorProfile {
+  _id: string;
+  name: string;
+  role: string;
+  slug: string;
+  bio: string;
+  avatar?: string;
+  credentials?: string[];
+  education?: string[];
+  editorialRole?: string;
+}
+
+export const MOCK_AUTHORS: AuthorProfile[] = [
+  {
+    _id: 'author-dr-marcus-vance',
+    name: 'Dr. Marcus Vance, Ph.D.',
+    role: 'Lead Biomechanics Researcher & Exercise Physiologist',
+    slug: 'dr-marcus-vance',
+    bio: 'Ph.D. in Exercise Physiology and Biomechanics researcher specializing in resistance training kinetics, EMG motor unit recruitment, and progressive overload periodization. Lead Science Editor for the PPL Hypertrophy Research Journal and published author in the Journal of Strength and Conditioning Research.',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+    credentials: ['Ph.D. Exercise Physiology', 'Certified Strength & Conditioning Specialist (CSCS)', 'NSCA Member'],
+    education: ['Doctor of Philosophy in Exercise Science, Stanford University', 'M.S. Kinesiology & Biomechanics, University of Texas'],
+    editorialRole: 'Lead Science Editor & Biomechanical Reviewer',
+  },
+  {
+    _id: 'author-elena-rostova',
+    name: 'Elena Rostova, CSCS',
+    role: 'Head of High-Performance Strength & Conditioning',
+    slug: 'elena-rostova',
+    bio: 'Certified Strength and Conditioning Specialist (CSCS) and competitive powerlifter with over a decade of coaching experience designing high-frequency, periodized hypertrophy splits.',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80',
+    credentials: ['CSCS (National Strength & Conditioning Association)', 'USAW Level 2 Sports Performance Coach'],
+    education: ['B.S. Sports & Exercise Science, Ohio State University'],
+    editorialRole: 'Senior Strength Programming Editor',
+  },
+  {
+    _id: 'author-liam-sterling',
+    name: 'Liam Sterling',
+    role: 'Natural Bodybuilding Coach & Hypertrophy Specialist',
+    slug: 'liam-sterling',
+    bio: 'Drug-free physique competitor specializing in double progression frameworks, RPE/RIR tracking accuracy, and joint-friendly hypertrophy biomechanics.',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+    credentials: ['WNBF Natural Pro', 'CPT - National Academy of Sports Medicine'],
+    education: ['B.S. Health Science, University of Florida'],
+    editorialRole: 'Physique & Progressive Overload Editor',
+  },
+];
+
 export interface BlogPost {
   _id: string;
   title: string;
@@ -12,6 +60,7 @@ export interface BlogPost {
   author: {
     name: string;
     role: string;
+    slug?: string;
     avatar?: string;
     bio?: string;
   };
@@ -62,6 +111,7 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     author: {
       name: 'Dr. Marcus Vance, Ph.D.',
       role: 'Biomechanics & Hypertrophy Researcher',
+      slug: 'dr-marcus-vance',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
       bio: 'Published author in the Journal of Strength and Conditioning Research specializing in resistance training kinetics and EMG muscle recruitment.'
     },
@@ -109,6 +159,7 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     author: {
       name: 'Elena Rostova, CSCS',
       role: 'Head of High-Performance Strength',
+      slug: 'elena-rostova',
       avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
       bio: 'Competitive powerlifter and strength coach with over a decade of experience designing periodized hypertrophy splits.'
     },
@@ -155,6 +206,7 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     author: {
       name: 'Liam Sterling',
       role: 'Natural Bodybuilder & Coach',
+      slug: 'liam-sterling',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
       bio: 'Drug-free physique competitor specializing in RPE tracking, double progression structures, and longevity-first hypertrophy.'
     },
@@ -201,6 +253,7 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     author: {
       name: 'Dr. Marcus Vance, Ph.D.',
       role: 'Biomechanics & Hypertrophy Researcher',
+      slug: 'dr-marcus-vance',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
       bio: 'Published author in the Journal of Strength and Conditioning Research specializing in resistance training kinetics and EMG muscle recruitment.'
     },

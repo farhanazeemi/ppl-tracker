@@ -91,9 +91,9 @@ export function getWebApplicationSchema() {
       'Supabase cloud profile persistence and workout history sync',
     ],
     author: {
-      '@type': 'Person',
-      name: 'Farhan Azeemi',
-      url: 'https://github.com/farhanazeemi',
+      '@type': 'Organization',
+      name: 'PPL Hypertrophy Tracker',
+      url: BASE_URL,
     },
     publisher: {
       '@id': `${BASE_URL}/#organization`,
@@ -185,7 +185,7 @@ export function getArticleSchema(post: {
   excerpt: string;
   publishedAt: string;
   modifiedAt?: string;
-  author: { name: string; role?: string; bio?: string; avatar?: string };
+  author: { name: string; role?: string; bio?: string; avatar?: string; slug?: string };
   mainImage?: string;
   imageAlt?: string;
   splitCategory?: string;
@@ -197,6 +197,8 @@ export function getArticleSchema(post: {
   const imageUrl = post.mainImage || `${BASE_URL}/icon.svg`;
   const datePublished = post.publishedAt || new Date().toISOString();
   const dateModified = post.modifiedAt || post.publishedAt || datePublished;
+  const authorSlug = post.author?.slug || 'dr-marcus-vance';
+  const authorUrl = `${BASE_URL}/author/${authorSlug}`;
 
   const graphEntities: any[] = [
     {
@@ -219,10 +221,10 @@ export function getArticleSchema(post: {
       isAccessibleForFree: true,
       author: {
         '@type': 'Person',
-        '@id': `${BASE_URL}/#author-farhan-azeemi`,
-        name: post.author?.name || 'Farhan Azeemi',
-        jobTitle: post.author?.role || 'Fitness Specialist & Software Engineer',
-        url: 'https://github.com/farhanazeemi',
+        '@id': `${authorUrl}#author`,
+        name: post.author?.name || 'Dr. Marcus Vance, Ph.D.',
+        jobTitle: post.author?.role || 'Lead Biomechanics Researcher',
+        url: authorUrl,
         ...(post.author?.avatar ? { image: post.author.avatar } : {}),
       },
       publisher: {
@@ -343,6 +345,116 @@ export function getLegalPageSchema(title: string, path: string, description: str
       getBreadcrumbSchema([
         { name: 'Home', url: '/' },
         { name: title, url: path },
+      ]),
+    ],
+  };
+}
+
+/**
+ * Author ProfilePage and Person Schema for Google E-E-A-T.
+ */
+export function getAuthorProfileSchema(author: {
+  slug: string;
+  name: string;
+  role: string;
+  bio: string;
+  avatar?: string;
+  credentials?: string[];
+  education?: string[];
+  editorialRole?: string;
+}) {
+  const authorUrl = `${BASE_URL}/author/${author.slug}`;
+  const avatarUrl = author.avatar || `${BASE_URL}/icon.svg`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ProfilePage',
+        '@id': `${authorUrl}#profile`,
+        url: authorUrl,
+        name: `${author.name} — Author Profile & Exercise Science Research`,
+        description: author.bio,
+        isPartOf: {
+          '@id': `${BASE_URL}/#website`,
+        },
+        mainEntity: {
+          '@id': `${authorUrl}#author`,
+        },
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'Person',
+        '@id': `${authorUrl}#author`,
+        name: author.name,
+        url: authorUrl,
+        jobTitle: author.role,
+        description: author.bio,
+        image: avatarUrl,
+        worksFor: {
+          '@id': `${BASE_URL}/#organization`,
+        },
+        knowsAbout: [
+          'Resistance Training Biomechanics',
+          'Muscular Hypertrophy Kinetics',
+          'Periodized Progressive Overload',
+          'Electromyography (EMG) Muscle Recruitment',
+          'Sports Nutrition & Muscle Protein Synthesis',
+          'Exercise Selection & Joint Safety',
+        ],
+        ...(author.credentials && author.credentials.length > 0
+          ? {
+              hasCredential: author.credentials.map((c) => ({
+                '@type': 'EducationalOccupationalCredential',
+                name: c,
+              })),
+            }
+          : {}),
+        ...(author.education && author.education.length > 0
+          ? {
+              alumniOf: author.education.map((edu) => ({
+                '@type': 'EducationalOrganization',
+                name: edu,
+              })),
+            }
+          : {}),
+      },
+      getBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Journal', url: '/blog' },
+        { name: 'Authors', url: '/author' },
+        { name: author.name, url: `/author/${author.slug}` },
+      ]),
+    ],
+  };
+}
+
+/**
+ * Authors Directory CollectionPage Schema.
+ */
+export function getAuthorsIndexSchema(authorCount: number) {
+  const pageUrl = `${BASE_URL}/author`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${pageUrl}#collection`,
+        url: pageUrl,
+        name: 'Scientific Authors & Editorial Board | PPL Hypertrophy Tracker',
+        description:
+          'Meet the biomechanics researchers, strength coaches, and sports science contributors behind PPL Hypertrophy Tracker.',
+        isPartOf: {
+          '@id': `${BASE_URL}/#website`,
+        },
+        publisher: {
+          '@id': `${BASE_URL}/#organization`,
+        },
+      },
+      getBreadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Journal', url: '/blog' },
+        { name: 'Authors & Editorial Board', url: '/author' },
       ]),
     ],
   };
