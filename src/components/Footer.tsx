@@ -43,12 +43,18 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Column 1 & 2: Brand & Mission */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-2xl bg-[#B7FF4A] text-[#090B0F] flex items-center justify-center font-black font-display text-sm tracking-wider shadow-md shadow-[#B7FF4A]/20">
-                PPL
-              </div>
-              <span className="font-display font-black text-xl tracking-tight uppercase text-[var(--text-primary)]">
-                TRACKER<span className="text-[#B7FF4A]">.</span>
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-dark.png"
+                alt="PPL Tracker"
+                className="h-8 w-auto object-contain hidden dark:block"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-light.png"
+                alt="PPL Tracker"
+                className="h-8 w-auto object-contain block dark:hidden"
+              />
             </div>
 
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed max-w-sm">

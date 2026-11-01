@@ -189,25 +189,26 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Link
               href="/"
               onClick={() => handleNavClick()}
-              className="flex items-center gap-2.5 group select-none cursor-pointer"
+              className="flex items-center gap-2 group select-none cursor-pointer"
               aria-label="PPL Tracker Home"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-[#B7FF4A] text-[#090B0F] flex items-center justify-center font-black font-display text-sm sm:text-base tracking-wider shadow-md shadow-[#B7FF4A]/20 group-hover:scale-105 active:scale-95 transition-transform duration-150">
-                PPL
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5 leading-none">
-                  <span className="font-display font-black text-lg sm:text-xl tracking-tight uppercase text-[var(--text-primary)]">
-                    TRACKER<span className="text-[#B7FF4A]">.</span>
-                  </span>
-                  <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-                    PRO
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono tracking-widest uppercase text-[var(--text-muted)] block mt-0.5">
-                  Hypertrophy Engine
-                </span>
-              </div>
+              {/* Main Site Logo - Dark Mode */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-dark.png"
+                alt="PPL Tracker"
+                className="h-7 sm:h-8 w-auto object-contain hidden dark:block transition-transform duration-150 group-hover:scale-[1.02]"
+              />
+              {/* Main Site Logo - Light Mode */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-light.png"
+                alt="PPL Tracker"
+                className="h-7 sm:h-8 w-auto object-contain block dark:hidden transition-transform duration-150 group-hover:scale-[1.02]"
+              />
+              <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-[var(--border-subtle)] hidden sm:inline-block">
+                PRO
+              </span>
             </Link>
           </div>
 
