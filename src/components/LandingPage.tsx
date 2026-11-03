@@ -690,6 +690,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <img
                       src={post.mainImage}
                       alt={post.imageAlt || post.title}
+                      width={400}
+                      height={250}
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (

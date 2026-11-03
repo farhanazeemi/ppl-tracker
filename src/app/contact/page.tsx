@@ -17,14 +17,14 @@ import { getContactPageSchema } from '../../lib/schema';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Contact & Athlete Support | PPL Hypertrophy Tracker',
+  title: 'Contact & Athlete Support',
   description:
     'Need help with your workout logs, progressive overload engine, or have a sports science inquiry? Contact the PPL Hypertrophy Tracker engineering team directly.',
   alternates: {
     canonical: '/contact',
   },
   openGraph: {
-    title: 'Contact & Athlete Support | PPL Hypertrophy Tracker',
+    title: 'Contact & Athlete Support | PPL Tracker',
     description:
       'Need help with your workout logs, progressive overload engine, or have a sports science inquiry? Contact the PPL Hypertrophy Tracker team directly.',
     url: `${baseUrl}/contact`,
@@ -45,7 +45,7 @@ export default function ContactPage() {
 
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12 outline-none">
         {/* Header */}
         <div className="space-y-4 border-b border-[var(--border-subtle)] pb-8 text-center sm:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-semibold">

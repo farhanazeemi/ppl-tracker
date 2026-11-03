@@ -17,14 +17,14 @@ import { getAboutPageSchema } from '../../lib/schema';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'About PPL Hypertrophy Tracker | Sports Science & Architecture',
+  title: 'About Platform & Architecture',
   description:
-    'Discover the evidence-based biomechanics, progressive overload principles, and minimalist engineering powering PPL Hypertrophy Tracker. Created by Farhan Azeemi.',
+    'Evidence-based biomechanics, progressive overload principles, and minimalist engineering powering PPL Hypertrophy Tracker. Built for serious lifters.',
   alternates: {
     canonical: '/about',
   },
   openGraph: {
-    title: 'About PPL Hypertrophy Tracker | Sports Science & Architecture',
+    title: 'About Platform & Architecture | PPL Tracker',
     description:
       'Discover the evidence-based biomechanics, progressive overload principles, and minimalist engineering powering PPL Hypertrophy Tracker.',
     url: `${baseUrl}/about`,
@@ -45,7 +45,7 @@ export default function AboutPage() {
 
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-16">
+      <main id="main-content" tabIndex={-1} className="max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-16 outline-none">
         {/* Editorial Hero */}
         <section className="relative overflow-hidden rounded-3xl card-bento p-8 sm:p-14 border border-[var(--border-subtle)]">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />

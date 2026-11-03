@@ -47,12 +47,18 @@ export const Footer: React.FC<FooterProps> = ({
               <img
                 src="/logo-dark.png"
                 alt="PPL Tracker"
+                width={123}
+                height={32}
+                loading="lazy"
                 className="h-8 w-auto object-contain hidden dark:block"
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo-light.png"
                 alt="PPL Tracker"
+                width={123}
+                height={32}
+                loading="lazy"
                 className="h-8 w-auto object-contain block dark:hidden"
               />
             </div>

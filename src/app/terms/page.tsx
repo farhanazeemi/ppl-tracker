@@ -9,14 +9,14 @@ import { getLegalPageSchema } from '../../lib/schema';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service & Medical Disclaimer | PPL Hypertrophy Tracker',
+  title: 'Terms of Service & Medical Disclaimer',
   description:
-    'Terms of Service and Resistance Training Medical Disclaimer for PPL Hypertrophy Tracker. Essential safety guidelines, liability limitations, and user agreements.',
+    'Terms of Service and Resistance Training Medical Disclaimer for PPL Hypertrophy Tracker. Safety guidelines, liability limits, and platform agreements.',
   alternates: {
     canonical: '/terms',
   },
   openGraph: {
-    title: 'Terms of Service & Medical Disclaimer | PPL Hypertrophy Tracker',
+    title: 'Terms of Service & Medical Disclaimer | PPL Tracker',
     description:
       'Terms of Service and Resistance Training Medical Disclaimer for PPL Hypertrophy Tracker. Essential safety guidelines, liability limitations, and user agreements.',
     url: `${baseUrl}/terms`,
@@ -41,7 +41,7 @@ export default function TermsOfServicePage() {
 
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12 outline-none">
         {/* Header */}
         <div className="space-y-4 border-b border-[var(--border-subtle)] pb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-semibold">

@@ -197,6 +197,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <img
                 src="/logo-dark.png"
                 alt="PPL Tracker"
+                width={123}
+                height={32}
+                fetchPriority="high"
                 className="h-7 sm:h-8 w-auto object-contain hidden dark:block transition-transform duration-150 group-hover:scale-[1.02]"
               />
               {/* Main Site Logo - Light Mode */}
@@ -204,6 +207,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <img
                 src="/logo-light.png"
                 alt="PPL Tracker"
+                width={123}
+                height={32}
+                fetchPriority="high"
                 className="h-7 sm:h-8 w-auto object-contain block dark:hidden transition-transform duration-150 group-hover:scale-[1.02]"
               />
               <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-[var(--border-subtle)] hidden sm:inline-block">
@@ -225,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick()}
               className={`px-3 py-2 rounded-xl transition-all cursor-pointer ${
                 isHome
-                  ? 'text-[#B7FF4A] bg-[#B7FF4A]/10 font-bold border border-[#B7FF4A]/25'
+                  ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/10 font-bold border border-[var(--accent-primary)]/25'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
               }`}
             >
@@ -256,14 +262,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 aria-controls="tools-dropdown-menu"
                 className={`px-3 py-2 rounded-xl transition-all cursor-pointer inline-flex items-center gap-1.5 ${
                   isToolsActive
-                    ? 'text-[#B7FF4A] bg-[#B7FF4A]/10 font-bold border border-[#B7FF4A]/25'
+                    ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/10 font-bold border border-[var(--accent-primary)]/25'
                     : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
                 }`}
               >
                 <span>Tools</span>
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    toolsDropdownOpen ? 'rotate-180 text-[#B7FF4A]' : 'text-[var(--text-muted)]'
+                    toolsDropdownOpen ? 'rotate-180 text-[var(--accent-primary)]' : 'text-[var(--text-muted)]'
                   }`}
                 />
               </button>
@@ -342,7 +348,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick()}
               className={`px-3 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                 isBlogActive
-                  ? 'text-[#B7FF4A] bg-[#B7FF4A]/10 font-bold border border-[#B7FF4A]/25'
+                  ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/10 font-bold border border-[var(--accent-primary)]/25'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
               }`}
             >
@@ -356,7 +362,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick()}
               className={`px-3 py-2 rounded-xl transition-all cursor-pointer ${
                 pathname === '/about'
-                  ? 'text-[#B7FF4A] bg-[#B7FF4A]/10 font-bold border border-[#B7FF4A]/25'
+                  ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/10 font-bold border border-[var(--accent-primary)]/25'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
               }`}
             >
@@ -532,7 +538,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onClick={() => handleNavClick()}
                       className={`flex items-center justify-between p-2.5 rounded-2xl text-xs font-mono transition-colors ${
                         pathname === tool.href
-                          ? 'bg-[#B7FF4A]/15 text-[#B7FF4A] font-bold border border-[#B7FF4A]/30'
+                          ? 'bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] font-bold border border-[var(--accent-primary)]/30'
                           : 'bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-subtle)]'
                       }`}
                     >

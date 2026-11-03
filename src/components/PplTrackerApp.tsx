@@ -566,7 +566,7 @@ export function PplTrackerApp({
 
       {/* CONDITIONAL MAIN VIEW: Tracker App vs Platform Marketing & Guide */}
       {activeView === 'landing' ? (
-        <main className="flex-1">
+        <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
           <LandingPage
             onOpenAuth={(mode) => {
               playClickSound(soundEnabled);
@@ -611,7 +611,7 @@ export function PplTrackerApp({
             soundEnabled={soundEnabled}
           />
 
-          <main className="max-w-6xl mx-auto px-4 mt-6 space-y-6">
+          <main id="main-content" tabIndex={-1} className="max-w-6xl mx-auto px-4 mt-6 space-y-6 outline-none">
             {/* OFFLINE GYM STATUS BANNER */}
             {!isOnline && (
               <div

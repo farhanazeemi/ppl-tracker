@@ -6,16 +6,16 @@ import { getWebApplicationSchema } from '../../../lib/schema';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'PPL Workout Tracker | 6-Day Push Pull Legs Progressive Overload Engine',
+  title: 'PPL Workout Tracker & Overload Engine',
   description:
-    'Science-backed 6-day Push-Pull-Legs progressive overload workout app. Automated rest interval timers, barbell plate math, double progression ceilings, and local-first cloud sync.',
+    'Free 6-day Push-Pull-Legs workout app with automated rest timers, Olympic plate math, double progression ceilings, and local-first cloud synchronization.',
   alternates: {
     canonical: '/tools/ppl-tracker',
   },
   openGraph: {
-    title: 'PPL Workout Tracker | 6-Day Push Pull Legs Progressive Overload Engine',
+    title: 'PPL Workout Tracker & Overload Engine | PPL Tracker',
     description:
-      'Science-backed 6-day Push-Pull-Legs progressive overload workout app. Automated rest interval timers, barbell plate math, double progression ceilings, and local-first cloud sync.',
+      'Free 6-day Push-Pull-Legs workout app with automated rest timers, Olympic plate math, double progression ceilings, and local-first cloud synchronization.',
     url: `${baseUrl}/tools/ppl-tracker`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PPL Workout Tracker | Progressive Overload Engine',
+    title: 'PPL Workout Tracker & Overload Engine | PPL Tracker',
     description:
-      'Science-backed 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, plate math, and double progression tracking.',
+      'Free 6-day Push-Pull-Legs workout app with automated rest timers, Olympic plate math, and double progression ceilings.',
     images: ['/icon.svg'],
   },
 };

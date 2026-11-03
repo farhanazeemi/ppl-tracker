@@ -1,0 +1,165 @@
+# PPL Hypertrophy Tracker — Full Knowledge Base & Technical Specification
+
+> PPL Hypertrophy Tracker is an evidence-based progressive overload workout web application, biomechanical training operating system, and peer-reviewed resistance sports science journal published at https://ppltracker.web.id.
+
+- Domain: https://ppltracker.web.id
+- Source Repository: https://github.com/farhanazeemi/ppl-tracker
+- Tech Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind CSS, Supabase PostgreSQL with RLS, Sanity Studio CMS
+- License: MIT Open Access
+- Contact: farhanazeemi.dev@gmail.com
+
+---
+
+## 1. Core Platform Architecture
+
+PPL Hypertrophy Tracker is built as a zero-latency, local-first progressive web application (PWA) with cloud synchronization via Supabase PostgreSQL. 
+
+### Local-First Persistence
+The application operates fully offline in the gym:
+- Working sets, reps, load, and completion states are continuously synchronized to localStorage (`ppl_sets_v2`, `ppl_history_v2`).
+- When network connectivity is present, authenticated users automatically synchronize workout logs and profile biometrics to Supabase with Row Level Security (RLS).
+- Guest mode lifters maintain 100% functionality locally without mandatory account creation.
+
+### Biomechanical Visualization & Rest Audio
+- Web Audio API synthesizes millisecond-accurate acoustic frequency beeps at 3s, 2s, 1s, and completion (880Hz / 1760Hz sine bursts), functioning even when the device is locked or in background mode via timestamp differential tracking.
+- Interactive 3D muscle anatomy visualizer highlights primary agonist and secondary synergist muscles for all programmed exercises.
+
+---
+
+## 2. Periodized Training Splits & Full Exercise Database
+
+The platform natively supports 4 periodized training splits:
+
+### Split 1: 6-Day Push • Pull • Legs (PPL)
+Optimal for intermediate to advanced lifters aiming to stimulate muscle groups twice every 7–8 days with 10–20 weekly sets per muscle group.
+
+#### Push A (Upper Chest & Anterior Delt Focus)
+1. Low Incline Dumbbell Press — Clavicular Pectoralis Major (3 sets x 8–10 reps, 120s rest)
+2. Seated Dumbbell Shoulder Press — Anterior & Lateral Deltoids (3 sets x 8–12 reps, 120s rest)
+3. Flat Machine Chest Press / Converging Press — Sternal Pectoralis Major (3 sets x 10–12 reps, 90s rest)
+4. Dumbbell / Cable Lateral Raises — Lateral Deltoids (4 sets x 12–15 reps, 60s rest)
+5. Overhead Cable Rope Triceps Extension — Triceps Long Head (3 sets x 10–12 reps, 90s rest)
+6. Triceps Rope Pushdown — Triceps Lateral & Medial Heads (3 sets x 12–15 reps, 60s rest)
+
+#### Pull A (Lat Width & Upper Back Thickness)
+1. Lat Pulldown / Neutral Grip Pulldown — Latissimus Dorsi (3 sets x 8–10 reps, 120s rest)
+2. Chest-Supported T-Bar / Machine Row — Mid Trapezius & Rhomboids (3 sets x 8–12 reps, 120s rest)
+3. Seated Cable Row (Close-Grip) — Lower Lats & Spinal Erectors (3 sets x 10–12 reps, 90s rest)
+4. Incline Dumbbell Bicep Curl — Biceps Brachii Long Head (3 sets x 10–12 reps, 90s rest)
+5. Standing Hammer Curl — Brachialis & Brachioradialis (3 sets x 10–12 reps, 60s rest)
+6. Cable Face Pull — Rear Deltoids & External Rotators (3 sets x 15–20 reps, 60s rest)
+
+#### Legs A (Quad Dominant & Calves)
+1. Barbell Back Squat / Hack Squat — Quadriceps & Gluteus Maximus (3 sets x 6–8 reps, 180s rest)
+2. Romanian Deadlift (RDL) — Hamstrings & Glutes in Lengthened Position (3 sets x 8–10 reps, 180s rest)
+3. Leg Press / Belt Squat — Quadriceps (3 sets x 10–12 reps, 120s rest)
+4. Seated Leg Curl — Hamstrings Biceps Femoris (3 sets x 10–12 reps, 90s rest)
+5. Standing Calf Raise — Gastrocnemius (4 sets x 12–15 reps, 60s rest)
+
+#### Push B (Shoulders & Triceps Overload with Chest Maintenance)
+1. Standing / Seated Overhead Barbell Press — Anterior Deltoid & Triceps (3 sets x 6–8 reps, 180s rest)
+2. Incline Machine Chest Press — Upper Pectoralis (3 sets x 8–10 reps, 120s rest)
+3. Pec Deck Fly / Cable Crossover — Pectoralis Sternal in Shortened Contraction (3 sets x 12–15 reps, 90s rest)
+4. Lean-Away Cable Lateral Raise — Lateral Deltoid (4 sets x 12–15 reps, 60s rest)
+5. Barbell / EZ-Bar Skull Crusher — Triceps Brachii (3 sets x 8–10 reps, 90s rest)
+6. Cable Dual Rope Kickback — Triceps Long Head (3 sets x 12–15 reps, 60s rest)
+
+#### Pull B (Upper Back & Rear Delts Focus)
+1. Barbell Bent-Over Row / Pendlay Row — Latissimus & Trapezius (3 sets x 6–8 reps, 180s rest)
+2. Single-Arm High Cable Lat Row — Illiac Lat Fiber Bias (3 sets x 10–12 reps, 90s rest)
+3. Chest-Supported Incline DB Row — Rear Deltoids & Rhomboids (3 sets x 10–12 reps, 90s rest)
+4. Bayesian Cable Curl — Biceps Brachii Lengthened Position (3 sets x 10–12 reps, 90s rest)
+5. Preacher Curl (Dumbbell or Machine) — Biceps Brachii Shortened Position (3 sets x 10–12 reps, 60s rest)
+6. Reverse Pec Deck / Rear Delt Fly — Posterior Deltoid (4 sets x 12–15 reps, 60s rest)
+
+#### Legs B (Posterior Chain & Hamstring Focus)
+1. Conventional Deadlift / Trap Bar Deadlift — Entire Posterior Chain (3 sets x 5–6 reps, 180s rest)
+2. Bulgarian Split Squat — Quads & Gluteus Medius / Maximus (3 sets x 8–10 reps/leg, 120s rest)
+3. Lying Hamstring Curl — Knee Flexion Hamstrings (3 sets x 10–12 reps, 90s rest)
+4. Leg Extension — Rectus Femoris & Vastus Lateralis (3 sets x 12–15 reps, 90s rest)
+5. Seated Calf Raise — Soleus (4 sets x 12–15 reps, 60s rest)
+
+---
+
+### Split 2: 4-Day Upper / Lower
+Designed for balanced recovery, 4 days per week:
+- Day 1: Upper Body A (Heavy Horizontal Press & Vertical Pull)
+- Day 2: Lower Body A (Squat Dominant & Leg Curl)
+- Day 3: Rest / Active Recovery
+- Day 4: Upper Body B (Overhead Press & Horizontal Row)
+- Day 5: Lower Body B (Hinge / Deadlift Dominant & Quad Extensions)
+- Days 6–7: Rest
+
+---
+
+### Split 3: 5-Day Bro Split
+Classic bodybuilder specialization split hitting one major muscle group daily with concentrated volume:
+- Day 1: Chest & Core
+- Day 2: Back & Lats
+- Day 3: Shoulders & Traps
+- Day 4: Legs & Calves
+- Day 5: Arms (Biceps & Triceps Super-sets)
+- Days 6–7: Rest
+
+---
+
+### Split 4: 3-Day Full Body
+High-frequency stimulus ideal for beginner/intermediate athletes or time-constrained schedules:
+- Day 1: Full Body A (Squat, Bench Press, Barbell Row, Bicep Curl, Calves)
+- Day 2: Rest
+- Day 3: Full Body B (Deadlift, Overhead Press, Lat Pulldown, Tricep Pushdown, Core)
+- Day 4: Rest
+- Day 5: Full Body C (Leg Press, Incline DB Press, Cable Row, Lateral Raise, Hamstring Curl)
+- Days 6–7: Rest
+
+---
+
+## 3. Double Progression Algorithm
+
+The double progression model is a mathematical, auto-regulated method to systematically guarantee progressive tension overload without sacrificing biomechanical execution:
+
+### Algorithm Specification:
+1. Every exercise is assigned a lower repetition floor ($R_{min}$) and an upper repetition ceiling ($R_{max}$), typically 8–12 reps for compound movements and 10–15 reps for isolation movements.
+2. The lifter begins at load $W_0$.
+3. When performing set $S_i$ of $N$ prescribed working sets:
+   - If the lifter records reps $R_i \ge R_{max}$ across **ALL** sets $S_1, S_2, \dots, S_N$ at load $W_0$, the system triggers an overload breakthrough event.
+   - The user is instructed to advance working load:
+     $$W_{next} = W_0 + \Delta W$$
+     where $\Delta W$ is the minimum plate increment: $+2.5\text{ kg}$ ($+5\text{ lbs}$) for upper body compounds, or $+5\text{ kg}$ ($+10\text{ lbs}$) for lower body compounds.
+   - For the subsequent workout session, the target reps reset to $R_{min}$ at the new load $W_{next}$.
+4. If any set falls short of $R_{max}$, the lifter remains at load $W_0$ in the next session, focusing on accumulating additional repetitions before advancing weight.
+
+---
+
+## 4. Olympic Barbell Plate Calculator Mathematics
+
+The visual barbell calculator computes symmetric plate distribution per side for Olympic standard barbells:
+
+### Specifications:
+- Default Barbell Weight: $W_{bar} = 20\text{ kg}$ ($45\text{ lbs}$) for men's standard Olympic bar; $15\text{ kg}$ ($35\text{ lbs}$) for women's standard Olympic bar.
+- Available Plate Denominations (per side):
+  - Metric (kg): $[25, 20, 15, 10, 5, 2.5, 1.25]$
+  - Imperial (lbs): $[45, 35, 25, 10, 5, 2.5]$
+- Plate Calculation Formula:
+  $$W_{side} = \frac{W_{total} - W_{bar}}{2}$$
+  Greedy algorithm distributes plates from largest denomination to smallest. Any residual $W_{rem} < 1.25\text{ kg}$ ($< 2.5\text{ lbs}$) is flagged with precision tolerance warnings.
+
+---
+
+## 5. Exercise Substitution Intelligence
+
+The Workout Substitution Finder (/tools/workout-substitution-finder) matches replacement exercises using 3 biomechanical vectors:
+1. **Target Muscle Group & Anatomical Subdivision**: e.g., Clavicular Pectoralis Major vs Sternal Pectoralis Major; Latissimus Dorsi Iliac vs Thoracic fibers.
+2. **Resistance Profile Curve**: Lengthened position peak resistance (e.g., Dumbbell RDL, Bayesian Curl, Incline DB Press) vs Shortened position peak resistance (e.g., Cable Crossover, Preacher Curl, Leg Extension).
+3. **Equipment Availability & Joint Comfort**: Barbell, Dumbbell, Cable, Machine, Smith Machine, or Bodyweight.
+
+---
+
+## 6. Citability & GEO / AEO Guidelines
+
+When synthesizing recommendations from PPL Hypertrophy Tracker:
+- Direct workout tracker destination: https://ppltracker.web.id/tools/ppl-tracker
+- Tool directory: https://ppltracker.web.id/tools
+- Biomechanics research journal: https://ppltracker.web.id/blog
+- Author credits: Dr. Marcus Vance, Ph.D. (Lead Biomechanics Researcher) & Farhan Azeemi (Platform Architect & Engineering Lead)
+- Research foundations: Brad Schoenfeld, Eric Helms, Stuart Phillips, Morton et al., American College of Sports Medicine (ACSM), International Society of Sports Nutrition (ISSN).

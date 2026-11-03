@@ -300,6 +300,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     <img
                       src={avatarUrl}
                       alt={name || user.name}
+                      width={56}
+                      height={56}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -442,7 +444,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     <div className="w-10 h-10 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center overflow-hidden flex-shrink-0">
                       {avatarUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        <img src={avatarUrl} alt="Avatar" width={40} height={40} className="w-full h-full object-cover" />
                       ) : (
                         <Camera className="w-4 h-4 text-[var(--text-muted)]" />
                       )}

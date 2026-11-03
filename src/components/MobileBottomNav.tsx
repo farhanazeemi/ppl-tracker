@@ -61,14 +61,14 @@ export const MobileBottomNav: React.FC = () => {
             href="/"
             className={`flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none transition-colors ${
               isHomeActive
-                ? 'text-[#B7FF4A] dark:text-[#B7FF4A]'
+                ? 'text-[var(--accent-primary)] font-bold'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             <div className="relative">
               <LayoutGrid className="w-5 h-5 transition-transform active:scale-90" />
               {isHomeActive && (
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#B7FF4A]" />
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--accent-primary)]" />
               )}
             </div>
             <span className="text-[10px] font-sans font-medium mt-1">Home</span>
@@ -79,14 +79,14 @@ export const MobileBottomNav: React.FC = () => {
             href="/tools/ppl-tracker"
             className={`flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none transition-colors ${
               isTrackerActive
-                ? 'text-[#B7FF4A] dark:text-[#B7FF4A]'
+                ? 'text-[var(--accent-primary)] font-bold'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             <div className="relative">
               <Dumbbell className="w-5 h-5 transition-transform active:scale-90" />
               {isTrackerActive && (
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#B7FF4A]" />
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--accent-primary)]" />
               )}
             </div>
             <span className="text-[10px] font-sans font-medium mt-1">Tracker</span>
@@ -97,14 +97,14 @@ export const MobileBottomNav: React.FC = () => {
             href="/tools"
             className={`flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none transition-colors ${
               isToolsActive
-                ? 'text-[#B7FF4A] dark:text-[#B7FF4A]'
+                ? 'text-[var(--accent-primary)] font-bold'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             <div className="relative">
               <Boxes className="w-5 h-5 transition-transform active:scale-90" />
               {isToolsActive && (
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#B7FF4A]" />
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--accent-primary)]" />
               )}
             </div>
             <span className="text-[10px] font-sans font-medium mt-1">Tools</span>
@@ -115,14 +115,14 @@ export const MobileBottomNav: React.FC = () => {
             href="/blog"
             className={`flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none transition-colors ${
               isBlogActive
-                ? 'text-[#B7FF4A] dark:text-[#B7FF4A]'
+                ? 'text-[var(--accent-primary)] font-bold'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             <div className="relative">
               <BookOpen className="w-5 h-5 transition-transform active:scale-90" />
               {isBlogActive && (
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#B7FF4A]" />
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--accent-primary)]" />
               )}
             </div>
             <span className="text-[10px] font-sans font-medium mt-1">Journal</span>
@@ -132,13 +132,13 @@ export const MobileBottomNav: React.FC = () => {
           <button
             onClick={handleProfileClick}
             aria-label={isAuthenticated ? 'Open athlete profile' : 'Sign in to account'}
-            className="flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors active:scale-90"
+            className="flex flex-col items-center justify-center h-full min-w-[48px] py-1 select-none text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors active:scale-90 cursor-pointer"
           >
             {isAuthenticated ? (
-              <div className="w-6 h-6 rounded-full bg-[#B7FF4A]/15 border border-[#B7FF4A]/40 text-[#B7FF4A] flex items-center justify-center text-[11px] font-bold font-mono overflow-hidden">
+              <div className="w-6 h-6 rounded-full bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/40 text-[var(--accent-primary)] flex items-center justify-center text-[11px] font-bold font-mono overflow-hidden">
                 {user?.avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  <img src={user.avatarUrl} alt="Avatar" width={24} height={24} className="w-full h-full object-cover" />
                 ) : user?.name ? (
                   user.name.charAt(0).toUpperCase()
                 ) : (

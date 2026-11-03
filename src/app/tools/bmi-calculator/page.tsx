@@ -9,16 +9,16 @@ import { BmiCalculator } from '../../../components/BmiCalculator';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Free BMI Calculator | Body Mass Index Metric & Imperial | PPL Tracker',
+  title: 'Free BMI Calculator (Metric & Imperial)',
   description:
-    'Calculate your Body Mass Index (BMI) instantly with metric (cm/kg) and imperial (ft/in/lbs) units. Interactive visual scale, healthy weight targets, and muscle vs. fat guidance for lifters.',
+    'Calculate your Body Mass Index (BMI) instantly with metric and imperial units. Interactive scale, healthy weight targets, and muscle mass guidance for lifters.',
   alternates: {
     canonical: '/tools/bmi-calculator',
   },
   openGraph: {
-    title: 'Free BMI Calculator | Body Mass Index Metric & Imperial | PPL Tracker',
+    title: 'Free BMI Calculator (Metric & Imperial) | PPL Tracker',
     description:
-      'Calculate your Body Mass Index (BMI) instantly with metric and imperial units. Interactive visual scale, healthy weight targets, and muscle vs fat guidance for resistance athletes.',
+      'Calculate your Body Mass Index (BMI) instantly with metric and imperial units. Interactive scale, healthy weight targets, and muscle mass guidance for lifters.',
     url: `${baseUrl}/tools/bmi-calculator`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
@@ -44,6 +44,7 @@ export default function BmiCalculatorPage() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
+    '@id': `${baseUrl}/tools/bmi-calculator#webapp`,
     name: 'PPL Tracker BMI Calculator',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'All',
@@ -66,7 +67,7 @@ export default function BmiCalculatorPage() {
 
       <Navbar />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12 outline-none">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">

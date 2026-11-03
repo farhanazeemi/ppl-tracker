@@ -35,16 +35,18 @@ const baseUrl = 'https://ppltracker.web.id';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'PPL Tracker | Evidence-Based Hypertrophy & Workout Technology Platform',
+  title: {
+    absolute: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
+  },
   description:
-    'Free evidence-based fitness technology platform: 4 periodized resistance training splits, automated double progression tracking, deterministic exercise substitution finder, Olympic barbell plate math, BMI calculator, and peer-reviewed biomechanics journal.',
+    'Free workout tracker and hypertrophy engine: 4 training splits, double progression overload, rest timers, plate math, and exercise biomechanics journal.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'PPL Tracker | Evidence-Based Hypertrophy & Workout Technology Platform',
+    title: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
     description:
-      'Free evidence-based fitness platform: 4 resistance splits, double progression tracking, workout substitution finder, barbell plate math, and biomechanics journal.',
+      'Free workout tracker and hypertrophy engine: 4 training splits, double progression overload, rest timers, plate math, and exercise biomechanics journal.',
     url: baseUrl,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
@@ -59,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PPL Tracker | Evidence-Based Hypertrophy & Workout Technology Platform',
+    title: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
     description:
-      'Free evidence-based fitness platform: 4 resistance splits, double progression tracking, workout substitution finder, and biomechanics journal.',
+      'Free workout tracker and hypertrophy engine: 4 training splits, double progression overload, rest timers, plate math, and exercise biomechanics journal.',
     images: ['/icon.svg'],
   },
 };
@@ -92,7 +94,7 @@ export default async function HomePage() {
       {/* Global Navigation Bar */}
       <Navbar />
 
-      <main className="space-y-20 sm:space-y-28">
+      <main id="main-content" tabIndex={-1} className="space-y-20 sm:space-y-28 outline-none">
         {/* ========================================================= */}
         {/* 1. HERO SECTION                                           */}
         {/* ========================================================= */}

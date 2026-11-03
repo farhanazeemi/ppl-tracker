@@ -59,7 +59,7 @@ export async function generateMetadata({
   const authorUrl = `${baseUrl}/author/${authorSlug}`;
 
   return {
-    title: `${post.title} | PPL Hypertrophy Tracker`,
+    title: post.title,
     description: post.excerpt,
     alternates: {
       canonical: `/blog/${post.slug}`,
@@ -129,7 +129,7 @@ export default async function BlogPostDetailPage({
       {/* Top Global Navigation Bar */}
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
+      <main id="main-content" tabIndex={-1} className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8 outline-none">
         {/* Sub-header Navigation */}
         <div className="flex items-center justify-between gap-4">
           <Link
@@ -186,6 +186,9 @@ export default async function BlogPostDetailPage({
                 <img
                   src={post.author.avatar}
                   alt={post.author.name}
+                  width={44}
+                  height={44}
+                  loading="lazy"
                   className="w-11 h-11 rounded-full object-cover border border-[var(--border-subtle)] group-hover/author:border-[var(--accent-primary)] transition-colors"
                 />
               ) : (
@@ -354,6 +357,9 @@ export default async function BlogPostDetailPage({
                       <img
                         src={rec.mainImage}
                         alt={rec.imageAlt || rec.title}
+                        width={400}
+                        height={250}
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (

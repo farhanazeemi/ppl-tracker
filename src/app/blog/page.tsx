@@ -13,14 +13,14 @@ const baseUrl = 'https://ppltracker.web.id';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
+  title: 'Hypertrophy Science Journal',
   description:
     'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols from the PPL Tracker team.',
   alternates: {
     canonical: '/blog',
   },
   openGraph: {
-    title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
+    title: 'Hypertrophy Science Journal | PPL Tracker',
     description:
       'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols.',
     url: `${baseUrl}/blog`,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hypertrophy Science Journal | Evidence-Based Resistance Training',
+    title: 'Hypertrophy Science Journal | PPL Tracker',
     description:
       'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols.',
     images: ['/icon.svg'],
@@ -58,7 +58,7 @@ export default async function BlogIndexPage() {
       {/* Top Universal Navbar */}
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-12 outline-none">
         {/* Editorial Hero Bento */}
         <section className="relative overflow-hidden rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] p-8 sm:p-12 shadow-sm card-bento">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />

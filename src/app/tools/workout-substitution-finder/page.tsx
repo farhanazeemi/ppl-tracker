@@ -10,14 +10,14 @@ import { FaqAccordion, FaqItem } from '../../../components/FaqAccordion';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Workout Substitution Finder | Gym Exercise Alternatives | PPL Tracker',
+  title: 'Workout Exercise Substitution Finder',
   description:
     'Find instant biomechanical exercise alternatives for busy gyms or home workouts. Filter by available equipment, target muscles, and training goals free.',
   alternates: {
     canonical: '/tools/workout-substitution-finder',
   },
   openGraph: {
-    title: 'Workout Substitution Finder | Exercise Alternatives Engine | PPL Tracker',
+    title: 'Workout Exercise Substitution Finder | PPL Tracker',
     description:
       'Can\'t get your preferred machine or barbell? Discover biomechanically matched exercise alternatives based on movement patterns, target muscles, and available equipment.',
     url: `${baseUrl}/tools/workout-substitution-finder`,
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Workout Substitution Finder | Gym Exercise Alternatives',
+    title: 'Workout Exercise Substitution Finder | PPL Tracker',
     description:
       'Deterministic exercise substitution engine matching movement patterns, target muscles, and open gym equipment.',
     images: ['/icon.svg'],
@@ -147,7 +147,7 @@ export default function WorkoutSubstitutionFinderPage() {
 
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16">
+      <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16 outline-none">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">

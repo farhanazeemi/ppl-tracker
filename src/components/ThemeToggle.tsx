@@ -26,7 +26,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       type="button"
       onClick={handleToggle}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      className={`relative inline-flex items-center justify-center min-w-[42px] min-h-[42px] p-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all duration-200 cursor-pointer active:scale-95 ${className}`}
+      className={`relative inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all duration-200 cursor-pointer active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] focus:outline-none ${className}`}
       title={`Toggle theme (currently ${theme})`}
     >
       <div className="relative w-4 h-4 flex items-center justify-center">

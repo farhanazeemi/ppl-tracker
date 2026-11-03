@@ -27,11 +27,11 @@ const baseUrl = 'https://ppltracker.web.id';
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'PPL Hypertrophy Tracker | Minimalist Workout App',
-    template: '%s | PPL Hypertrophy Tracker',
+    default: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
+    template: '%s | PPL Tracker',
   },
   description:
-    'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, biomechanics visualizer, user profiles, and double progression tracking.',
+    'Free 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, Olympic plate math, 3D muscle anatomy, and cloud workout tracking.',
   keywords: [
     'PPL workout tracker',
     'push pull legs split',
@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'PPL Hypertrophy Tracker | Minimalist Workout App',
+    title: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
     description:
-      'Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, biomechanics visualizer, user profiles, and double progression tracking.',
+      'Free 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, Olympic plate math, 3D muscle anatomy, and cloud workout tracking.',
     url: baseUrl,
     siteName: 'PPL Hypertrophy Tracker',
     images: [
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PPL Hypertrophy Tracker | Minimalist Workout App',
+    title: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
     description:
-      'Science-backed 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, plate math, and double progression tracking.',
+      'Free 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, Olympic plate math, and double progression tracking.',
     images: ['/icon.svg'],
     creator: '@ppltracker',
   },
@@ -175,6 +175,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonLd(websiteSchema) }}
         />
+        {/* Agentic Browsing & LLMs.txt Alternate Links (3/3 Standard) */}
+        <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLMs.txt" />
+        <link rel="help" href="/llms.txt" />
         {/* Google Analytics & GTM loaded on idle, excludes internal Sanity Studio routes */}
         <GoogleAnalytics />
       </head>
@@ -182,6 +185,13 @@ export default function RootLayout({
         className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] antialiased selection:bg-[#B7FF4A] selection:text-[#090B0F] transition-colors duration-200 pb-16 md:pb-0"
         suppressHydrationWarning
       >
+        {/* WCAG 2.4.1 Accessible Skip Landmark Link */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-[#B7FF4A] focus:text-[#090B0F] focus:font-mono focus:font-bold focus:text-sm focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-[#090B0F]"
+        >
+          Skip to main content
+        </a>
         <Providers>
           {children}
           <MobileBottomNav />

@@ -21,14 +21,14 @@ const baseUrl = 'https://ppltracker.web.id';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Scientific Editorial Board & Verified Authors | PPL Hypertrophy Tracker',
+  title: 'Editorial Board & Verified Authors',
   description:
     'Meet the biomechanics researchers, strength coaches, and sports science contributors behind PPL Hypertrophy Tracker. Evidence-based peer review guidelines.',
   alternates: {
     canonical: '/author',
   },
   openGraph: {
-    title: 'Scientific Authors & Editorial Board | PPL Hypertrophy Tracker',
+    title: 'Editorial Board & Verified Authors | PPL Tracker',
     description:
       'Meet the biomechanics researchers, strength coaches, and sports science contributors behind PPL Hypertrophy Tracker.',
     url: `${baseUrl}/author`,
@@ -56,7 +56,7 @@ export default async function AuthorsIndexPage() {
 
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12 outline-none">
         {/* Hero Banner */}
         <section className="relative overflow-hidden rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] p-8 sm:p-12 shadow-sm card-bento space-y-4">
           <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />

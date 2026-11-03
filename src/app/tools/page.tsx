@@ -13,16 +13,16 @@ import { ToolsDirectoryList } from './ToolsDirectoryList';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Free Fitness Tools & Workout Calculators | PPL Tracker Platform',
+  title: 'Free Fitness Tools & Calculators',
   description:
-    'Explore free, evidence-based fitness utilities: 6-day PPL progressive overload workout tracker, BMI screening calculator with metric/imperial units, barbell plate math, and more.',
+    'Free workout tools: 6-day PPL progressive overload tracker, BMI calculator, exercise substitution finder, and Olympic barbell plate math for lifters.',
   alternates: {
     canonical: '/tools',
   },
   openGraph: {
-    title: 'Free Fitness Tools & Workout Calculators | PPL Tracker Platform',
+    title: 'Free Fitness Tools & Calculators | PPL Tracker',
     description:
-      'Explore free, evidence-based fitness utilities: 6-day PPL progressive overload workout tracker, BMI screening calculator with metric/imperial units, and more.',
+      'Free workout tools: 6-day PPL progressive overload tracker, BMI calculator, exercise substitution finder, and Olympic barbell plate math for lifters.',
     url: `${baseUrl}/tools`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Fitness Tools & Calculators | PPL Tracker',
     description:
-      'Explore free, evidence-based fitness utilities: 6-day PPL workout tracker, BMI calculator, and more.',
+      'Free workout tools: 6-day PPL workout tracker, BMI calculator, and plate math.',
     images: ['/icon.svg'],
   },
 };
@@ -48,10 +48,14 @@ export default function ToolsDirectoryPage() {
   const directorySchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
+    '@id': `${baseUrl}/tools#collection`,
     name: 'PPL Tracker Fitness Tools Directory',
     url: `${baseUrl}/tools`,
     description:
       'A collection of free, evidence-based workout tracking applications and body composition calculators.',
+    isPartOf: {
+      '@id': `${baseUrl}/#website`,
+    },
     hasPart: FITNESS_TOOLS.map((tool) => ({
       '@type': 'WebApplication',
       name: tool.name,
@@ -69,7 +73,7 @@ export default function ToolsDirectoryPage() {
 
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-12 outline-none">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">

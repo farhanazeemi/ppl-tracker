@@ -238,6 +238,9 @@ function BlogInteractiveListInner({ initialPosts }: BlogInteractiveListProps) {
                       <img
                         src={featuredPost.author.avatar}
                         alt={featuredPost.author.name}
+                        width={40}
+                        height={40}
+                        loading="lazy"
                         className="w-10 h-10 rounded-full object-cover border border-[var(--border-subtle)]"
                       />
                     ) : (
@@ -405,6 +408,9 @@ function BlogInteractiveListInner({ initialPosts }: BlogInteractiveListProps) {
                         <img
                           src={post.author.avatar}
                           alt={post.author.name}
+                          width={24}
+                          height={24}
+                          loading="lazy"
                           className="w-6 h-6 rounded-full object-cover border border-[var(--border-subtle)]"
                         />
                       ) : (

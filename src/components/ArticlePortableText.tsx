@@ -205,7 +205,14 @@ export const articlePortableTextComponents: PortableTextComponents = {
       return (
         <figure className="my-8 overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={alt} className="w-full max-h-[460px] object-cover" />
+          <img
+            src={url}
+            alt={alt}
+            width={800}
+            height={450}
+            loading="lazy"
+            className="w-full max-h-[460px] object-cover"
+          />
           {value.caption && (
             <figcaption className="p-3.5 text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)]">
               {value.caption}

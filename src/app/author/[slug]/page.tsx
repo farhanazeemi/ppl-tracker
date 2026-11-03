@@ -44,7 +44,7 @@ export async function generateMetadata({
 
   if (!author) {
     return {
-      title: 'Author Not Found | PPL Hypertrophy Tracker',
+      title: 'Author Not Found',
       robots: { index: false, follow: false },
     };
   }
@@ -52,7 +52,7 @@ export async function generateMetadata({
   const authorUrl = `${baseUrl}/author/${author.slug}`;
 
   return {
-    title: `${author.name} — Sports Science Author & Biomechanics Researcher | PPL Tracker`,
+    title: `${author.name} — Sports Science Author`,
     description: author.bio,
     alternates: {
       canonical: `/author/${author.slug}`,
@@ -104,7 +104,7 @@ export default async function AuthorProfilePage({
 
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12 outline-none">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center gap-2 text-xs font-mono uppercase text-[var(--text-secondary)]">
           <Link
@@ -242,6 +242,9 @@ export default async function AuthorProfilePage({
                       <img
                         src={post.mainImage}
                         alt={post.imageAlt || post.title}
+                        width={400}
+                        height={225}
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (

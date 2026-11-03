@@ -9,14 +9,14 @@ import { getLegalPageSchema } from '../../lib/schema';
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | PPL Hypertrophy Tracker',
+  title: 'Privacy Policy',
   description:
-    'Comprehensive Privacy Policy for PPL Hypertrophy Tracker. Transparent disclosure of client storage, Supabase authentication, cookie usage, Google AdSense advertising, and GDPR/CCPA data rights.',
+    'Privacy Policy for PPL Hypertrophy Tracker. Transparent disclosure of client storage, Supabase authentication, cookie usage, analytics, and data rights.',
   alternates: {
     canonical: '/privacy',
   },
   openGraph: {
-    title: 'Privacy Policy | PPL Hypertrophy Tracker',
+    title: 'Privacy Policy | PPL Tracker',
     description:
       'Transparent disclosure of client storage, Supabase authentication, cookie usage, Google AdSense advertising, and GDPR/CCPA data rights.',
     url: `${baseUrl}/privacy`,
@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
 
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12">
+      <main id="main-content" tabIndex={-1} className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-12 outline-none">
         {/* Header */}
         <div className="space-y-4 border-b border-[var(--border-subtle)] pb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-semibold">
