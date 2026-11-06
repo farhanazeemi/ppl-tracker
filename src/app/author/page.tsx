@@ -33,6 +33,21 @@ export const metadata: Metadata = {
       'Meet the biomechanics researchers, strength coaches, and sports science contributors behind PPL Hypertrophy Tracker.',
     url: `${baseUrl}/author`,
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Hypertrophy Tracker Editorial Board & Verified Authors',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Editorial Board & Verified Authors | PPL Tracker',
+    description:
+      'Meet the biomechanics researchers, strength coaches, and sports science contributors behind PPL Hypertrophy Tracker.',
+    images: ['/og-image.png'],
   },
 };
 

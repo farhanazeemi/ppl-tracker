@@ -1,7 +1,7 @@
 import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import { PplTrackerApp } from '../../../components/PplTrackerApp';
-import { getWebApplicationSchema } from '../../../lib/schema';
+import { getPplTrackerToolSchema } from '../../../lib/schema';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
-        alt: 'PPL Hypertrophy Tracker App',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Hypertrophy Tracker App & Progressive Overload Engine',
       },
     ],
   },
@@ -33,18 +33,18 @@ export const metadata: Metadata = {
     title: 'PPL Workout Tracker & Overload Engine | PPL Tracker',
     description:
       'Free 6-day Push-Pull-Legs workout app with automated rest timers, Olympic plate math, and double progression ceilings.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
   },
 };
 
 export default function PplTrackerPage() {
-  const webAppSchema = getWebApplicationSchema();
+  const schema = getPplTrackerToolSchema();
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLd(webAppSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
       />
       <PplTrackerApp initialView="app" />
     </>

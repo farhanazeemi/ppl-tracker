@@ -8,6 +8,7 @@ import {
 import { Navbar } from '../../components/Navbar';
 import { Footer } from '../../components/Footer';
 import { FITNESS_TOOLS, UPCOMING_TOOLS } from '../../config/tools';
+import { getToolsIndexSchema } from '../../lib/schema';
 import { ToolsDirectoryList } from './ToolsDirectoryList';
 
 const baseUrl = 'https://ppltracker.web.id';
@@ -28,10 +29,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
-        alt: 'PPL Tracker Tools Directory',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Tracker Free Fitness Tools Directory',
       },
     ],
   },
@@ -40,29 +41,12 @@ export const metadata: Metadata = {
     title: 'Free Fitness Tools & Calculators | PPL Tracker',
     description:
       'Free workout tools: 6-day PPL workout tracker, BMI calculator, and plate math.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
   },
 };
 
 export default function ToolsDirectoryPage() {
-  const directorySchema = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    '@id': `${baseUrl}/tools#collection`,
-    name: 'PPL Tracker Fitness Tools Directory',
-    url: `${baseUrl}/tools`,
-    description:
-      'A collection of free, evidence-based workout tracking applications and body composition calculators.',
-    isPartOf: {
-      '@id': `${baseUrl}/#website`,
-    },
-    hasPart: FITNESS_TOOLS.map((tool) => ({
-      '@type': 'WebApplication',
-      name: tool.name,
-      url: `${baseUrl}${tool.href}`,
-      description: tool.shortDescription,
-    })),
-  };
+  const directorySchema = getToolsIndexSchema(FITNESS_TOOLS);
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">

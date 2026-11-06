@@ -8,9 +8,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [posts, authors] = await Promise.all([getAllBlogPosts(), getAllAuthors()]);
 
+  // Stable reference timestamp for non-blog static foundation and tools
+  const platformStableDate = new Date('2026-11-03T00:00:00Z');
+
   const blogUrls: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.publishedAt || Date.now()),
+    lastModified: new Date(post.modifiedAt || post.publishedAt || platformStableDate),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));
@@ -18,13 +21,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const authorUrls: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/author`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
     ...authors.map((author) => ({
       url: `${baseUrl}/author/${author.slug}`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     })),
@@ -33,25 +36,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const toolsPages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/tools`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/tools/ppl-tracker`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/tools/bmi-calculator`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/tools/workout-substitution-finder`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
@@ -60,25 +63,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticCompliancePages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'yearly' as const,
       priority: 0.5,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'yearly' as const,
       priority: 0.5,
     },
@@ -87,13 +90,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'daily' as const,
       priority: 1.0,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: platformStableDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },

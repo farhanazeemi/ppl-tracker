@@ -28,10 +28,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
-        alt: 'PPL Hypertrophy Journal',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Hypertrophy Science Journal — Peer-Reviewed Biomechanics & Overload Research',
       },
     ],
   },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: 'Hypertrophy Science Journal | PPL Tracker',
     description:
       'Peer-reviewed biomechanics studies, muscle hypertrophy mechanisms, exercise selection kinematics, and progressive overload protocols.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
   },
 };
 

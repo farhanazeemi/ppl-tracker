@@ -22,6 +22,21 @@ export const metadata: Metadata = {
     url: `${baseUrl}/terms`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Hypertrophy Tracker Terms of Service & Medical Disclaimer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Terms of Service & Medical Disclaimer | PPL Tracker',
+    description:
+      'Terms of Service and Resistance Training Medical Disclaimer for PPL Hypertrophy Tracker. Essential safety guidelines and user agreements.',
+    images: ['/og-image.png'],
   },
 };
 

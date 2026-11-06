@@ -52,10 +52,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
-        alt: 'PPL Tracker Platform Logo',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Tracker — Evidence-Based Workout & Hypertrophy App',
       },
     ],
   },
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
     description:
       'Free workout tracker and hypertrophy engine: 4 training splits, double progression overload, rest timers, plate math, and exercise biomechanics journal.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
   },
 };
 

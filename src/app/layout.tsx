@@ -64,10 +64,10 @@ export const metadata: Metadata = {
     siteName: 'PPL Hypertrophy Tracker',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
-        alt: 'PPL Hypertrophy Tracker Logo',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Hypertrophy Tracker — Evidence-Based Progressive Overload Operating System',
       },
     ],
     locale: 'en_US',
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     title: 'PPL Tracker | Evidence-Based Workout & Hypertrophy App',
     description:
       'Free 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, Olympic plate math, and double progression tracking.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
     creator: '@ppltracker',
   },
   icons: {

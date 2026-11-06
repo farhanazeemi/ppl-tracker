@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
         alt: 'PPL Tracker Workout Substitution Finder',
       },
     ],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: 'Workout Exercise Substitution Finder | PPL Tracker',
     description:
       'Deterministic exercise substitution engine matching movement patterns, target muscles, and open gym equipment.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
   },
 };
 

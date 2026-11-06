@@ -1,0 +1,170 @@
+{
+  "pillar": {
+    "title": "PPL Progressive Overload Workout Tracker",
+    "keyword": "ppl workout tracker",
+    "volume": 22000,
+    "template": "landing-page",
+    "wordCount": 3500,
+    "url": "https://ppltracker.web.id/tools/ppl-tracker"
+  },
+  "clusters": [
+    {
+      "name": "Push (Chest & Front Delts)",
+      "color": "#B7FF4A",
+      "posts": [
+        {
+          "title": "Solving the Clavicular Head: The Biomechanics of Upper Chest Growth",
+          "slug": "biomechanics-upper-chest-growth-clavicular-head",
+          "keyword": "upper chest hypertrophy biomechanics",
+          "volume": 4400,
+          "template": "ultimate-guide",
+          "wordCount": 2200,
+          "url": "https://ppltracker.web.id/blog/biomechanics-upper-chest-growth-clavicular-head",
+          "status": "published"
+        },
+        {
+          "title": "Clavicular Pec Hypertrophy: Overcoming Stubborn Upper Chest Plateaus",
+          "slug": "clavicular-pec-upper-chest-hypertrophy-overcoming-stubborn-lagging-muscle-plateaus",
+          "keyword": "clavicular pec hypertrophy plateaus",
+          "volume": 3200,
+          "template": "how-to",
+          "wordCount": 1850,
+          "url": "https://ppltracker.web.id/blog/clavicular-pec-upper-chest-hypertrophy-overcoming-stubborn-lagging-muscle-plateaus",
+          "status": "published"
+        },
+        {
+          "title": "Incline Dumbbell Press vs Barbell Bench Press for Hypertrophy",
+          "slug": "incline-dumbbell-press-vs-barbell-bench-press-hypertrophy",
+          "keyword": "incline dumbbell press vs barbell bench press",
+          "volume": 5800,
+          "template": "comparison",
+          "wordCount": 1750,
+          "url": "https://ppltracker.web.id/blog/incline-dumbbell-press-vs-barbell-bench-press-hypertrophy",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "name": "Pull (Lats & Posterior Chain)",
+      "color": "#38BDF8",
+      "posts": [
+        {
+          "title": "Latissimus Dorsi Iliac & Thoracic Fibers: Lengthened Partials vs Full ROM",
+          "slug": "latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-lengthened-partials-vs-full-range-of-motion",
+          "keyword": "latissimus dorsi lengthened partials vs full rom",
+          "volume": 3900,
+          "template": "explainer",
+          "wordCount": 2100,
+          "url": "https://ppltracker.web.id/blog/latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-lengthened-partials-vs-full-range-of-motion",
+          "status": "published"
+        },
+        {
+          "title": "Pull-ups vs Lat Pulldowns for Complete Back Thickness & Width",
+          "slug": "pull-ups-vs-lat-pulldowns-back-hypertrophy",
+          "keyword": "pull-ups vs lat pulldowns hypertrophy",
+          "volume": 6600,
+          "template": "comparison",
+          "wordCount": 1800,
+          "url": "https://ppltracker.web.id/blog/pull-ups-vs-lat-pulldowns-back-hypertrophy",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "name": "Legs (Squat, Quads & Posterior)",
+      "color": "#F472B6",
+      "posts": [
+        {
+          "title": "Low Bar Back Squat Mastery & Deload Week Central Nervous System Recovery",
+          "slug": "low-bar-back-squat-mastery-deload-week-architecture-central-nervous-system-recovery",
+          "keyword": "low bar squat deload cns recovery",
+          "volume": 2900,
+          "template": "how-to",
+          "wordCount": 2400,
+          "url": "https://ppltracker.web.id/blog/low-bar-back-squat-mastery-deload-week-architecture-central-nervous-system-recovery",
+          "status": "published"
+        },
+        {
+          "title": "Seated vs Lying Leg Curls: Regional Hamstring Muscle Recruitment",
+          "slug": "seated-vs-lying-leg-curls-hamstring-hypertrophy",
+          "keyword": "seated vs lying leg curl hypertrophy",
+          "volume": 4100,
+          "template": "comparison",
+          "wordCount": 1650,
+          "url": "https://ppltracker.web.id/blog/seated-vs-lying-leg-curls-hamstring-hypertrophy",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "name": "Sports Nutrition & Body Composition",
+      "color": "#FBBF24",
+      "posts": [
+        {
+          "title": "Optimizing Muscle Protein Synthesis: Leucine Thresholds & Feeding Frequency",
+          "slug": "muscle-protein-synthesis-leucine-thresholds-feeding-frequency",
+          "keyword": "muscle protein synthesis leucine thresholds",
+          "volume": 5200,
+          "template": "ultimate-guide",
+          "wordCount": 2300,
+          "url": "https://ppltracker.web.id/blog/muscle-protein-synthesis-leucine-thresholds-feeding-frequency",
+          "status": "published"
+        },
+        {
+          "title": "Creatine Monohydrate Saturation: Timing, Dosage, and Water Retention",
+          "slug": "creatine-monohydrate-saturation-timing-dosage-water-retention",
+          "keyword": "creatine monohydrate saturation dosage",
+          "volume": 9800,
+          "template": "explainer",
+          "wordCount": 1900,
+          "url": "https://ppltracker.web.id/blog/creatine-monohydrate-saturation-timing-dosage-water-retention",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "name": "Biomechanics & Exercise Substitutions",
+      "color": "#A78BFA",
+      "posts": [
+        {
+          "title": "Workout Exercise Substitution Finder",
+          "slug": "workout-substitution-finder",
+          "keyword": "exercise substitution finder",
+          "volume": 7400,
+          "template": "landing-page",
+          "wordCount": 2800,
+          "url": "https://ppltracker.web.id/tools/workout-substitution-finder",
+          "status": "published"
+        },
+        {
+          "title": "Machine vs Free Weight Bench Press: Joint Shearing & Muscle Tension",
+          "slug": "machine-vs-free-weight-bench-press-joint-shearing-muscle-tension",
+          "keyword": "machine vs free weight bench press tension",
+          "volume": 3100,
+          "template": "comparison",
+          "wordCount": 1700,
+          "url": "https://ppltracker.web.id/blog/machine-vs-free-weight-bench-press-joint-shearing-muscle-tension",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "links": [
+    { "from": "pillar", "to": "biomechanics-upper-chest-growth-clavicular-head", "type": "mandatory", "anchor": "upper chest biomechanics guide" },
+    { "from": "biomechanics-upper-chest-growth-clavicular-head", "to": "pillar", "type": "mandatory", "anchor": "track your progressive overload with PPL Tracker" },
+    { "from": "clavicular-pec-upper-chest-hypertrophy-overcoming-stubborn-lagging-muscle-plateaus", "to": "pillar", "type": "mandatory", "anchor": "log your sets, reps, and RPE with the PPL Tracker tool" },
+    { "from": "incline-dumbbell-press-vs-barbell-bench-press-hypertrophy", "to": "pillar", "type": "mandatory", "anchor": "record your training volume in PPL Tracker" },
+    { "from": "latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-lengthened-partials-vs-full-range-of-motion", "to": "pillar", "type": "mandatory", "anchor": "launch the PPL Tracker workout tool" },
+    { "from": "pull-ups-vs-lat-pulldowns-back-hypertrophy", "to": "pillar", "type": "mandatory", "anchor": "use our free workout tracker" },
+    { "from": "low-bar-back-squat-mastery-deload-week-architecture-central-nervous-system-recovery", "to": "pillar", "type": "mandatory", "anchor": "track your progressive overload with PPL Tracker" },
+    { "from": "seated-vs-lying-leg-curls-hamstring-hypertrophy", "to": "pillar", "type": "mandatory", "anchor": "log your sets, reps, and RPE with the PPL Tracker tool" },
+    { "from": "muscle-protein-synthesis-leucine-thresholds-feeding-frequency", "to": "https://ppltracker.web.id/tools/bmi-calculator", "type": "cross-cluster", "anchor": "screen your body mass and calorie targets with our BMI tool" },
+    { "from": "machine-vs-free-weight-bench-press-joint-shearing-muscle-tension", "to": "workout-substitution-finder", "type": "mandatory", "anchor": "find exercise alternatives with the Substitution Finder" }
+  ],
+  "meta": {
+    "totalPosts": 84,
+    "totalClusters": 5,
+    "totalLinks": 240,
+    "estimatedWords": 185000
+  }
+}

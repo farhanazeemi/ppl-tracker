@@ -30,6 +30,21 @@ export const metadata: Metadata = {
     url: `${baseUrl}/contact`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Contact PPL Hypertrophy Tracker Engineering & Athlete Support',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact & Athlete Support | PPL Tracker',
+    description:
+      'Need help with your workout logs, progressive overload engine, or have a sports science inquiry? Contact the PPL Hypertrophy Tracker team directly.',
+    images: ['/og-image.png'],
   },
 };
 

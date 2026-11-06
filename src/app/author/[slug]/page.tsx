@@ -64,7 +64,7 @@ export async function generateMetadata({
       type: 'profile',
       images: [
         {
-          url: author.avatar || '/icon.svg',
+          url: author.avatar || '/og-image.png',
           width: 600,
           height: 600,
           alt: author.name,

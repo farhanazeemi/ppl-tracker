@@ -77,7 +77,7 @@ export async function generateMetadata({
       siteName: 'PPL Hypertrophy Tracker',
       images: [
         {
-          url: post.mainImage || '/icon.svg',
+          url: post.mainImage || '/og-image.png',
           width: 1200,
           height: 630,
           alt: post.imageAlt || post.title,
@@ -88,7 +88,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: [post.mainImage || '/icon.svg'],
+      images: [post.mainImage || '/og-image.png'],
     },
   };
 }

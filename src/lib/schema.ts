@@ -20,11 +20,12 @@ export function getRootWebSiteSchema() {
         url: BASE_URL,
         logo: {
           '@type': 'ImageObject',
-          url: `${BASE_URL}/icon.svg`,
+          url: `${BASE_URL}/icon-512.png`,
           width: 512,
           height: 512,
           caption: 'PPL Hypertrophy Tracker Logo',
         },
+        image: `${BASE_URL}/og-image.png`,
         founder: {
           '@type': 'Person',
           name: 'Farhan Azeemi',
@@ -104,9 +105,10 @@ export function getWebApplicationSchema() {
 /**
  * BreadcrumbList schema helper for any route.
  */
-export function getBreadcrumbSchema(items: BreadcrumbItem[]) {
+export function getBreadcrumbSchema(items: BreadcrumbItem[], id?: string) {
   return {
     '@type': 'BreadcrumbList',
+    ...(id ? { '@id': id } : {}),
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -194,7 +196,7 @@ export function getArticleSchema(post: {
   faqItems?: FaqSchemaItem[];
 }) {
   const postUrl = `${BASE_URL}/blog/${post.slug}`;
-  const imageUrl = post.mainImage || `${BASE_URL}/icon.svg`;
+  const imageUrl = post.mainImage || `${BASE_URL}/og-image.png`;
   const datePublished = post.publishedAt || new Date().toISOString();
   const dateModified = post.modifiedAt || post.publishedAt || datePublished;
   const authorSlug = post.author?.slug || 'dr-marcus-vance';
@@ -231,7 +233,16 @@ export function getArticleSchema(post: {
         ...(post.author?.avatar ? { image: post.author.avatar } : {}),
       },
       publisher: {
+        '@type': 'Organization',
         '@id': `${BASE_URL}/#organization`,
+        name: 'PPL Hypertrophy Tracker',
+        url: BASE_URL,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${BASE_URL}/icon-512.png`,
+          width: 512,
+          height: 512,
+        },
       },
       inLanguage: 'en-US',
       keywords: [
@@ -244,11 +255,14 @@ export function getArticleSchema(post: {
         'evidence-based training',
       ].join(', '),
     },
-    getBreadcrumbSchema([
-      { name: 'Home', url: '/' },
-      { name: 'Journal', url: '/blog' },
-      { name: post.title, url: `/blog/${post.slug}` },
-    ]),
+    getBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Journal', url: '/blog' },
+        { name: post.title, url: `/blog/${post.slug}` },
+      ],
+      `${postUrl}#breadcrumb`
+    ),
   ];
 
   if (post.faqItems && post.faqItems.length > 0) {
@@ -460,5 +474,145 @@ export function getAuthorsIndexSchema(authorCount: number) {
         { name: 'Authors & Editorial Board', url: '/author' },
       ]),
     ],
+  };
+}
+
+/**
+ * Tools Directory CollectionPage Schema with BreadcrumbList.
+ */
+export function getToolsIndexSchema(tools: Array<{ name: string; href: string; shortDescription: string }>) {
+  const pageUrl = `${BASE_URL}/tools`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${pageUrl}#collection`,
+        url: pageUrl,
+        name: 'Free Fitness Tools & Biomechanics Calculators',
+        description:
+          'A collection of free, evidence-based workout tracking applications, body composition calculators, and exercise substitution engines.',
+        isPartOf: {
+          '@id': `${BASE_URL}/#website`,
+        },
+        publisher: {
+          '@id': `${BASE_URL}/#organization`,
+        },
+        hasPart: tools.map((tool) => ({
+          '@type': 'WebApplication',
+          name: tool.name,
+          url: `${BASE_URL}${tool.href}`,
+          description: tool.shortDescription,
+        })),
+      },
+      getBreadcrumbSchema(
+        [
+          { name: 'Home', url: '/' },
+          { name: 'Tools', url: '/tools' },
+        ],
+        `${pageUrl}#breadcrumb`
+      ),
+    ],
+  };
+}
+
+/**
+ * PPL Tracker Tool Page Schema.
+ */
+export function getPplTrackerToolSchema() {
+  const pageUrl = `${BASE_URL}/tools/ppl-tracker`;
+  const webApp = getWebApplicationSchema();
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: 'PPL Workout Tracker & Overload Engine',
+        description:
+          'Free 6-day Push-Pull-Legs workout app with automated rest timers, Olympic plate math, double progression ceilings, and local-first cloud synchronization.',
+        isPartOf: {
+          '@id': `${BASE_URL}/#website`,
+        },
+        publisher: {
+          '@id': `${BASE_URL}/#organization`,
+        },
+      },
+      getBreadcrumbSchema(
+        [
+          { name: 'Home', url: '/' },
+          { name: 'Tools', url: '/tools' },
+          { name: 'PPL Workout Tracker', url: '/tools/ppl-tracker' },
+        ],
+        `${pageUrl}#breadcrumb`
+      ),
+      {
+        ...webApp,
+        '@context': undefined,
+        '@id': `${pageUrl}#webapp`,
+        url: pageUrl,
+      },
+    ],
+  };
+}
+
+/**
+ * BMI Calculator Page Schema with WebPage, BreadcrumbList, WebApplication, and FAQPage.
+ */
+export function getBmiCalculatorPageSchema(faqItems?: FaqSchemaItem[]) {
+  const pageUrl = `${BASE_URL}/tools/bmi-calculator`;
+  const graphEntities: any[] = [
+    {
+      '@type': 'WebPage',
+      '@id': `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: 'Free BMI Calculator (Metric & Imperial) | PPL Tracker',
+      description:
+        'Instant Body Mass Index calculator with dual metric and imperial unit conversion, visual spectrum gauge, and resistance athlete context.',
+      isPartOf: {
+        '@id': `${BASE_URL}/#website`,
+      },
+      publisher: {
+        '@id': `${BASE_URL}/#organization`,
+      },
+    },
+    getBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Tools', url: '/tools' },
+        { name: 'BMI Calculator', url: '/tools/bmi-calculator' },
+      ],
+      `${pageUrl}#breadcrumb`
+    ),
+    {
+      '@type': 'WebApplication',
+      '@id': `${pageUrl}#webapp`,
+      name: 'PPL Tracker BMI Calculator',
+      applicationCategory: 'HealthApplication',
+      operatingSystem: 'All',
+      url: pageUrl,
+      image: `${BASE_URL}/icon-512.png`,
+      screenshot: `${BASE_URL}/og-image.png`,
+      description:
+        'Instant Body Mass Index calculator with dual metric and imperial unit conversion, visual spectrum gauge, and resistance athlete context.',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+    },
+  ];
+
+  if (faqItems && faqItems.length > 0) {
+    const faqEntity = getFaqPageSchema(faqItems, pageUrl);
+    if (faqEntity) {
+      graphEntities.push(faqEntity);
+    }
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': graphEntities,
   };
 }

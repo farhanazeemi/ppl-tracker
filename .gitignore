@@ -48,5 +48,8 @@ antigravity_config*.json
 sidecar.json
 content/
 scripts/*.mjs
+brag-output*/
+*.whl
+urls_to_index.txt
 scripts/*.json
 

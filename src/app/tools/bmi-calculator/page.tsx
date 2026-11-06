@@ -5,6 +5,7 @@ import { ChevronRight, Sparkles } from 'lucide-react';
 import { Navbar } from '../../../components/Navbar';
 import { Footer } from '../../../components/Footer';
 import { BmiCalculator } from '../../../components/BmiCalculator';
+import { getBmiCalculatorPageSchema, FaqSchemaItem } from '../../../lib/schema';
 
 const baseUrl = 'https://ppltracker.web.id';
 
@@ -24,10 +25,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon.svg',
-        width: 512,
-        height: 512,
-        alt: 'PPL Tracker BMI Calculator',
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Tracker Free BMI Calculator & Athletic Spectrum Gauge',
       },
     ],
   },
@@ -36,27 +37,25 @@ export const metadata: Metadata = {
     title: 'Free BMI Calculator | PPL Tracker',
     description:
       'Instant Body Mass Index calculator with metric & imperial units and muscle-to-fat guidance for lifters.',
-    images: ['/icon.svg'],
+    images: ['/og-image.png'],
   },
 };
 
+const BMI_FAQS: FaqSchemaItem[] = [
+  {
+    question: 'How is BMI Mathematically Calculated?',
+    answer:
+      'In the metric system, BMI is computed as weight in kilograms divided by height in meters squared: BMI = weight (kg) / [height (m)]². In the imperial system, weight in pounds is divided by height in inches squared, then multiplied by 703: BMI = 703 × weight (lbs) / [height (in)]².',
+  },
+  {
+    question: 'Why does BMI often misclassify bodybuilders?',
+    answer:
+      'BMI does not differentiate between skeletal muscle and adipose fat mass. Skeletal muscle is roughly 18% denser than fat tissue. Muscular athletes with low body fat often register as overweight or obese on traditional BMI scales despite superior cardiovascular and metabolic health.',
+  },
+];
+
 export default function BmiCalculatorPage() {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    '@id': `${baseUrl}/tools/bmi-calculator#webapp`,
-    name: 'PPL Tracker BMI Calculator',
-    applicationCategory: 'HealthApplication',
-    operatingSystem: 'All',
-    url: `${baseUrl}/tools/bmi-calculator`,
-    description:
-      'Instant Body Mass Index calculator with dual metric and imperial unit conversion, visual spectrum gauge, and resistance athlete context.',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
-  };
+  const schema = getBmiCalculatorPageSchema(BMI_FAQS);
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">

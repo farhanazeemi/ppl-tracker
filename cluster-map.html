@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PPL Tracker — Interactive Topic Cluster Map</title>
+  <style>
+    :root {
+      --bg: #090B0F;
+      --card-bg: #111520;
+      --border: #1E2638;
+      --accent: #B7FF4A;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 30px;
+      line-height: 1.5;
+    }
+    .header {
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(183, 255, 74, 0.1);
+      border: 1px solid rgba(183, 255, 74, 0.3);
+      color: var(--accent);
+      font-size: 12px;
+      font-family: monospace;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px; }
+    p.sub { color: var(--text-muted); font-size: 14px; margin-top: 5px; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+    .pillar-box {
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(183, 255, 74, 0.08);
+      text-align: center;
+    }
+    .pillar-box h2 { font-size: 22px; font-weight: 800; color: #FFF; }
+    .pillar-box a { color: var(--accent); text-decoration: none; font-weight: bold; }
+    .clusters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .cluster-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .cluster-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .cluster-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .post-list { list-style: none; space-y: 10px; }
+    .post-item {
+      font-size: 13px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .post-item a { color: #E2E8F0; text-decoration: none; font-weight: 500; display: block; }
+    .post-item a:hover { color: var(--accent); }
+    .post-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">// SEO CONTENT ARCHITECTURE MAP</div>
+    <h1>PPL Tracker Topic Cluster Map</h1>
+    <p class="sub">Hub-and-spoke visualization connecting scientific research to interactive progressive overload tools.</p>
+  </div>
+
+  <div class="container">
+    <div class="pillar-box">
+      <div style="font-size: 11px; font-family: monospace; color: var(--accent); margin-bottom: 6px;">CORE PILLAR DESTINATION</div>
+      <h2>PPL Progressive Overload Workout Tracker</h2>
+      <p style="font-size: 14px; color: var(--text-muted); margin: 8px 0 12px 0;">All resistance training articles mandate a contextual anchor link to this high-intent web utility.</p>
+      <a href="https://ppltracker.web.id/tools/ppl-tracker" target="_blank">https://ppltracker.web.id/tools/ppl-tracker &rarr;</a>
+    </div>
+
+    <div class="clusters-grid">
+      <!-- Cluster 1 -->
+      <div class="cluster-card" style="border-top: 3px solid #B7FF4A;">
+        <div class="cluster-title">
+          <span class="dot" style="background: #B7FF4A;"></span>
+          Push (Chest & Shoulders)
+        </div>
+        <ul class="post-list">
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/biomechanics-upper-chest-growth-clavicular-head" target="_blank">Solving the Clavicular Head: Biomechanics</a>
+            <div class="post-meta">Target: 4.4k vol &bull; Anchor: "track progressive overload"</div>
+          </li>
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/clavicular-pec-upper-chest-hypertrophy-overcoming-stubborn-lagging-muscle-plateaus" target="_blank">Clavicular Pec Hypertrophy Plateaus</a>
+            <div class="post-meta">Target: 3.2k vol &bull; Anchor: "log your sets and reps"</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Cluster 2 -->
+      <div class="cluster-card" style="border-top: 3px solid #38BDF8;">
+        <div class="cluster-title">
+          <span class="dot" style="background: #38BDF8;"></span>
+          Pull (Lats & Posterior Chain)
+        </div>
+        <ul class="post-list">
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-lengthened-partials-vs-full-range-of-motion" target="_blank">Latissimus Dorsi: Lengthened Partials</a>
+            <div class="post-meta">Target: 3.9k vol &bull; Anchor: "launch PPL Tracker"</div>
+          </li>
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/pull-ups-vs-lat-pulldowns-back-hypertrophy" target="_blank">Pull-ups vs Lat Pulldowns</a>
+            <div class="post-meta">Target: 6.6k vol &bull; Anchor: "free workout tracker"</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Cluster 3 -->
+      <div class="cluster-card" style="border-top: 3px solid #F472B6;">
+        <div class="cluster-title">
+          <span class="dot" style="background: #F472B6;"></span>
+          Legs (Squats, Quads, Posterior)
+        </div>
+        <ul class="post-list">
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/low-bar-back-squat-mastery-deload-week-architecture-central-nervous-system-recovery" target="_blank">Low Bar Squat & CNS Deload Recovery</a>
+            <div class="post-meta">Target: 2.9k vol &bull; Anchor: "track progressive overload"</div>
+          </li>
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/seated-vs-lying-leg-curls-hamstring-hypertrophy" target="_blank">Seated vs Lying Leg Curls</a>
+            <div class="post-meta">Target: 4.1k vol &bull; Anchor: "record training volume"</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Cluster 4 -->
+      <div class="cluster-card" style="border-top: 3px solid #FBBF24;">
+        <div class="cluster-title">
+          <span class="dot" style="background: #FBBF24;"></span>
+          Sports Nutrition & Recomp
+        </div>
+        <ul class="post-list">
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/muscle-protein-synthesis-leucine-thresholds-feeding-frequency" target="_blank">Muscle Protein Synthesis & Leucine</a>
+            <div class="post-meta">Target: 5.2k vol &bull; Cross-link: BMI Calculator</div>
+          </li>
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/creatine-monohydrate-saturation-timing-dosage-water-retention" target="_blank">Creatine Monohydrate Saturation</a>
+            <div class="post-meta">Target: 9.8k vol &bull; Explainer Guide</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Cluster 5 -->
+      <div class="cluster-card" style="border-top: 3px solid #A78BFA;">
+        <div class="cluster-title">
+          <span class="dot" style="background: #A78BFA;"></span>
+          Exercise Substitutions
+        </div>
+        <ul class="post-list">
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/tools/workout-substitution-finder" target="_blank">Substitution Finder Application</a>
+            <div class="post-meta">Target: 7.4k vol &bull; Free Utility</div>
+          </li>
+          <li class="post-item">
+            <a href="https://ppltracker.web.id/blog/machine-vs-free-weight-bench-press-joint-shearing-muscle-tension" target="_blank">Machine vs Free Weight Pressing</a>
+            <div class="post-meta">Target: 3.1k vol &bull; Anchor: "Substitution Finder"</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

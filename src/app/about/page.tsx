@@ -30,6 +30,21 @@ export const metadata: Metadata = {
     url: `${baseUrl}/about`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'About PPL Hypertrophy Tracker Platform & Biomechanics Architecture',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Platform & Architecture | PPL Tracker',
+    description:
+      'Discover the evidence-based biomechanics, progressive overload principles, and minimalist engineering powering PPL Hypertrophy Tracker.',
+    images: ['/og-image.png'],
   },
 };
 

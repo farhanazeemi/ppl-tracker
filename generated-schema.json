@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "organization": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://ppltracker.web.id/#organization",
+    "name": "PPL Hypertrophy Tracker",
+    "url": "https://ppltracker.web.id",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ppltracker.web.id/icon-512.png",
+      "width": 512,
+      "height": 512,
+      "caption": "PPL Hypertrophy Tracker Logo"
+    },
+    "image": "https://ppltracker.web.id/og-image.png",
+    "founder": {
+      "@type": "Person",
+      "name": "Farhan Azeemi",
+      "url": "https://github.com/farhanazeemi",
+      "jobTitle": "Software Engineer & Resistance Training Researcher"
+    },
+    "sameAs": [
+      "https://github.com/farhanazeemi",
+      "https://twitter.com/farhanazeemi"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "email": "farhanazeemi.dev@gmail.com",
+      "url": "https://ppltracker.web.id/contact"
+    }
+  },
+  "webApplication": {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": "https://ppltracker.web.id/tools/ppl-tracker#webapp",
+    "name": "PPL Hypertrophy Tracker",
+    "url": "https://ppltracker.web.id/tools/ppl-tracker",
+    "description": "Minimalist 6-day Push-Pull-Legs progressive overload hypertrophy app with automatic rest timers, barbell plate math, 3D visualizer, user profiles, and double progression tracking.",
+    "applicationCategory": "HealthAndFitnessApplication",
+    "operatingSystem": "All (iOS, Android, Windows, macOS, Linux)",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "softwareVersion": "2.0.0",
+    "inLanguage": "en-US",
+    "image": "https://ppltracker.web.id/icon-512.png",
+    "screenshot": "https://ppltracker.web.id/og-image.png",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "6-Day Push-Pull-Legs periodized hypertrophy routine",
+      "Double progression rep-range overload engine",
+      "Automated rest interval timers with audio chimes",
+      "Olympic barbell plate calculator (45lb / 20kg bar math)",
+      "Interactive 3D muscle anatomy visualizer",
+      "Supabase cloud profile persistence and workout history sync"
+    ]
+  },
+  "articleTemplate": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": "https://ppltracker.web.id/blog/[slug]#article",
+        "isPartOf": {
+          "@type": ["CreativeWork", "Product"],
+          "name": "PPL Hypertrophy Tracker",
+          "productID": "CAowpcXODA:openaccess",
+          "@id": "https://ppltracker.web.id/blog#collection"
+        },
+        "headline": "[Article Headline]",
+        "description": "[140-160 Character Excerpt]",
+        "image": ["https://ppltracker.web.id/og-image.png"],
+        "datePublished": "2026-11-01T00:00:00Z",
+        "dateModified": "2026-11-03T00:00:00Z",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://ppltracker.web.id/blog/[slug]"
+        },
+        "url": "https://ppltracker.web.id/blog/[slug]",
+        "articleSection": "Push (Chest)",
+        "isAccessibleForFree": true,
+        "author": {
+          "@type": "Person",
+          "@id": "https://ppltracker.web.id/author/dr-marcus-vance#author",
+          "name": "Dr. Marcus Vance, Ph.D.",
+          "jobTitle": "Lead Biomechanics Researcher",
+          "url": "https://ppltracker.web.id/author/dr-marcus-vance"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://ppltracker.web.id/#organization",
+          "name": "PPL Hypertrophy Tracker",
+          "url": "https://ppltracker.web.id",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ppltracker.web.id/icon-512.png",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://ppltracker.web.id/blog/[slug]#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ppltracker.web.id" },
+          { "@type": "ListItem", "position": 2, "name": "Journal", "item": "https://ppltracker.web.id/blog" },
+          { "@type": "ListItem", "position": 3, "name": "[Article Title]", "item": "https://ppltracker.web.id/blog/[slug]" }
+        ]
+      }
+    ]
+  }
+}

@@ -205,6 +205,7 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
             title: p.title,
             slug: p.slug,
             publishedAt: p.publishedAt,
+            modifiedAt: p._updatedAt || p.modifiedAt || p.publishedAt,
             excerpt: cleanExcerpt,
             readTime: p.readTime || '5 min read',
             splitCategory: p.splitCategory || 'General',

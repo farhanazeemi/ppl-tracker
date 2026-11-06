@@ -6,6 +6,7 @@ export const ALL_POSTS_QUERY = `
     title,
     "slug": slug.current,
     publishedAt,
+    _updatedAt,
     "excerpt": coalesce(excerpt, seo.metaDescription, ""),
     "readTime": coalesce(readTime, string(readingTimeMinutes) + " min read", "5 min read"),
     splitCategory,

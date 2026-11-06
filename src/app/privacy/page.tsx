@@ -22,6 +22,21 @@ export const metadata: Metadata = {
     url: `${baseUrl}/privacy`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PPL Hypertrophy Tracker Privacy Policy & Data Governance',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacy Policy | PPL Tracker',
+    description:
+      'Transparent disclosure of client storage, Supabase authentication, cookie usage, and data protection rights.',
+    images: ['/og-image.png'],
   },
 };
 
