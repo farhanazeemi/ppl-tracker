@@ -10,7 +10,7 @@
 
 | Metric | Target | Current Status | Score | Notes |
 |--------|--------|----------------|-------|-------|
-| Coverage | 100% | 100% | ✅ Pass | All 80 planned articles are mapped to defined split clusters. |
+| Coverage | 100% | 100% | ✅ Pass | All 100 published articles are mapped to defined split clusters across 10 pillars. |
 | Link Density | 3+ per post | 3–5 per 1,000 words | ✅ Pass | Each article contains contextual anchor links and related reading sections. |
 | Orphan Pages | 0 | 0 | ✅ Pass | Every article is accessible via Journal Index (`/blog`), split filters, and author profiles. |
 | Cannibalization | 0 conflicts | 0 conflicts | ✅ Pass | Strict slug stability & distinct biomechanical focus per target muscle group. |
