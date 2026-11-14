@@ -8,9 +8,12 @@ export interface UserProfile {
   username?: string;
   avatarUrl?: string;
   email: string;
+  gender?: 'male' | 'female';
   age?: number;
   height?: number; // in cm
   weight?: number; // in kg
+  bodyFatPct?: number; // estimated body fat %
+  activityMultiplier?: number; // 1.2 to 1.9
   preferredUnit: 'kg' | 'lbs';
   fitnessGoal: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
   selectedExercise?: string;
@@ -52,9 +55,12 @@ export interface UpdateProfileInput {
   name?: string;
   username?: string;
   avatarUrl?: string;
+  gender?: 'male' | 'female';
   age?: number;
   height?: number;
   weight?: number;
+  bodyFatPct?: number;
+  activityMultiplier?: number;
   preferredUnit?: 'kg' | 'lbs';
   fitnessGoal?: 'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition';
   selectedExercise?: string;

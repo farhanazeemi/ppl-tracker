@@ -280,14 +280,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   id="tools-dropdown-menu"
                   role="menu"
                   aria-orientation="vertical"
-                  className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-96 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-strong)] shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                  className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[560px] lg:w-[640px] rounded-3xl bg-[var(--bg-card)] border border-[var(--border-strong)] shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                 >
                   <div className="px-3 py-2 text-[10px] font-mono uppercase tracking-widest text-[var(--text-muted)] border-b border-[var(--border-subtle)] flex items-center justify-between">
-                    <span>Performance Tools</span>
-                    <span className="text-[#B7FF4A] font-bold">{FITNESS_TOOLS.length} Available</span>
+                    <span>Performance Tools & Calculators</span>
+                    <span className="text-[#B7FF4A] font-bold">{FITNESS_TOOLS.length} Live Utilities</span>
                   </div>
 
-                  <div className="py-2 space-y-1">
+                  <div className="py-2.5 grid grid-cols-2 gap-1.5">
                     {FITNESS_TOOLS.map((tool) => {
                       const isActive = pathname === tool.href;
                       return (
@@ -296,7 +296,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           href={tool.href}
                           role="menuitem"
                           onClick={() => handleNavClick()}
-                          className={`flex items-start gap-3 p-3 rounded-2xl transition-all group ${
+                          className={`flex items-start gap-3 p-2.5 rounded-2xl transition-all group ${
                             isActive
                               ? 'bg-[#B7FF4A]/10 border border-[#B7FF4A]/30 text-[#B7FF4A]'
                               : 'hover:bg-[var(--bg-elevated)] border border-transparent'
@@ -307,11 +307,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                           </div>
                           <div className="space-y-0.5 min-w-0 flex-1">
                             <div className="flex items-center justify-between gap-1">
-                              <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-[#B7FF4A] transition-colors uppercase font-display tracking-tight">
+                              <span className="text-xs font-bold text-[var(--text-primary)] group-hover:text-[#B7FF4A] transition-colors uppercase font-display tracking-tight truncate">
                                 {tool.name}
-                              </span>
-                              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
-                                {tool.badge}
                               </span>
                             </div>
                             <p className="text-[11px] text-[var(--text-muted)] line-clamp-1 font-sans normal-case">

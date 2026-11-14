@@ -35,14 +35,22 @@ export const ToolsDirectoryList: React.FC<ToolsDirectoryListProps> = ({
   tools,
   upcoming,
 }) => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'tracking' | 'calculators'>('all');
+  const [activeCategory, setActiveCategory] = useState<'all' | 'tracking' | 'calculators' | 'health'>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const filteredTools = tools.filter((tool) => {
-    if (activeCategory === 'all') return true;
-    return tool.categorySlug === activeCategory;
+    const matchesCat = activeCategory === 'all' || tool.categorySlug === activeCategory;
+    const q = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      q === '' ||
+      tool.name.toLowerCase().includes(q) ||
+      tool.shortDescription.toLowerCase().includes(q) ||
+      tool.category.toLowerCase().includes(q) ||
+      tool.badge.toLowerCase().includes(q);
+    return matchesCat && matchesSearch;
   });
 
-  const handleTabChange = (cat: 'all' | 'tracking' | 'calculators') => {
+  const handleTabChange = (cat: 'all' | 'tracking' | 'calculators' | 'health') => {
     playTabSound(true);
     setActiveCategory(cat);
   };
@@ -69,43 +77,71 @@ export const ToolsDirectoryList: React.FC<ToolsDirectoryListProps> = ({
 
   return (
     <div className="space-y-12">
-      {/* Category Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-4">
-        <button
-          type="button"
-          onClick={() => handleTabChange('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
-            activeCategory === 'all'
-              ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
-              : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
-          }`}
-        >
-          All Tools ({tools.length})
-        </button>
+      {/* Category Filter Tabs & Instant Search */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => handleTabChange('all')}
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
+              activeCategory === 'all'
+                ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
+                : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+            }`}
+          >
+            All Tools ({tools.length})
+          </button>
 
-        <button
-          type="button"
-          onClick={() => handleTabChange('tracking')}
-          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
-            activeCategory === 'tracking'
-              ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
-              : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
-          }`}
-        >
-          Workout Tracking
-        </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange('tracking')}
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
+              activeCategory === 'tracking'
+                ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
+                : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+            }`}
+          >
+            Workout & Equipment
+          </button>
 
-        <button
-          type="button"
-          onClick={() => handleTabChange('calculators')}
-          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
-            activeCategory === 'calculators'
-              ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
-              : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
-          }`}
-        >
-          Health & Calculators
-        </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange('calculators')}
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
+              activeCategory === 'calculators'
+                ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
+                : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+            }`}
+          >
+            Strength & 1RM / RPE
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleTabChange('health')}
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer btn-tactile ${
+              activeCategory === 'health'
+                ? 'bg-[#B7FF4A] text-[#090B0F] font-black shadow-md shadow-[#B7FF4A]/20'
+                : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]'
+            }`}
+          >
+            Body Comp & TDEE
+          </button>
+        </div>
+
+        <div className="relative min-w-[240px]">
+          <label htmlFor="tools-directory-search" className="visually-hidden">
+            Search fitness tools and calculators
+          </label>
+          <input
+            id="tools-directory-search"
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Filter calculators (e.g. 1RM, TDEE, RPE)..."
+            className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)]"
+          />
+        </div>
       </div>
 
       {/* Flagship App Bento Card (Shown when 'all' is active) */}
@@ -287,44 +323,46 @@ export const ToolsDirectoryList: React.FC<ToolsDirectoryListProps> = ({
       {/* ========================================================= */}
       {/* UPCOMING TOOLS ROADMAP SECTION                            */}
       {/* ========================================================= */}
-      <section className="space-y-6 pt-8 border-t border-[var(--border-subtle)]">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-          <div className="space-y-1.5">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#B7FF4A] font-bold">
-              {"// Platform Expansion"}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-display font-black uppercase tracking-tight text-[var(--text-primary)]">
-              Upcoming Fitness Utilities
-            </h2>
-          </div>
-          <span className="text-xs font-mono text-[var(--text-muted)]">Scheduled for Upcoming Releases</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {upcoming.map((u, i) => (
-            <div
-              key={i}
-              className="card-bento p-6 space-y-3 relative overflow-hidden"
-            >
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
-                  {renderIcon(u.iconName)}
-                </div>
-                <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
-                  {u.eta}
-                </span>
-              </div>
-
-              <h4 className="text-base font-display font-bold uppercase text-[var(--text-primary)]">
-                {u.name}
-              </h4>
-              <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-                {u.description}
-              </p>
+      {upcoming.length > 0 && (
+        <section className="space-y-6 pt-8 border-t border-[var(--border-subtle)]">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div className="space-y-1.5">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#B7FF4A] font-bold">
+                {"// Platform Expansion"}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-display font-black uppercase tracking-tight text-[var(--text-primary)]">
+                Upcoming Fitness Utilities
+              </h2>
             </div>
-          ))}
-        </div>
-      </section>
+            <span className="text-xs font-mono text-[var(--text-muted)]">Scheduled for Upcoming Releases</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {upcoming.map((u, i) => (
+              <div
+                key={i}
+                className="card-bento p-6 space-y-3 relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
+                    {renderIcon(u.iconName)}
+                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
+                    {u.eta}
+                  </span>
+                </div>
+
+                <h4 className="text-base font-display font-bold uppercase text-[var(--text-primary)]">
+                  {u.name}
+                </h4>
+                <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
+                  {u.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

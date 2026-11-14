@@ -616,3 +616,67 @@ export function getBmiCalculatorPageSchema(faqItems?: FaqSchemaItem[]) {
     '@graph': graphEntities,
   };
 }
+
+/**
+ * Generic Interactive Fitness Calculator / Utility Page Schema
+ * Emits WebPage, BreadcrumbList, WebApplication, and FAQPage.
+ */
+export function getCalculatorToolPageSchema(params: {
+  name: string;
+  slug: string;
+  description: string;
+  faqItems?: FaqSchemaItem[];
+}) {
+  const pageUrl = `${BASE_URL}/tools/${params.slug}`;
+  const graphEntities: any[] = [
+    {
+      '@type': 'WebPage',
+      '@id': `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: `${params.name} | PPL Tracker`,
+      description: params.description,
+      isPartOf: {
+        '@id': `${BASE_URL}/#website`,
+      },
+      publisher: {
+        '@id': `${BASE_URL}/#organization`,
+      },
+    },
+    getBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Tools', url: '/tools' },
+        { name: params.name, url: `/tools/${params.slug}` },
+      ],
+      `${pageUrl}#breadcrumb`
+    ),
+    {
+      '@type': 'WebApplication',
+      '@id': `${pageUrl}#webapp`,
+      name: `PPL Tracker ${params.name}`,
+      applicationCategory: 'HealthApplication',
+      operatingSystem: 'All',
+      url: pageUrl,
+      image: `${BASE_URL}/icon-512.png`,
+      screenshot: `${BASE_URL}/og-image.png`,
+      description: params.description,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+    },
+  ];
+
+  if (params.faqItems && params.faqItems.length > 0) {
+    const faqEntity = getFaqPageSchema(params.faqItems, pageUrl);
+    if (faqEntity) {
+      graphEntities.push(faqEntity);
+    }
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': graphEntities,
+  };
+}

@@ -9,6 +9,7 @@ import {
   POSTS_BY_AUTHOR_QUERY,
 } from './queries';
 import { MOCK_BLOG_POSTS, MOCK_AUTHORS, BlogPost, AuthorProfile } from '../data/mockBlogPosts';
+import { getRedirectedArticleSlug } from '../data/articleRedirects';
 
 // Curated pool of high-resolution fitness photography to ensure every article gets a distinct image
 const DIVERSE_FITNESS_GALLERY: Array<{ url: string; alt: string }> = [
@@ -53,13 +54,13 @@ const DIVERSE_FITNESS_GALLERY: Array<{ url: string; alt: string }> = [
   { url: 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=1200&auto=format&fit=crop&q=80', alt: 'Kettlebell Romanian deadlifts targeting posterior chain and glutes' },
   { url: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=1200&auto=format&fit=crop&q=80', alt: 'Female runner performing post-workout mobility and hamstring recovery' },
   { url: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=1200&auto=format&fit=crop&q=80', alt: 'Sleep and recovery optimization metrics on bedside smartwatch' },
-  { url: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=1200&auto=format&fit=crop&q=80', alt: 'Athlete performing VO2 max interval training on concept 2 rowing machine' },
-  { url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop&q=80', alt: 'High-intensity cardiovascular testing on air assault bike' },
-  { url: 'https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=1200&auto=format&fit=crop&q=80', alt: 'Grip strength and forearm flexor testing with heavy iron carry' },
-  { url: 'https://images.unsplash.com/photo-1534367507873-d2d7e24c797f?w=1200&auto=format&fit=crop&q=80', alt: 'Beginner lifter walking onto gym floor with gym bag and workout plan' },
-  { url: 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1200&auto=format&fit=crop&q=80', alt: 'Olympic barbell loaded with calibrated iron plates in private gym' },
-  { url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&auto=format&fit=crop&q=80', alt: 'Two training partners encouraging each other during heavy resistance set' },
-  { url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1200&auto=format&fit=crop&q=80', alt: 'Progressive overload tracking logbook next to dumbbells' },
+  { url: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=1200&auto=format&fit=crop&q=80', alt: 'Athlete performing VO2 max interval training and strength conditioning' },
+  { url: 'https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=1200&auto=format&fit=crop&q=80', alt: 'High-intensity medial deltoid and upper body resistance training' },
+  { url: 'https://images.unsplash.com/photo-1521804906057-1df8fdb718b7?w=1200&auto=format&fit=crop&q=80', alt: 'Grip strength and calibrated barbell plates in private facility' },
+  { url: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1200&auto=format&fit=crop&q=80', alt: 'Lifter preparing barbell setup with structured progressive overload plan' },
+  { url: 'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=1200&auto=format&fit=crop&q=80', alt: 'Dumbbell rack and heavy resistance equipment in modern strength lab' },
+  { url: 'https://images.unsplash.com/photo-1596357395217-80de13130e92?w=1200&auto=format&fit=crop&q=80', alt: 'Focused athlete tracking progressive overload sets between compound lifts' },
+  { url: 'https://images.unsplash.com/photo-1577221084712-45b0445d2b00?w=1200&auto=format&fit=crop&q=80', alt: 'Athletic physique and core stability conditioning under studio lighting' },
 ];
 
 function hashString(str: string): number {
@@ -74,11 +75,13 @@ function hashString(str: string): number {
 export function cleanPromptFromExcerpt(excerpt?: string, title?: string): string {
   if (!excerpt) return `Evidence-based investigation into ${title || 'resistance training and hypertrophy science'}.`;
   let cleaned = excerpt.trim();
-  // Strip any accidental LLM generation prompt prefixes
+  // Strip any accidental LLM generation prompt prefixes or raw HTML artifacts
+  cleaned = cleaned.replace(/^(?:sure,\s+here\s+is\s+[^:]+:\s*)/i, '');
   cleaned = cleaned.replace(/^(write\s+an?\s+(actionable\s+|empathetic,?\s+|evidence-based\s+|technical\s+)?(hypertrophy\s+|fat loss\s+|strength\s+)?(guide|article|deep dive)\s+(on|focused on)\s+)/i, '');
   cleaned = cleaned.replace(/^(develop\s+a\s+(technical\s+)?(strength\s+)?training\s+article\s+on\s+)/i, '');
   cleaned = cleaned.replace(/^(synthesize\s+(the\s+)?(core\s+)?)/i, '');
   cleaned = cleaned.replace(/^(create\s+a\s+detailed\s+breakdown\s+of\s+)/i, '');
+  cleaned = cleaned.replace(/<\/?[a-z][^>]*>/gi, ' ').replace(/\s{2,}/g, ' ').trim();
   if (cleaned.length > 0) {
     cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
   }
@@ -86,18 +89,20 @@ export function cleanPromptFromExcerpt(excerpt?: string, title?: string): string
 }
 
 export function resolvePostImage(p: any): { url: string; alt: string } {
-  if (p.imageUrl && typeof p.imageUrl === 'string' && p.imageUrl.startsWith('http')) {
-    return {
-      url: p.imageUrl,
-      alt: p.imageAlt || p.title || 'PPL Hypertrophy Science Journal',
-    };
-  }
-
-  const directUrl = p.mainImage?.asset?.url || (typeof p.mainImage === 'string' && p.mainImage.startsWith('http') ? p.mainImage : null);
+  const directUrl =
+    p.mainImage?.asset?.url ||
+    (typeof p.mainImage === 'string' && p.mainImage.startsWith('http') ? p.mainImage : null);
   if (directUrl) {
     return {
       url: directUrl,
       alt: p.mainImage?.alt || p.imageAlt || p.title || 'PPL Hypertrophy Science Journal',
+    };
+  }
+
+  if (p.imageUrl && typeof p.imageUrl === 'string' && p.imageUrl.startsWith('http')) {
+    return {
+      url: p.imageUrl,
+      alt: p.imageAlt || p.title || 'PPL Hypertrophy Science Journal',
     };
   }
 
@@ -249,7 +254,8 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
   });
 }
 
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function getBlogPostBySlug(rawSlug: string): Promise<BlogPost | null> {
+  const slug = getRedirectedArticleSlug(rawSlug) || rawSlug;
   if (isSanityConfigured && client) {
     try {
       const post = await client.fetch(POST_BY_SLUG_QUERY, { slug });

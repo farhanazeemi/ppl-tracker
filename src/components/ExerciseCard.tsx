@@ -27,6 +27,7 @@ interface ExerciseCardProps {
   onTriggerRestTimer: (seconds: number) => void;
   onOpenPlateCalc: (weight: number, exerciseName: string) => void;
   soundEnabled: boolean;
+  unitLabel?: 'kg' | 'lbs';
 }
 
 export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
@@ -37,6 +38,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
   onTriggerRestTimer,
   onOpenPlateCalc,
   soundEnabled,
+  unitLabel = 'kg',
 }) => {
   const [showCues, setShowCues] = useState(false);
 
@@ -208,16 +210,19 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
       </div>
 
       {/* Sets Table */}
-      <div className="overflow-x-auto">
+      <div className="table-responsive-region" tabIndex={0} role="region" aria-label={`${exercise.name} set log`}>
         <table className="w-full text-left border-collapse">
+          <caption className="visually-hidden">
+            Workout set log for {exercise.name} ({exercise.targetReps} target reps)
+          </caption>
           <thead>
             <tr className="border-b border-[var(--border-subtle)] text-[10px] uppercase tracking-wider text-[var(--text-muted)] bg-[var(--bg-elevated)]/40 font-mono">
-              <th className="py-2.5 pl-4 pr-2 text-center w-12 font-bold">Set</th>
-              <th className="py-2.5 px-3 min-w-[90px] font-bold">Weight (kg)</th>
-              <th className="py-2.5 px-3 min-w-[80px] font-bold">Reps</th>
-              <th className="py-2.5 px-3 hidden md:table-cell font-bold">Est. 1RM</th>
-              <th className="py-2.5 px-3 text-center w-20 font-bold">Done</th>
-              <th className="py-2.5 pr-4 pl-2 w-10"></th>
+              <th scope="col" className="py-2.5 pl-4 pr-2 text-center w-12 font-bold">Set</th>
+              <th scope="col" className="py-2.5 px-3 min-w-[90px] font-bold">Weight ({unitLabel})</th>
+              <th scope="col" className="py-2.5 px-3 min-w-[80px] font-bold">Reps</th>
+              <th scope="col" className="py-2.5 px-3 hidden md:table-cell font-bold">Est. 1RM</th>
+              <th scope="col" className="py-2.5 px-3 text-center w-20 font-bold">Done</th>
+              <th scope="col" className="py-2.5 pr-4 pl-2 w-10"><span className="visually-hidden">Actions</span></th>
             </tr>
           </thead>
           <tbody>

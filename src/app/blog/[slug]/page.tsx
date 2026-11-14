@@ -1,8 +1,9 @@
 import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getRedirectedArticleSlug } from '@/data/articleRedirects';
 import {
   ArrowLeft,
   Clock,
@@ -44,7 +45,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  const targetSlug = getRedirectedArticleSlug(slug) || slug;
+  const post = await getBlogPostBySlug(targetSlug);
 
   if (!post) {
     return {
@@ -99,6 +101,10 @@ export default async function BlogPostDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const redirectedSlug = getRedirectedArticleSlug(slug);
+  if (redirectedSlug && redirectedSlug !== slug) {
+    permanentRedirect(`/blog/${redirectedSlug}`);
+  }
   const post = await getBlogPostBySlug(slug);
 
   if (!post) {
@@ -106,7 +112,11 @@ export default async function BlogPostDetailPage({
   }
 
   const recent = await getRecentPosts(post.slug);
-  const { toc, faqs, mainBlocks } = processArticleBody(post.rawBody, post.title);
+  const { toc, faqs, mainBlocks, keyTakeaways } = processArticleBody(post.rawBody, post.title);
+  const fallbackTakeaways = (post.content?.sections || [])
+    .map((s) => s.keyTakeaway)
+    .filter((k): k is string => Boolean(k));
+  const summaryTakeaways = keyTakeaways.length > 0 ? keyTakeaways : fallbackTakeaways;
 
   const articleJsonLd = getArticleSchema({
     ...post,
@@ -229,18 +239,41 @@ export default async function BlogPostDetailPage({
             </div>
           )}
 
-          {/* Lead Excerpt / Key Takeaway */}
-          <div className="p-6 bg-[var(--bg-card)] border-l-4 border-[var(--accent-primary)] rounded-r-2xl border-y border-r border-[var(--border-subtle)]">
-            <p className="text-base sm:text-lg text-[var(--text-primary)] font-sans leading-relaxed italic">
-              &quot;{post.excerpt}&quot;
+          {/* Executive Summary & Key Takeaways (AEO / Human Readability) */}
+          <section
+            aria-label="Executive Summary and Key Takeaways"
+            className="p-6 bg-[var(--bg-card)] border-l-4 border-[var(--accent-primary)] rounded-r-2xl border-y border-r border-[var(--border-subtle)] space-y-4"
+          >
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[var(--accent-primary)]">
+              <Sparkles className="w-4 h-4" /> Executive Summary &amp; Core Takeaway
+            </div>
+            <p className="text-base sm:text-lg text-[var(--text-primary)] font-sans leading-relaxed font-medium">
+              {post.excerpt}
             </p>
-          </div>
+            {summaryTakeaways.length > 0 && (
+              <div className="pt-3 border-t border-[var(--border-subtle)]">
+                <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">
+                  Key Actionable Takeaways
+                </span>
+                <ul className="space-y-1.5 text-xs sm:text-sm text-[var(--text-secondary)] list-disc list-inside">
+                  {summaryTakeaways.map((item, idx) => (
+                    <li key={idx} className="leading-relaxed">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
 
           {/* Dynamic Table of Contents for Long Articles */}
           {toc.length >= 3 && <TableOfContents items={toc} />}
 
           {/* Article Body Content */}
-          <div className="space-y-6 text-[var(--text-secondary)] font-sans leading-relaxed text-sm sm:text-base">
+          <section
+            aria-label="Article Content"
+            className="space-y-6 text-[var(--text-secondary)] font-sans leading-relaxed text-sm sm:text-base"
+          >
             {mainBlocks && mainBlocks.length > 0 ? (
               <ArticlePortableText value={mainBlocks} />
             ) : (
@@ -274,7 +307,7 @@ export default async function BlogPostDetailPage({
                 )}
               </>
             )}
-          </div>
+          </section>
 
           {/* Interactive Accessible FAQ Accordion */}
           {faqs.length > 0 && <FaqAccordion items={faqs} />}

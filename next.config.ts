@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { OLD_TO_NEW_ARTICLE_SLUGS } from "./src/data/articleRedirects";
 
 const cspDirectives = [
   "default-src 'self'",
@@ -106,6 +107,14 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
+    const articleSlugRedirects = Object.entries(OLD_TO_NEW_ARTICLE_SLUGS).map(
+      ([oldSlug, newSlug]) => ({
+        source: `/blog/${oldSlug}`,
+        destination: `/blog/${newSlug}`,
+        permanent: true,
+      })
+    );
+
     return [
       {
         source: '/:path*',
@@ -118,6 +127,7 @@ const nextConfig: NextConfig = {
         destination: 'https://ppltracker.web.id/:path*',
         permanent: true,
       },
+      ...articleSlugRedirects,
     ];
   },
 };

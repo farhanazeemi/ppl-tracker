@@ -21,22 +21,29 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
   exerciseName = 'Barbell Exercise',
   soundEnabled = true,
 }) => {
+  const [unit, setUnit] = useState<'kg' | 'lbs'>('kg');
   const [targetWeight, setTargetWeight] = useState<number>(initialWeight);
+  const [weightInput, setWeightInput] = useState<string>(String(initialWeight));
   const [barWeight, setBarWeight] = useState<number>(20);
   useModalAccessibility(isOpen, onClose);
 
   useEffect(() => {
     if (initialWeight && initialWeight > 0) {
       setTargetWeight(initialWeight);
+      setWeightInput(String(initialWeight));
     }
   }, [isOpen, initialWeight]);
 
   if (!isOpen) return null;
 
-  const result = calculatePlates(targetWeight, barWeight);
+  const availablePlates =
+    unit === 'kg' ? [25, 20, 15, 10, 5, 2.5, 1.25] : [45, 35, 25, 10, 5, 2.5];
+  const result = calculatePlates(targetWeight, barWeight, availablePlates);
 
   // Standard Olympic calibrated competition colors
   const plateColors: Record<number, { bg: string; text: string; border: string }> = {
+    45: { bg: 'bg-blue-600', text: 'text-white font-bold', border: 'border-blue-700' },
+    35: { bg: 'bg-amber-400', text: 'text-zinc-950 font-bold', border: 'border-amber-500' },
     25: { bg: 'bg-red-600', text: 'text-white font-bold', border: 'border-red-700' },
     20: { bg: 'bg-blue-600', text: 'text-white font-bold', border: 'border-blue-700' },
     15: { bg: 'bg-amber-400', text: 'text-zinc-950 font-bold', border: 'border-amber-500' },
@@ -48,13 +55,51 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
 
   const addWeight = (delta: number) => {
     playPopSound(soundEnabled);
-    setTargetWeight((prev) => Math.max(barWeight, Math.round((prev + delta) * 10) / 10));
+    setTargetWeight((prev) => {
+      const next = Math.max(barWeight, Math.round((prev + delta) * 10) / 10);
+      setWeightInput(String(next));
+      return next;
+    });
+  };
+
+  const handleUnitChange = (nextUnit: 'kg' | 'lbs') => {
+    if (nextUnit === unit) return;
+    playPopSound(soundEnabled);
+    setUnit(nextUnit);
+    if (nextUnit === 'lbs') {
+      const nextBar = 45;
+      const converted = Math.max(nextBar, Math.round((targetWeight * 2.20462) / 5) * 5);
+      setBarWeight(nextBar);
+      setTargetWeight(converted);
+      setWeightInput(String(converted));
+    } else {
+      const nextBar = 20;
+      const converted = Math.max(nextBar, Math.round((targetWeight / 2.20462) / 2.5) * 2.5);
+      setBarWeight(nextBar);
+      setTargetWeight(converted);
+      setWeightInput(String(converted));
+    }
   };
 
   const handleClose = () => {
     playClickSound(soundEnabled);
     onClose();
   };
+
+  const barOptions =
+    unit === 'kg'
+      ? [
+          { label: 'Olympic Bar', weight: 20 },
+          { label: "Women's / Tech", weight: 15 },
+          { label: 'EZ Curl Bar', weight: 10 },
+        ]
+      : [
+          { label: 'Olympic Bar', weight: 45 },
+          { label: "Women's / Tech", weight: 35 },
+          { label: 'EZ Curl Bar', weight: 25 },
+        ];
+
+  const increments = unit === 'kg' ? [-10, -2.5, +2.5, +5, +10, +20] : [-25, -5, +5, +10, +25, +45];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -85,27 +130,77 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
           {/* Target Weight Input */}
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1.5 font-bold">
-                Target Total Weight (kg)
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label
+                  htmlFor="modal-plate-target-weight"
+                  className="block text-xs font-mono uppercase text-[var(--text-secondary)] font-bold"
+                >
+                  Target Total Weight ({unit})
+                </label>
+                <div className="inline-flex rounded-xl bg-[var(--bg-elevated)] p-0.5 border border-[var(--border-subtle)] text-[10px] font-mono">
+                  <button
+                    type="button"
+                    onClick={() => handleUnitChange('kg')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                      unit === 'kg'
+                        ? 'bg-[#B7FF4A] text-[#090B0F]'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                  >
+                    KG
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleUnitChange('lbs')}
+                    className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                      unit === 'lbs'
+                        ? 'bg-[#B7FF4A] text-[#090B0F]'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                  >
+                    LBS
+                  </button>
+                </div>
+              </div>
               <div className="flex items-center gap-2">
                 <input
+                  id="modal-plate-target-weight"
+                  name="targetWeight"
                   type="number"
-                  step="2.5"
+                  step={unit === 'kg' ? '2.5' : '5'}
                   min={barWeight}
-                  value={targetWeight}
-                  onChange={(e) => setTargetWeight(parseFloat(e.target.value) || barWeight)}
+                  value={weightInput}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setWeightInput(val);
+                    const parsed = parseFloat(val);
+                    if (!Number.isNaN(parsed) && parsed >= 0) {
+                      setTargetWeight(parsed);
+                    } else if (val === '') {
+                      setTargetWeight(barWeight);
+                    }
+                  }}
+                  onBlur={() => {
+                    const parsed = parseFloat(weightInput);
+                    if (Number.isNaN(parsed) || parsed < barWeight) {
+                      setTargetWeight(barWeight);
+                      setWeightInput(String(barWeight));
+                    }
+                  }}
                   className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl px-4 py-2.5 text-lg font-mono tabular-nums font-bold text-[var(--text-primary)] focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A]"
                 />
-                <span className="text-sm font-bold text-[var(--text-secondary)] px-2 font-mono">KG</span>
+                <span className="text-sm font-bold text-[var(--text-secondary)] px-2 font-mono uppercase">
+                  {unit}
+                </span>
               </div>
             </div>
 
             {/* Quick Increment Buttons */}
             <div className="flex flex-wrap gap-2">
-              {[-10, -2.5, +2.5, +5, +10, +20].map((delta) => (
+              {increments.map((delta) => (
                 <button
                   key={delta}
+                  type="button"
                   onClick={() => addWeight(delta)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-mono tabular-nums font-bold border transition btn-tactile cursor-pointer ${
                     delta > 0
@@ -113,7 +208,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
                       : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
                   }`}
                 >
-                  {delta > 0 ? `+${delta} kg` : `${delta} kg`}
+                  {delta > 0 ? `+${delta} ${unit}` : `${delta} ${unit}`}
                 </button>
               ))}
             </div>
@@ -124,13 +219,10 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
                 Barbell Base Weight:
               </span>
               <div className="grid grid-cols-3 gap-2">
-                {[
-                  { label: 'Olympic Bar', weight: 20 },
-                  { label: "Women's / Tech", weight: 15 },
-                  { label: 'EZ Curl Bar', weight: 10 },
-                ].map((bar) => (
+                {barOptions.map((bar) => (
                   <button
                     key={bar.weight}
+                    type="button"
                     onClick={() => {
                       playPopSound(soundEnabled);
                       setBarWeight(bar.weight);
@@ -141,7 +233,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
                         : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
                     }`}
                   >
-                    {bar.label} ({bar.weight}kg)
+                    {bar.label} ({bar.weight}{unit})
                   </button>
                 ))}
               </div>
@@ -152,7 +244,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
               <div className="flex items-center justify-between text-xs text-[var(--text-muted)] font-mono tabular-nums">
                 <span className="font-bold text-[var(--text-primary)]">Load Per Sleeve Side:</span>
                 <span className="font-mono text-[#B7FF4A] font-black text-sm">
-                  {result.weightPerSide} kg / side
+                  {result.weightPerSide} {unit} / side
                 </span>
               </div>
 
@@ -164,7 +256,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
 
                 {result.platesPerSide.length === 0 ? (
                   <div className="text-xs text-[var(--text-muted)] italic mx-auto">
-                    Only the empty {barWeight}kg barbell
+                    Only the empty {barWeight}{unit} barbell
                   </div>
                 ) : (
                   result.platesPerSide.flatMap((p: { weight: number; count: number }) =>
@@ -183,7 +275,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
                           className={`${style.bg} ${style.border} ${style.text} ${heightClass} border rounded-md shrink-0 flex flex-col items-center justify-center font-mono tabular-nums text-[10px] font-bold shadow-xs`}
                         >
                           <span>{p.weight}</span>
-                          <span className="text-[8px] opacity-75">kg</span>
+                          <span className="text-[8px] opacity-75">{unit}</span>
                         </div>
                       );
                     })
@@ -198,7 +290,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
                     key={p.weight}
                     className="px-2.5 py-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-xs font-mono tabular-nums font-bold text-[var(--text-secondary)] shadow-xs"
                   >
-                    <strong className="text-[#B7FF4A] font-black">{p.count}×</strong> {p.weight}kg
+                    <strong className="text-[#B7FF4A] font-black">{p.count}×</strong> {p.weight}{unit}
                   </span>
                 ))}
               </div>
@@ -207,7 +299,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
                 <div className="text-xs text-[#B7FF4A] flex items-center gap-1 font-mono pt-1">
                   <Info className="w-3.5 h-3.5" />
                   <span>
-                    Remainder of {result.remainder * 2}kg cannot be divided with standard plates.
+                    Remainder of {result.remainder * 2}{unit} cannot be divided with standard plates.
                   </span>
                 </div>
               )}
@@ -217,6 +309,7 @@ export const PlateCalculatorModal: React.FC<PlateCalculatorModalProps> = ({
           {/* Apply & Close Button */}
           <div className="pt-2 flex justify-end">
             <button
+              type="button"
               onClick={handleClose}
               className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#B7FF4A] hover:bg-[#a8f23d] text-[#090B0F] font-display font-black text-xs uppercase tracking-wider transition btn-tactile shadow-md shadow-[#B7FF4A]/20 cursor-pointer"
             >

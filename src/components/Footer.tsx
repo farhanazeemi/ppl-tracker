@@ -137,6 +137,51 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
+                  href="/tools/one-rep-max-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  1RM & Training % Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/tdee-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  TDEE & Macro Split Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/plate-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Barbell Plate Loader Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/rpe-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  RPE / RIR Load Estimator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/ffmi-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  FFMI & Body Comp Estimator
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools/workout-substitution-finder"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors"
@@ -213,7 +258,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
-                  href="/blog/biomechanics-upper-chest-growth-clavicular-head"
+                  href="/blog/clavicular-pectoral-upper-chest-growth"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >
@@ -222,7 +267,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
-                  href="/blog/scapular-plane-lateral-raise-delt-hypertrophy"
+                  href="/blog/scapular-plane-lateral-raise-guide"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >
@@ -231,7 +276,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
-                  href="/blog/double-progression-hypertrophy-overload-guide"
+                  href="/blog/double-progression-protocol-hypertrophy"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >

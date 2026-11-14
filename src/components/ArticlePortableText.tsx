@@ -14,25 +14,24 @@ function extractPlainText(node: any): string {
   return '';
 }
 
-function parseMarkdownTable(text: string) {
-  const lines = text.trim().split('\n').filter((l) => l.trim().startsWith('|'));
-  if (lines.length < 2) return null;
-
-  const headers = lines[0]
-    .split('|')
-    .slice(1, -1)
-    .map((c) => c.trim());
-
-  // Line 1 is the separator: | :--- | :--- |
-  const rowLines = lines.slice(2);
-  const rows = rowLines.map((row) =>
-    row
-      .split('|')
-      .slice(1, -1)
-      .map((c) => c.trim())
+function renderCellContent(cellText: string) {
+  if (!cellText) return null;
+  const parts = cellText
+    .split(/\s*•\s*|<br\s*\/?>/i)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length <= 1) {
+    return <span>{cellText}</span>;
+  }
+  return (
+    <ul className="space-y-1">
+      {parts.map((part, idx) => (
+        <li key={idx} className="leading-snug block">
+          {part}
+        </li>
+      ))}
+    </ul>
   );
-
-  return { headers, rows };
 }
 
 export const articlePortableTextComponents: PortableTextComponents = {
@@ -56,7 +55,7 @@ export const articlePortableTextComponents: PortableTextComponents = {
       return (
         <h2
           id={id}
-          className="scroll-mt-24 text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-[var(--text-primary)] pt-8 pb-2"
+          className="scroll-mt-24 text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-[var(--text-primary)] pt-8 pb-2 border-b border-[var(--border-subtle)]/60"
         >
           {children}
         </h2>
@@ -91,62 +90,20 @@ export const articlePortableTextComponents: PortableTextComponents = {
         {children}
       </blockquote>
     ),
-    normal: ({ children, value }) => {
-      const rawText = extractPlainText(value || children);
-      // Check if this block contains a markdown-formatted table
-      if (rawText.includes('|') && rawText.trim().startsWith('|')) {
-        const tableData = parseMarkdownTable(rawText);
-        if (tableData) {
-          return (
-            <div className="my-6 overflow-x-auto rounded-2xl border border-[var(--border-subtle)] shadow-sm bg-[var(--bg-card)]">
-              <table className="w-full text-left text-xs sm:text-sm border-collapse font-mono tabular-nums">
-                <thead className="bg-[var(--bg-elevated)] text-[var(--text-primary)] font-display font-bold uppercase tracking-wider text-[11px]">
-                  <tr>
-                    {tableData.headers.map((h, i) => (
-                      <th
-                        key={i}
-                        className="px-4 py-3 border-b border-[var(--border-subtle)]"
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-secondary)]">
-                  {tableData.rows.map((row, rIdx) => (
-                    <tr
-                      key={rIdx}
-                      className="hover:bg-[var(--bg-elevated)]/50 transition-colors"
-                    >
-                      {row.map((cell, cIdx) => (
-                        <td key={cIdx} className="px-4 py-3 leading-relaxed">
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          );
-        }
-      }
-
-      return (
-        <p className="leading-relaxed text-[var(--text-secondary)] font-sans text-sm sm:text-base my-4">
-          {children}
-        </p>
-      );
-    },
+    normal: ({ children }) => (
+      <p className="leading-relaxed text-[var(--text-secondary)] font-sans text-sm sm:text-base my-4">
+        {children}
+      </p>
+    ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 my-4 pl-2 text-[var(--text-secondary)] text-sm sm:text-base font-sans leading-relaxed">
+      <ul className="list-disc list-inside space-y-2.5 my-4 pl-2 text-[var(--text-secondary)] text-sm sm:text-base font-sans leading-relaxed">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 my-4 pl-2 text-[var(--text-secondary)] text-sm sm:text-base font-sans leading-relaxed">
+      <ol className="list-decimal list-inside space-y-2.5 my-4 pl-2 text-[var(--text-secondary)] text-sm sm:text-base font-sans leading-relaxed">
         {children}
       </ol>
     ),
@@ -173,7 +130,6 @@ export const articlePortableTextComponents: PortableTextComponents = {
         href.includes('ppltracker.web.id');
 
       if (isInternal) {
-        // Strip origin if full internal URL
         const cleanHref = href.replace('https://ppltracker.web.id', '') || '/';
         return (
           <Link
@@ -198,6 +154,74 @@ export const articlePortableTextComponents: PortableTextComponents = {
     },
   },
   types: {
+    structuredTable: ({ value }) => {
+      const headers: string[] = Array.isArray(value?.headers) ? value.headers : [];
+      const rows: string[][] = Array.isArray(value?.rows) ? value.rows : [];
+      if (headers.length === 0 && rows.length === 0) return null;
+
+      return (
+        <div
+          className="table-responsive-region my-6 rounded-2xl border border-[var(--border-subtle)] shadow-sm bg-[var(--bg-card)]"
+          tabIndex={0}
+          role="region"
+          aria-label="Training protocol and evidence comparison table"
+        >
+          <table className="w-full text-left text-xs sm:text-sm border-collapse tabular-nums">
+            <caption className="visually-hidden">
+              Structured training parameters and biomechanical reference table
+            </caption>
+            {headers.length > 0 && (
+              <thead className="bg-[var(--bg-elevated)] text-[var(--text-primary)] font-display font-bold uppercase tracking-wider text-[11px]">
+                <tr>
+                  {headers.map((h, i) => (
+                    <th
+                      key={i}
+                      scope="col"
+                      className="px-4 py-3 border-b border-[var(--border-subtle)]"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody className="divide-y divide-[var(--border-subtle)] text-[var(--text-secondary)]">
+              {rows.map((row, rIdx) => (
+                <tr
+                  key={rIdx}
+                  className="hover:bg-[var(--bg-elevated)]/50 transition-colors align-top"
+                >
+                  {row.map((cell, cIdx) => (
+                    <td
+                      key={cIdx}
+                      className={`px-4 py-3 leading-relaxed ${
+                        cIdx === 0 ? 'font-semibold text-[var(--text-primary)]' : ''
+                      }`}
+                    >
+                      {renderCellContent(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    },
+    diagramBlock: ({ value }) => {
+      const lines: string[] = Array.isArray(value?.lines) ? value.lines : [];
+      if (lines.length === 0) return null;
+      return (
+        <figure
+          aria-label="Biomechanical diagram"
+          className="my-6 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] p-4 sm:p-5 overflow-x-auto shadow-inner"
+        >
+          <pre className="font-mono text-xs sm:text-sm text-[var(--accent-primary)] leading-relaxed whitespace-pre">
+            {lines.join('\n')}
+          </pre>
+        </figure>
+      );
+    },
     image: ({ value }) => {
       if (!value?.asset?.url && !value?.imageUrl) return null;
       const url = value.asset?.url || value.imageUrl;

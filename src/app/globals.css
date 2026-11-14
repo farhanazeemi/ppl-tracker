@@ -21,11 +21,13 @@
   --text-muted: #5F6B7A;      /* Contrast vs #EDF1F6: 4.78:1 (PASS AA) */
 
   --accent-primary: #496E0F;  /* Contrast vs #EDF1F6: 5.26:1 (PASS AA) */
+  --accent-hover: #3B590C;
   --accent-primary-fill: #6B9F19; /* Solid button surface */
   --accent-primary-contrast: #FFFFFF;
 
   --accent-secondary: #06715E; /* Contrast vs #EDF1F6: 5.24:1 (PASS AA) */
   --accent-secondary-fill: #087E69;
+  --accent-danger: #DC2626;
 
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(16, 20, 27, 0.08);
@@ -49,11 +51,13 @@ html.dark {
   --text-muted: #8291A5;      /* Contrast vs #1B2330: 4.92:1 (PASS AA) */
 
   --accent-primary: #B7FF4A;  /* Electric Athletic Volt -> Contrast vs #1B2330: 13.10:1 (PASS AA) */
+  --accent-hover: #a8f23d;
   --accent-primary-fill: #B7FF4A;
   --accent-primary-contrast: #090B0F;
 
   --accent-secondary: #36D6B0; /* Cyan-Teal Glow -> Contrast vs #1B2330: 8.58:1 (PASS AA) */
   --accent-secondary-fill: #36D6B0;
+  --accent-danger: #F87171;
 
   --glass-bg: rgba(16, 20, 27, 0.82);
   --glass-border: rgba(255, 255, 255, 0.08);
@@ -76,10 +80,53 @@ body {
 }
 
 /* Headings Typography */
-h1, h2, h3, h4, .font-display {
+h1, h2, h3, h4, h5, h6, .font-display {
   font-family: var(--font-geist-sans), sans-serif;
   letter-spacing: -0.025em;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  text-wrap: balance;
+}
+
+/* Body & Editorial Text Legibility */
+p, blockquote, li, figcaption {
+  text-wrap: pretty;
+}
+
+/* Visually hidden utility that remains accessible to screen readers */
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Post-interaction validation styling */
+input:is(:user-invalid, .user-invalid-fallback),
+select:is(:user-invalid, .user-invalid-fallback),
+textarea:is(:user-invalid, .user-invalid-fallback) {
+  border-color: var(--accent-danger);
+}
+
+/* Responsive Data Table Region */
+.table-responsive-region {
+  overflow-x: auto;
+  max-inline-size: 100%;
+  container-type: inline-size;
+  -webkit-overflow-scrolling: touch;
+}
+.table-responsive-region:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+.table-responsive-region thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
 }
 
 /* Numeric & Metrics Tabular Data */

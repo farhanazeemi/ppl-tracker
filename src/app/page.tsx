@@ -274,20 +274,35 @@ export default async function HomePage() {
               </div>
             </BentoCard>
 
-            {/* Tile 3: Rest Interval Timer (Span 4) */}
+            {/* Tile 3: 1RM & RPE Strength Suite (Span 4) */}
             <BentoCard
               className="md:col-span-4 flex flex-col justify-between"
-              title="Automated Rest Timers"
-              subtitle="Checking a set triggers an optimal rest interval (60s to 3 min) with Web Audio synthesized chimes."
+              title="1RM & RPE Load Suite"
+              subtitle="Estimate One-Rep Max via Epley & Brzycki equations or autoregulate daily working loads from RPE 6–10."
             >
-              <div className="flex items-center justify-center py-4">
-                <div className="w-24 h-24 rounded-full border-4 border-[var(--border-subtle)] border-t-[#B7FF4A] flex items-center justify-center font-mono font-bold text-xl text-[var(--text-primary)] tnum">
-                  90s
-                </div>
+              <div className="grid grid-cols-2 gap-2 py-3 font-mono text-xs">
+                <Link
+                  href="/tools/one-rep-max-calculator"
+                  className="p-3 rounded-2xl bg-[var(--bg-elevated)] hover:border-[#B7FF4A] border border-[var(--border-subtle)] transition-all"
+                >
+                  <div className="text-[10px] text-[var(--text-muted)] uppercase">1RM & %</div>
+                  <div className="font-bold text-[#B7FF4A] mt-0.5">60%–95% Chart →</div>
+                </Link>
+                <Link
+                  href="/tools/rpe-calculator"
+                  className="p-3 rounded-2xl bg-[var(--bg-elevated)] hover:border-[#36D6B0] border border-[var(--border-subtle)] transition-all"
+                >
+                  <div className="text-[10px] text-[var(--text-muted)] uppercase">RPE / RIR</div>
+                  <div className="font-bold text-[#36D6B0] mt-0.5">Load Estimator →</div>
+                </Link>
               </div>
-              <div className="text-[11px] font-mono text-center text-[var(--text-muted)]">
-                Zero-dependency Web Audio countdown alerts
-              </div>
+              <Link
+                href="/tools/one-rep-max-calculator"
+                className="w-full py-2.5 px-3 rounded-2xl bg-[var(--bg-elevated)] hover:bg-[var(--border-strong)] text-[var(--text-primary)] font-mono text-xs font-bold uppercase tracking-wider transition-all inline-flex items-center justify-between"
+              >
+                <span>Open 1RM Calculator</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#B7FF4A]" />
+              </Link>
             </BentoCard>
 
             {/* Tile 4: Olympic Barbell Plate Math (Span 4) */}
@@ -303,30 +318,46 @@ export default async function HomePage() {
                 <div className="w-3 h-10 rounded-md bg-emerald-600 text-[9px] text-white font-mono flex items-center justify-center font-bold">10</div>
                 <div className="w-2.5 h-8 rounded-md bg-zinc-300 dark:bg-zinc-700 text-[8px] text-[var(--text-primary)] font-mono flex items-center justify-center font-bold">5</div>
               </div>
-              <div className="text-[11px] font-mono text-center text-[var(--text-muted)]">
-                Olympic 20kg bar with collar breakdown
-              </div>
-            </BentoCard>
-
-            {/* Tile 5: BMI & Athlete Body Comp (Span 4) */}
-            <BentoCard
-              className="md:col-span-4 flex flex-col justify-between"
-              title="Athlete BMI & Body Comp"
-              subtitle="Dual-unit screening tool with clinical FFMI caveats explaining fat mass vs muscle mass for lifters."
-            >
-              <div className="py-4 space-y-2">
-                <div className="h-3 rounded-full bg-gradient-to-r from-blue-500 via-emerald-500 to-amber-500 w-full" />
-                <div className="flex justify-between text-[10px] font-mono text-[var(--text-muted)]">
-                  <span>Underweight</span>
-                  <span className="text-[#B7FF4A] font-bold">Normal</span>
-                  <span>Athletic</span>
-                </div>
-              </div>
               <Link
-                href="/tools/bmi-calculator"
+                href="/tools/plate-calculator"
                 className="w-full py-2.5 px-3 rounded-2xl bg-[var(--bg-elevated)] hover:bg-[var(--border-strong)] text-[var(--text-primary)] font-mono text-xs font-bold uppercase tracking-wider transition-all inline-flex items-center justify-between"
               >
-                <span>Calculate BMI</span>
+                <span>Open Plate Loader</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#36D6B0]" />
+              </Link>
+            </BentoCard>
+
+            {/* Tile 5: TDEE, FFMI & Body Comp (Span 4) */}
+            <BentoCard
+              className="md:col-span-4 flex flex-col justify-between"
+              title="TDEE, FFMI & Body Comp"
+              subtitle="Dial in daily calories & macros (Mifflin-St Jeor) and benchmark your natural muscular FFMI potential."
+            >
+              <div className="grid grid-cols-3 gap-1.5 py-3 font-mono text-[11px] text-center">
+                <Link
+                  href="/tools/tdee-calculator"
+                  className="p-2.5 rounded-xl bg-[var(--bg-elevated)] hover:border-[#B7FF4A] border border-[var(--border-subtle)] font-bold text-[var(--text-primary)]"
+                >
+                  TDEE & Macros
+                </Link>
+                <Link
+                  href="/tools/ffmi-calculator"
+                  className="p-2.5 rounded-xl bg-[var(--bg-elevated)] hover:border-[#36D6B0] border border-[var(--border-subtle)] font-bold text-[var(--text-primary)]"
+                >
+                  FFMI Gauge
+                </Link>
+                <Link
+                  href="/tools/bmi-calculator"
+                  className="p-2.5 rounded-xl bg-[var(--bg-elevated)] hover:border-[#B7FF4A] border border-[var(--border-subtle)] font-bold text-[var(--text-primary)]"
+                >
+                  Athlete BMI
+                </Link>
+              </div>
+              <Link
+                href="/tools/tdee-calculator"
+                className="w-full py-2.5 px-3 rounded-2xl bg-[var(--bg-elevated)] hover:bg-[var(--border-strong)] text-[var(--text-primary)] font-mono text-xs font-bold uppercase tracking-wider transition-all inline-flex items-center justify-between"
+              >
+                <span>Calculate TDEE & Macros</span>
                 <ArrowRight className="w-3.5 h-3.5 text-[#B7FF4A]" />
               </Link>
             </BentoCard>

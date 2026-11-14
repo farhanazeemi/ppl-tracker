@@ -51,5 +51,7 @@ scripts/*.mjs
 brag-output*/
 *.whl
 urls_to_index.txt
+all_articles_to_index.txt
+.agents/
 scripts/*.json
 

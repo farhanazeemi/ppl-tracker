@@ -270,10 +270,15 @@ export const WorkoutSubstitutionFinder: React.FC = () => {
           {/* Search Box with Autocomplete */}
           <div className="space-y-3 pt-2" ref={searchContainerRef}>
             <div className="relative">
+              <label htmlFor="sub-finder-search-input" className="visually-hidden">
+                Search exercise to substitute
+              </label>
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Search className="w-5 h-5 text-[var(--text-muted)]" />
               </div>
               <input
+                id="sub-finder-search-input"
+                name="searchQuery"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => {
@@ -554,10 +559,14 @@ export const WorkoutSubstitutionFinder: React.FC = () => {
             <div className="p-6 border-t border-[var(--border-subtle)] bg-[var(--bg-elevated)]/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in duration-200">
               {/* Muscle Group Filter */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold">
+                <label
+                  htmlFor="sub-filter-muscle"
+                  className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold"
+                >
                   Target Muscle Group
                 </label>
                 <select
+                  id="sub-filter-muscle"
                   value={targetMuscleFilter}
                   onChange={(e) => setTargetMuscleFilter(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs font-sans text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-primary)]"
@@ -582,10 +591,14 @@ export const WorkoutSubstitutionFinder: React.FC = () => {
 
               {/* Movement Pattern Filter */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold">
+                <label
+                  htmlFor="sub-filter-pattern"
+                  className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold"
+                >
                   Movement Pattern
                 </label>
                 <select
+                  id="sub-filter-pattern"
                   value={movementPatternFilter}
                   onChange={(e) => setMovementPatternFilter(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs font-sans text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-primary)]"
@@ -610,10 +623,14 @@ export const WorkoutSubstitutionFinder: React.FC = () => {
 
               {/* Mechanics Filter */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold">
+                <label
+                  htmlFor="sub-filter-mechanics"
+                  className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold"
+                >
                   Exercise Mechanics
                 </label>
                 <select
+                  id="sub-filter-mechanics"
                   value={mechanicsFilter}
                   onChange={(e) => setMechanicsFilter(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs font-sans text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-primary)]"
@@ -626,10 +643,14 @@ export const WorkoutSubstitutionFinder: React.FC = () => {
 
               {/* Difficulty Filter */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold">
+                <label
+                  htmlFor="sub-filter-difficulty"
+                  className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-bold"
+                >
                   Difficulty Level
                 </label>
                 <select
+                  id="sub-filter-difficulty"
                   value={difficultyFilter}
                   onChange={(e) => setDifficultyFilter(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs font-sans text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-primary)]"

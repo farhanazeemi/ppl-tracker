@@ -905,6 +905,7 @@ export function PplTrackerApp({
                             onTriggerRestTimer={handleTriggerRestTimer}
                             onOpenPlateCalc={openPlateCalculator}
                             soundEnabled={soundEnabled}
+                            unitLabel={user?.preferredUnit || 'kg'}
                           />
                         );
                       })}

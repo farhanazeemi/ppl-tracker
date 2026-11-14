@@ -21,13 +21,14 @@ describe('Author and Schema E-E-A-T Architecture', () => {
     expect(schema['@context']).toBe('https://schema.org');
     expect(schema['@graph']).toBeDefined();
 
-    const personEntity = schema['@graph'].find((e: any) => e['@type'] === 'Person');
+    const graph = schema['@graph'] as any[];
+    const personEntity = graph.find((e: any) => e['@type'] === 'Person');
     expect(personEntity).toBeDefined();
     expect(personEntity.name).toBe('Dr. Marcus Vance, Ph.D.');
     expect(personEntity.url).toBe(`${BASE_URL}/author/dr-marcus-vance`);
     expect(personEntity.hasCredential).toHaveLength(2);
 
-    const profileEntity = schema['@graph'].find((e: any) => e['@type'] === 'ProfilePage');
+    const profileEntity = graph.find((e: any) => e['@type'] === 'ProfilePage');
     expect(profileEntity).toBeDefined();
     expect(profileEntity.url).toBe(`${BASE_URL}/author/dr-marcus-vance`);
   });

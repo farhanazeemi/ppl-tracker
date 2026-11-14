@@ -58,6 +58,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/tools/one-rep-max-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/tdee-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/plate-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/rpe-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/ffmi-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
   ];
 
   const staticCompliancePages: MetadataRoute.Sitemap = [

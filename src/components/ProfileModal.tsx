@@ -83,9 +83,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
+  const [gender, setGender] = useState<'male' | 'female'>('male');
   const [age, setAge] = useState<number | ''>('');
   const [height, setHeight] = useState<number | ''>('');
   const [weight, setWeight] = useState<number | ''>('');
+  const [bodyFatPct, setBodyFatPct] = useState<number | ''>('');
   const [preferredUnit, setPreferredUnit] = useState<'kg' | 'lbs'>('kg');
   const [fitnessGoal, setFitnessGoal] = useState<'Hypertrophy' | 'Strength' | 'Cutting' | 'Body Recomposition'>('Hypertrophy');
   const [selectedExercise, setSelectedExercise] = useState('Barbell Bench Press');
@@ -115,9 +117,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       setName(user.name || '');
       setUsername(user.username || '');
       setAvatarUrl(user.avatarUrl);
+      setGender(user.gender || 'male');
       setAge(user.age ?? '');
       setHeight(user.height ?? '');
       setWeight(user.weight ?? '');
+      setBodyFatPct(user.bodyFatPct ?? '');
       setPreferredUnit(user.preferredUnit || 'kg');
       setFitnessGoal(user.fitnessGoal || 'Hypertrophy');
       setSelectedExercise(user.selectedExercise || 'Barbell Bench Press');
@@ -194,9 +198,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         name,
         username: cleanUser,
         avatarUrl,
+        gender,
         age: typeof age === 'number' ? age : undefined,
         height: typeof height === 'number' ? height : undefined,
         weight: typeof weight === 'number' ? weight : undefined,
+        bodyFatPct: typeof bodyFatPct === 'number' ? bodyFatPct : undefined,
         preferredUnit,
         fitnessGoal,
         selectedExercise,
@@ -518,6 +524,54 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl pl-10 pr-4 py-2.5 text-base sm:text-sm text-[var(--text-primary)] font-mono focus:outline-none focus:border-[#B7FF4A] focus:ring-1 focus:ring-[#B7FF4A] transition"
                       />
                     </div>
+                  </div>
+                </div>
+
+                {/* Gender & Body Fat % Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <span className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
+                      Biological Sex / Gender
+                    </span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setGender('male')}
+                        className={`py-2 rounded-xl border text-xs font-mono font-bold transition cursor-pointer ${
+                          gender === 'male'
+                            ? 'bg-[#B7FF4A]/15 border-[#B7FF4A] text-[#B7FF4A]'
+                            : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-secondary)]'
+                        }`}
+                      >
+                        Male
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setGender('female')}
+                        className={`py-2 rounded-xl border text-xs font-mono font-bold transition cursor-pointer ${
+                          gender === 'female'
+                            ? 'bg-[#B7FF4A]/15 border-[#B7FF4A] text-[#B7FF4A]'
+                            : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-secondary)]'
+                        }`}
+                      >
+                        Female
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-[var(--text-secondary)] mb-1">
+                      Est. Body Fat (%) — Syncs FFMI &amp; TDEE
+                    </label>
+                    <input
+                      type="number"
+                      step="0.5"
+                      min="3"
+                      max="60"
+                      value={bodyFatPct}
+                      placeholder="14"
+                      onChange={(e) => setBodyFatPct(e.target.value === '' ? '' : parseFloat(e.target.value))}
+                      className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 text-base sm:text-sm text-[var(--text-primary)] font-mono tabular-nums focus:outline-none focus:border-[#B7FF4A]"
+                    />
                   </div>
                 </div>
 

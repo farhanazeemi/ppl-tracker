@@ -302,13 +302,13 @@ export default function WorkoutSubstitutionFinderPage() {
                 Launch PPL Progressive Overload Tracker →
               </Link>
               <Link
-                href="/blog/double-progression-hypertrophy-overload-guide"
+                href="/blog/double-progression-protocol-hypertrophy"
                 className="text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] underline"
               >
                 Read Double Progression Hypertrophy Guide
               </Link>
               <Link
-                href="/blog/scapular-plane-lateral-raise-delt-hypertrophy"
+                href="/blog/scapular-plane-lateral-raise-guide"
                 className="text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] underline"
               >
                 Read Scapular Plane Deltoid Mechanics

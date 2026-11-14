@@ -100,8 +100,8 @@ export function formatPostDate(dateStr?: string): string {
 export const MOCK_BLOG_POSTS: BlogPost[] = [
   {
     _id: 'post-1',
-    title: 'Solving the Clavicular Head: The Biomechanics of Upper Chest Growth',
-    slug: 'biomechanics-upper-chest-growth-clavicular-head',
+    title: 'Clavicular Pectoral Biomechanics for Upper Chest Growth',
+    slug: 'clavicular-pectoral-upper-chest-growth',
     publishedAt: '2026-10-18T10:00:00Z',
     excerpt: 'Why standard 45-degree incline presses overload your front delts instead of your upper chest, and how a 15–30 degree bench angle optimizes clavicular fiber alignment.',
     readTime: '6 min read',
@@ -148,8 +148,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
   },
   {
     _id: 'post-2',
-    title: 'Push-Pull-Legs vs Bro Split: Which Yields Superior Muscle Growth?',
-    slug: 'push-pull-legs-vs-bro-split-hypertrophy-comparison',
+    title: 'Push-Pull-Legs vs Bro Split: Muscle Growth Comparison',
+    slug: 'push-pull-legs-vs-bro-split-comparison',
     publishedAt: '2026-10-15T08:30:00Z',
     excerpt: 'Comparing 2x/week muscle frequency against 1x/week high volume splits. We analyze muscle protein synthesis windows, systemic fatigue, and workout density.',
     readTime: '7 min read',
@@ -195,8 +195,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
   },
   {
     _id: 'post-3',
-    title: 'The Double Progression Protocol: The Most Reliable Hypertrophy Engine',
-    slug: 'double-progression-hypertrophy-overload-guide',
+    title: 'Double Progression Protocol for Reliable Hypertrophy',
+    slug: 'double-progression-protocol-hypertrophy',
     publishedAt: '2026-10-12T14:15:00Z',
     excerpt: 'Why linear weight jumps lead to early plateaus and joint injury, and how manipulating rep ceilings guarantees continuous progressive overload.',
     readTime: '5 min read',
@@ -242,8 +242,8 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
   },
   {
     _id: 'post-4',
-    title: 'Eliminating Lagging Lateral Delts: The Scapular Plane Lateral Raise',
-    slug: 'scapular-plane-lateral-raise-delt-hypertrophy',
+    title: 'Scapular Plane Lateral Raises for Medial Delt Growth',
+    slug: 'scapular-plane-lateral-raise-guide',
     publishedAt: '2026-10-08T11:20:00Z',
     excerpt: 'Why lifting directly out to your sides causes subacromial impingement, and how angling your arms 30 degrees forward delivers pure medial delt isolation.',
     readTime: '5 min read',

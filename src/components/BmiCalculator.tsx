@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Scale,
@@ -12,6 +12,8 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { playClickSound, playPopSound } from '../utils/audio';
+import { useAuth } from '../context/AuthContext';
+import { AthleteSyncBanner } from './tools/AthleteSyncBanner';
 
 type UnitSystem = 'metric' | 'imperial';
 
@@ -83,7 +85,11 @@ const BMI_CATEGORIES: BmiCategory[] = [
 ];
 
 export const BmiCalculator: React.FC = () => {
+  const { user } = useAuth();
+  const [isForOthers, setIsForOthers] = useState(false);
   const [unit, setUnit] = useState<UnitSystem>('metric');
+  const [gender, setGender] = useState<'male' | 'female'>('male');
+  const [age, setAge] = useState<string>('26');
 
   // Metric states
   const [heightCm, setHeightCm] = useState<string>('178');
@@ -94,8 +100,58 @@ export const BmiCalculator: React.FC = () => {
   const [heightIn, setHeightIn] = useState<string>('10');
   const [weightLbs, setWeightLbs] = useState<string>('168');
 
-  // Validation errors
-  const [errors, setErrors] = useState<{ height?: string; weight?: string }>({});
+  // Auto-populate from logged-in user's profile when in "My Profile" mode
+  useEffect(() => {
+    if (!user || isForOthers) return;
+    if (user.gender) setGender(user.gender);
+    if (user.age) setAge(String(user.age));
+    if (user.preferredUnit === 'lbs') {
+      setUnit('imperial');
+      if (user.height) {
+        const totalIn = user.height / 2.54;
+        const ft = Math.floor(totalIn / 12);
+        const inch = Math.round(totalIn % 12);
+        setHeightFt(String(ft));
+        setHeightIn(String(inch));
+        setHeightCm(String(user.height));
+      }
+      if (user.weight) {
+        setWeightLbs(String(user.weight));
+        setWeightKg(String(Math.round((user.weight / 2.20462) * 10) / 10));
+      }
+    } else {
+      setUnit('metric');
+      if (user.height) {
+        setHeightCm(String(user.height));
+        const totalIn = user.height / 2.54;
+        setHeightFt(String(Math.floor(totalIn / 12)));
+        setHeightIn(String(Math.round(totalIn % 12)));
+      }
+      if (user.weight) {
+        setWeightKg(String(user.weight));
+        setWeightLbs(String(Math.round(user.weight * 2.20462 * 10) / 10));
+      }
+    }
+  }, [user, isForOthers]);
+
+  const handleToggleForOthers = (forOthers: boolean) => {
+    setIsForOthers(forOthers);
+    if (forOthers) {
+      setGender('male');
+      setAge('25');
+      setHeightCm('175');
+      setWeightKg('72');
+      setHeightFt('5');
+      setHeightIn('9');
+      setWeightLbs('159');
+    }
+  };
+
+  // Post-interaction validation state (Modern Web Guidance: validate-input-after-interaction)
+  const [touched, setTouched] = useState<{ height: boolean; weight: boolean }>({
+    height: false,
+    weight: false,
+  });
 
   const handleUnitToggle = (newUnit: UnitSystem) => {
     playClickSound(true);
@@ -128,7 +184,7 @@ export const BmiCalculator: React.FC = () => {
     }
 
     setUnit(newUnit);
-    setErrors({});
+    setTouched({ height: false, weight: false });
   };
 
   const calculation = useMemo(() => {
@@ -226,14 +282,14 @@ export const BmiCalculator: React.FC = () => {
   const handleReset = () => {
     playPopSound(true);
     if (unit === 'metric') {
-      setHeightCm('');
-      setWeightKg('');
+      setHeightCm('178');
+      setWeightKg('76');
     } else {
-      setHeightFt('');
-      setHeightIn('');
-      setWeightLbs('');
+      setHeightFt('5');
+      setHeightIn('10');
+      setWeightLbs('168');
     }
-    setErrors({});
+    setTouched({ height: false, weight: false });
   };
 
   const applyPreset = (preset: 'lean' | 'average' | 'muscular') => {
@@ -267,7 +323,27 @@ export const BmiCalculator: React.FC = () => {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
+      <AthleteSyncBanner
+        toolName="BMI"
+        isForOthers={isForOthers}
+        onToggleMode={handleToggleForOthers}
+        profilePayloadToSave={{
+          gender,
+          age: parseInt(age, 10) || undefined,
+          height: unit === 'metric' ? parseFloat(heightCm) || undefined : Math.round(((parseFloat(heightFt) || 0) * 12 + (parseFloat(heightIn) || 0)) * 2.54),
+          weight: unit === 'metric' ? parseFloat(weightKg) || undefined : parseFloat(weightLbs) || undefined,
+          preferredUnit: unit === 'metric' ? 'kg' : 'lbs',
+        }}
+        syncedFieldsSummary={`Auto-calculated using ${gender === 'male' ? 'Male' : 'Female'}, ${age} yrs, ${
+          unit === 'metric' ? `${heightCm} cm, ${weightKg} kg` : `${heightFt}'${heightIn}", ${weightLbs} lbs`
+        }. Switch to "For Others" to calculate BMI for a friend or client.`}
+        quickLinks={[
+          { label: 'FFMI Muscle Potential', href: '/tools/ffmi-calculator' },
+          { label: 'TDEE & Macro Split', href: '/tools/tdee-calculator' },
+        ]}
+      />
+
       {/* ========================================================= */}
       {/* MAIN TWO-COLUMN CALCULATOR CARD                           */}
       {/* ========================================================= */}
@@ -326,23 +402,87 @@ export const BmiCalculator: React.FC = () => {
                 {"// Measurement Inputs"}
               </span>
 
+              {/* Gender & Age Row */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="block text-xs font-mono font-semibold uppercase text-[var(--text-secondary)] mb-1.5">
+                    Gender / Sex
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setGender('male')}
+                      aria-pressed={gender === 'male'}
+                      className={`py-2.5 rounded-xl text-xs font-mono font-bold uppercase border transition cursor-pointer ${
+                        gender === 'male'
+                          ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)]'
+                          : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      Male
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGender('female')}
+                      aria-pressed={gender === 'female'}
+                      className={`py-2.5 rounded-xl text-xs font-mono font-bold uppercase border transition cursor-pointer ${
+                        gender === 'female'
+                          ? 'bg-[var(--accent-primary)]/15 border-[var(--accent-primary)] text-[var(--accent-primary)]'
+                          : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      Female
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label
+                    htmlFor="bmi-age-input"
+                    className="block text-xs font-mono font-semibold uppercase text-[var(--text-secondary)] mb-1.5"
+                  >
+                    Age (Years)
+                  </label>
+                  <input
+                    id="bmi-age-input"
+                    type="number"
+                    min={10}
+                    max={110}
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl text-sm font-mono font-bold text-[var(--text-primary)] tabular-nums focus:outline-none focus:border-[var(--accent-primary)]"
+                  />
+                </div>
+              </div>
+
               {/* Height Field */}
               <div className="space-y-2">
-                <label className="block text-xs font-mono font-semibold uppercase text-[var(--text-secondary)]">
+                <label
+                  htmlFor={unit === 'metric' ? 'bmi-height-cm' : 'bmi-height-ft'}
+                  className="block text-xs font-mono font-semibold uppercase text-[var(--text-secondary)]"
+                >
                   Height {unit === 'metric' ? '(Centimeters)' : '(Feet & Inches)'}
                 </label>
 
                 {unit === 'metric' ? (
                   <div className="relative">
                     <input
+                      id="bmi-height-cm"
+                      name="heightCm"
                       type="number"
                       value={heightCm}
                       onChange={(e) => setHeightCm(e.target.value)}
+                      onBlur={() => setTouched((prev) => ({ ...prev, height: true }))}
+                      aria-invalid={touched.height && !!calculation.errors?.height ? 'true' : 'false'}
+                      aria-describedby={
+                        touched.height && calculation.errors?.height ? 'bmi-height-error' : undefined
+                      }
                       placeholder="e.g. 178"
                       min={50}
                       max={260}
                       step={0.5}
-                      className="w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors"
+                      className={`w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors ${
+                        touched.height && calculation.errors?.height ? 'user-invalid-fallback' : ''
+                      }`}
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[var(--text-muted)]">
                       cm
@@ -352,28 +492,50 @@ export const BmiCalculator: React.FC = () => {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="relative">
                       <input
+                        id="bmi-height-ft"
+                        name="heightFt"
                         type="number"
                         value={heightFt}
                         onChange={(e) => setHeightFt(e.target.value)}
+                        onBlur={() => setTouched((prev) => ({ ...prev, height: true }))}
+                        aria-label="Height feet"
+                        aria-invalid={touched.height && !!calculation.errors?.height ? 'true' : 'false'}
+                        aria-describedby={
+                          touched.height && calculation.errors?.height ? 'bmi-height-error' : undefined
+                        }
                         placeholder="e.g. 5"
                         min={1}
                         max={8}
-                        className="w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors"
+                        className={`w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors ${
+                          touched.height && calculation.errors?.height ? 'user-invalid-fallback' : ''
+                        }`}
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[var(--text-muted)]">
                         ft
                       </span>
                     </div>
                     <div className="relative">
+                      <label htmlFor="bmi-height-in" className="visually-hidden">
+                        Height inches
+                      </label>
                       <input
+                        id="bmi-height-in"
+                        name="heightIn"
                         type="number"
                         value={heightIn}
                         onChange={(e) => setHeightIn(e.target.value)}
+                        onBlur={() => setTouched((prev) => ({ ...prev, height: true }))}
+                        aria-invalid={touched.height && !!calculation.errors?.height ? 'true' : 'false'}
+                        aria-describedby={
+                          touched.height && calculation.errors?.height ? 'bmi-height-error' : undefined
+                        }
                         placeholder="e.g. 10"
                         min={0}
                         max={11}
                         step={0.5}
-                        className="w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors"
+                        className={`w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors ${
+                          touched.height && calculation.errors?.height ? 'user-invalid-fallback' : ''
+                        }`}
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[var(--text-muted)]">
                         in
@@ -381,9 +543,13 @@ export const BmiCalculator: React.FC = () => {
                     </div>
                   </div>
                 )}
-                {calculation.errors?.height && (
-                  <p className="text-[11px] font-mono text-rose-400 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
+                {touched.height && calculation.errors?.height && (
+                  <p
+                    id="bmi-height-error"
+                    role="alert"
+                    className="text-[11px] font-mono text-rose-400 flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3.5 h-3.5" aria-hidden="true" />
                     {calculation.errors.height}
                   </p>
                 )}
@@ -391,29 +557,45 @@ export const BmiCalculator: React.FC = () => {
 
               {/* Weight Field */}
               <div className="space-y-2">
-                <label className="block text-xs font-mono font-semibold uppercase text-[var(--text-secondary)]">
+                <label
+                  htmlFor="bmi-weight-input"
+                  className="block text-xs font-mono font-semibold uppercase text-[var(--text-secondary)]"
+                >
                   Weight {unit === 'metric' ? '(Kilograms)' : '(Pounds)'}
                 </label>
                 <div className="relative">
                   <input
+                    id="bmi-weight-input"
+                    name="weight"
                     type="number"
                     value={unit === 'metric' ? weightKg : weightLbs}
                     onChange={(e) =>
                       unit === 'metric' ? setWeightKg(e.target.value) : setWeightLbs(e.target.value)
                     }
+                    onBlur={() => setTouched((prev) => ({ ...prev, weight: true }))}
+                    aria-invalid={touched.weight && !!calculation.errors?.weight ? 'true' : 'false'}
+                    aria-describedby={
+                      touched.weight && calculation.errors?.weight ? 'bmi-weight-error' : undefined
+                    }
                     placeholder={unit === 'metric' ? 'e.g. 76' : 'e.g. 168'}
                     min={20}
                     max={750}
                     step={0.5}
-                    className="w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors"
+                    className={`w-full px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl text-base font-mono font-bold tabular-nums text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-colors ${
+                      touched.weight && calculation.errors?.weight ? 'user-invalid-fallback' : ''
+                    }`}
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-[var(--text-muted)]">
                     {unit === 'metric' ? 'kg' : 'lbs'}
                   </span>
                 </div>
-                {calculation.errors?.weight && (
-                  <p className="text-[11px] font-mono text-rose-400 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
+                {touched.weight && calculation.errors?.weight && (
+                  <p
+                    id="bmi-weight-error"
+                    role="alert"
+                    className="text-[11px] font-mono text-rose-400 flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3.5 h-3.5" aria-hidden="true" />
                     {calculation.errors.weight}
                   </p>
                 )}
