@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Dumbbell,
@@ -25,7 +25,8 @@ import {
   Cpu,
 } from 'lucide-react';
 import { ALL_TRAINING_PROGRAMS } from '../data/workouts';
-import { MOCK_BLOG_POSTS, formatPostDate } from '../data/mockBlogPosts';
+import { BlogPost, formatPostDate } from '../data/mockBlogPosts';
+import { getAllBlogPosts } from '../sanity/getPosts';
 import { useAuth } from '../context/AuthContext';
 import { playClickSound, playPopSound, playSetCompleteSound } from '../utils/audio';
 
@@ -42,6 +43,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   const { continueAsGuest } = useAuth();
   const [selectedSplitTab, setSelectedSplitTab] = useState<string>('ppl');
+  const [livePosts, setLivePosts] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    getAllBlogPosts()
+      .then((posts) => setLivePosts(posts))
+      .catch(() => {});
+  }, []);
 
   // Interactive Live Demo preview states
   const [demoSets, setDemoSets] = useState([
@@ -670,13 +678,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             href="/blog"
             className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold text-[#B7FF4A] hover:underline transition"
           >
-            <span>Explore All 60+ Studies</span>
+            <span>Explore All {livePosts.length || 110} Studies</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MOCK_BLOG_POSTS.slice(0, 3).map((post) => (
+          {livePosts.slice(0, 3).map((post) => (
             <Link
               key={post._id}
               href={`/blog/${post.slug}`}
