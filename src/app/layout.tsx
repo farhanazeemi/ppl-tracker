@@ -4,7 +4,6 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from '../components/Providers';
 import { GoogleAnalytics } from '../components/GoogleAnalytics';
-import { MicrosoftClarity } from '../components/MicrosoftClarity';
 import { ServiceWorkerRegistration } from '../components/ServiceWorkerRegistration';
 import { MobileBottomNav } from '../components/MobileBottomNav';
 import { getRootWebSiteSchema } from '../lib/schema';
@@ -182,7 +181,20 @@ export default function RootLayout({
         {/* Google Analytics & GTM loaded on idle, excludes internal Sanity Studio routes */}
         <GoogleAnalytics />
         {/* Microsoft Clarity session recording & heatmaps (Bing Webmaster integration) */}
-        <MicrosoftClarity />
+        <script
+          id="microsoft-clarity"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && !window.location.pathname.startsWith('/studio')) {
+                (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "ze3g5jcdbm");
+              }
+            `,
+          }}
+        />
       </head>
       <body
         className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] antialiased selection:bg-[#B7FF4A] selection:text-[#090B0F] transition-colors duration-200 pb-16 md:pb-0"
