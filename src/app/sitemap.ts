@@ -88,6 +88,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.85,
     },
+    {
+      url: `${baseUrl}/tools/strength-score-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/warmup-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/workout-importer`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/body-fat-calculator`,
+      lastModified: platformStableDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    },
   ];
 
   const staticCompliancePages: MetadataRoute.Sitemap = [

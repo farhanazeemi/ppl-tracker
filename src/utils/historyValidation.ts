@@ -1,22 +1,54 @@
 import { LoggedWorkoutSession, ExerciseSet } from '../types/workout';
+import { parseWorkoutCsv } from './csvWorkoutImporter';
 
 export interface HistoryValidationResult {
   validLogs: LoggedWorkoutSession[];
   isValid: boolean;
   errorMessage?: string;
+  sourceFormat?: string;
 }
 
 /**
- * Validates and sanitizes imported workout history JSON data.
+ * Validates and sanitizes imported workout history data (supporting JSON and CSV from Strong/Hevy/FitNotes).
  * Protects against malformed objects, prototype pollution, null exercisesLogged crashes,
  * and NaN/negative values.
  */
 export function validateAndSanitizeHistory(data: unknown): HistoryValidationResult {
+  // If data is a raw string (e.g. from file read or CSV)
+  if (typeof data === 'string') {
+    const trimmed = data.trim();
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return validateAndSanitizeHistory(parsed);
+      } catch {
+        // Fall through to CSV check if JSON parse fails
+      }
+    }
+
+    try {
+      const summary = parseWorkoutCsv(trimmed);
+      if (summary.sessions.length > 0) {
+        return {
+          validLogs: summary.sessions,
+          isValid: true,
+          sourceFormat: summary.format,
+        };
+      }
+    } catch (csvErr: any) {
+      return {
+        validLogs: [],
+        isValid: false,
+        errorMessage: csvErr?.message || 'Failed to parse workout file (invalid JSON or CSV format).',
+      };
+    }
+  }
+
   if (!Array.isArray(data)) {
     return {
       validLogs: [],
       isValid: false,
-      errorMessage: 'File must contain a valid JSON array of workout sessions.',
+      errorMessage: 'File must contain a valid JSON array or CSV export of workout sessions.',
     };
   }
 
@@ -100,5 +132,5 @@ export function validateAndSanitizeHistory(data: unknown): HistoryValidationResu
     };
   }
 
-  return { validLogs, isValid: true };
+  return { validLogs, isValid: true, sourceFormat: 'PPL Tracker JSON' };
 }

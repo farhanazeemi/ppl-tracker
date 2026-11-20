@@ -200,6 +200,42 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
+                  href="/tools/strength-score-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Strength Score (DOTS / Wilks)
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/warmup-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Barbell Warm-Up Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/workout-importer"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Workout CSV Importer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/body-fat-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  US Navy Body Fat Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors font-bold text-[#B7FF4A]"

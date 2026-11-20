@@ -18,6 +18,7 @@ import {
 import { ExerciseDefinition, ExerciseSet } from '../types/workout';
 import { calculateEstimated1RM, checkDoubleProgression } from '../utils/helpers';
 import { playSetCompleteSound, playClickSound, playPopSound, playTabSound } from '../utils/audio';
+import { WarmupModal } from './WarmupModal';
 
 interface ExerciseCardProps {
   exercise: ExerciseDefinition;
@@ -41,6 +42,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
   unitLabel = 'kg',
 }) => {
   const [showCues, setShowCues] = useState(false);
+  const [isWarmupModalOpen, setIsWarmupModalOpen] = useState(false);
 
   const colorStyles = {
     push: {
@@ -242,8 +244,14 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
                   }`}
                 >
                   {/* Set number */}
-                  <td className="py-3 pl-4 pr-2 text-center font-mono font-bold text-xs text-[var(--text-muted)] tabular-nums">
-                    {idx + 1}
+                  <td className="py-3 pl-4 pr-2 text-center font-mono font-bold text-xs tabular-nums">
+                    {set.isWarmup ? (
+                      <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-black bg-orange-500/15 text-orange-400 border border-orange-500/30" title="Warm-up Set">
+                        W{idx + 1}
+                      </span>
+                    ) : (
+                      <span className="text-[var(--text-muted)]">{idx + 1}</span>
+                    )}
                   </td>
 
                   {/* Weight Input */}
@@ -383,6 +391,19 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
             Add Set
           </button>
 
+          <button
+            type="button"
+            onClick={() => {
+              playClickSound(soundEnabled);
+              setIsWarmupModalOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/25 rounded-xl text-xs font-bold transition shadow-xs btn-tactile cursor-pointer font-mono"
+            title="Generate non-fatiguing warm-up sets"
+          >
+            <Flame className="w-3.5 h-3.5" />
+            Warm-Up
+          </button>
+
           {exercise.equipment === 'barbell' && (
             <button
               type="button"
@@ -465,6 +486,20 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = React.memo(({
             </div>
           </div>
         </div>
+      )}
+
+      {isWarmupModalOpen && (
+        <WarmupModal
+          isOpen={isWarmupModalOpen}
+          onClose={() => setIsWarmupModalOpen(false)}
+          exerciseName={exercise.name}
+          exerciseId={exercise.id}
+          currentWeight={typeof sets[0]?.weight === 'number' ? sets[0].weight : 60}
+          existingSets={sets}
+          onApplyWarmupSets={onUpdateSets}
+          soundEnabled={soundEnabled}
+          unitLabel={unitLabel}
+        />
       )}
     </div>
   );

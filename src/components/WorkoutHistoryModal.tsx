@@ -94,17 +94,17 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const parsed = JSON.parse(event.target?.result as string);
-        const { validLogs, isValid, errorMessage } = validateAndSanitizeHistory(parsed);
+        const rawText = event.target?.result as string;
+        const { validLogs, isValid, errorMessage, sourceFormat } = validateAndSanitizeHistory(rawText);
         if (!isValid) {
-          alert(errorMessage || 'Invalid JSON file format.');
+          alert(errorMessage || 'Invalid workout file format.');
           return;
         }
         onImportData(validLogs);
         playClickSound(soundEnabled);
-        alert(`Successfully imported ${validLogs.length} workout logs!`);
-      } catch (err) {
-        alert('Invalid JSON file format.');
+        alert(`Successfully imported ${validLogs.length} workout logs from ${sourceFormat || 'file'}!`);
+      } catch (err: any) {
+        alert(err?.message || 'Invalid workout file format.');
       }
     };
     reader.readAsText(file);
@@ -189,7 +189,7 @@ export const WorkoutHistoryModal: React.FC<WorkoutHistoryModalProps> = ({
               <label className="p-1.5 px-2.5 bg-[var(--bg-elevated)] hover:bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-xl text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition btn-tactile shadow-xs">
                 <Upload className="w-3.5 h-3.5 text-[#B7FF4A]" />
                 <span className="hidden sm:inline">Import</span>
-                <input type="file" accept=".json" onChange={handleImportFile} className="hidden" />
+                <input type="file" accept=".json,.csv,text/csv,application/json" onChange={handleImportFile} className="hidden" />
               </label>
             </div>
           </div>
