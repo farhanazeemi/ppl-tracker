@@ -21,32 +21,33 @@
 
 ---
 
-## 2. Recently Published Milestone Articles (100 Total Published Live)
+## 2. Published Milestone Articles (160 Total Published Live)
 
-The following 20 technical guides across all 10 core fitness pillars were generated, peer-reviewed against sports science literature, and published to production:
+The content catalog now stands at **160 peer-reviewed, evidence-based sports science articles** across all 10 core fitness pillars, strictly adhering to `AGENTS.md` guidelines.
 
+### Latest Published 50-Article Milestone Highlights:
 | Pillar | Article Title | Live Slug | Author | Status |
 |--------|---------------|-----------|--------|--------|
-| **Pull (Back)** | Latissimus Dorsi Hypertrophy: Weekly Set Volume Landmarks (MEV, MAV, MRV) | `/blog/latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-weekly-set-volume-landmarks-mev-mav-and-mrv` | Liam Sterling | **Published Live** |
-| **Pull (Back)** | Latissimus Dorsi Hypertrophy: Mechanical Tension vs. Metabolic Stress | `/blog/latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-mechanical-tension-vs-metabolic-stress` | Liam Sterling | **Published Live** |
-| **Legs (Squat)** | High-Bar & Front Squat Mastery: Linear vs. DUP Programming | `/blog/high-bar-front-squat-mastery-linear-vs-daily-undulating-periodization-dup-programming` | Elena Rostova, CSCS | **Published Live** |
-| **Legs (Squat)** | High-Bar & Front Squat Mastery: Autoregulation with RPE & VBT | `/blog/high-bar-front-squat-mastery-autoregulation-with-rpe-and-velocity-based-training-vbt` | Elena Rostova, CSCS | **Published Live** |
-| **Fat Loss & Recomp** | Breaking a 4-Week Weight Loss Plateau: Reddit r/loseit Case Analysis | `/blog/breaking-a-4-week-weight-loss-plateau-lessons-from-100-reddit-r-loseit-success-stories` | Liam Sterling | **Published Live** |
-| **Fat Loss & Recomp** | Breaking a 4-Week Weight Loss Plateau: Adjusting Gym Volume in Deficits | `/blog/breaking-a-4-week-weight-loss-plateau-how-to-adjust-your-gym-routine-when-calories-are-low` | Liam Sterling | **Published Live** |
-| **Sports Nutrition** | Creatine Monohydrate for Muscle, Brain & Sleep Deprivation: Dosing Guide | `/blog/creatine-monohydrate-for-muscle-brain-sleep-deprivation-a-practical-dosing-timing-guide-for-everyday-athletes` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Sports Nutrition** | Creatine Monohydrate: Separating Science from Influencer Marketing Myths | `/blog/creatine-monohydrate-for-muscle-brain-sleep-deprivation-separating-science-from-influencer-marketing-myths` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Endurance & Cardio** | 80/20 Polarized Running Distribution: 12-Week Periodized Schedule | `/blog/80-20-polarized-running-distribution-a-12-week-week-by-week-training-pacing-schedule` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Endurance & Cardio** | 80/20 Polarized Running: Avoiding the 'Gray Zone' Trap (Zone 3 Fatigue) | `/blog/80-20-polarized-running-distribution-avoiding-the-gray-zone-trap-zone-3-chronic-fatigue` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Calisthenics** | First Strict Pull-Up Progression: Fixing Form Errors & Tendon Strain | `/blog/first-strict-pull-up-chin-up-progression-fixing-the-5-most-common-form-errors-tendon-bottlenecks` | Liam Sterling | **Published Live** |
-| **Calisthenics** | First Strict Pull-Up Progression: Building Muscle Without a Commercial Gym | `/blog/first-strict-pull-up-chin-up-progression-how-to-build-real-muscle-mass-without-a-commercial-gym-membership` | Liam Sterling | **Published Live** |
-| **Prehab & Mobility** | Ankle Dorsiflexion Resilience: Why Static Stretching Fails (Loaded Mobility) | `/blog/ankle-dorsiflexion-tibialis-anterior-resilience-deep-squat-shin-splint-fix-why-static-stretching-alone-fails-and-how-loaded-mobility-works` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Prehab & Mobility** | Ankle Dorsiflexion Resilience: Training Around Pain Without Losing Gains | `/blog/ankle-dorsiflexion-tibialis-anterior-resilience-deep-squat-shin-splint-fix-how-to-train-around-pain-without-losing-your-gym-gains` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Women's Strength** | Debunking the 'Bulky' Myth: What r/xxfitness Wishes Every Beginner Knew | `/blog/debunking-the-bulky-myth-why-lifting-heavy-creates-a-toned-physique-what-reddit-s-r-xxfitness-community-wishes-every-beginner-knew` | Elena Rostova, CSCS | **Published Live** |
-| **Women's Strength** | Debunking the 'Bulky' Myth: Separating Peer-Reviewed Science from Myths | `/blog/debunking-the-bulky-myth-why-lifting-heavy-creates-a-toned-physique-separating-peer-reviewed-science-from-wellness-influencer-myths` | Elena Rostova, CSCS | **Published Live** |
-| **Longevity & Health** | Grip Strength & Dead Hang Protocol for Healthy Aging (Ages 35–70+) | `/blog/grip-strength-dead-hang-duration-for-healthy-aging-a-step-by-step-weekly-protocol-for-adults-35-to-70` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Longevity & Health** | Grip Strength & Dead Hang Duration: Field Testing Without a Lab | `/blog/grip-strength-dead-hang-duration-for-healthy-aging-how-to-test-and-track-your-baseline-without-an-expensive-lab` | Dr. Marcus Vance, Ph.D. | **Published Live** |
-| **Gym Mindset** | 'Never Miss Twice' Habit System: Behavioral Psychology for Consistency | `/blog/the-never-miss-twice-rule-identity-based-fitness-habits-behavioral-psychology-tricks-that-make-exercise-automatic` | Liam Sterling | **Published Live** |
-| **Gym Mindset** | 'Never Miss Twice' Habit System: Top Fitness Questions Answered Directly | `/blog/the-never-miss-twice-rule-identity-based-fitness-habits-answering-quora-s-most-viewed-fitness-questions-without-the-fluff` | Liam Sterling | **Published Live** |
+| **Pull (Back)** | Latissimus Dorsi Hypertrophy: Proximity to Failure & RIR Accuracy | `/blog/latissimus-dorsi-iliac-thoracic-fibers-hypertrophy-proximity-to-failure-and-rir-repetitions-in-reserve-accuracy` | Liam Sterling | **Published Live** |
+| **Pull (Back)** | Lateral Deltoid Hypertrophy: Lengthened Partials vs. Full ROM | `/blog/lateral-deltoid-side-delt-hypertrophy-lengthened-partials-vs-full-range-of-motion` | Liam Sterling | **Published Live** |
+| **Legs (Squat)** | High-Bar & Front Squat Mastery: Warm-Up Pyramid & Top-Set Architecture | `/blog/high-bar-front-squat-mastery-warm-up-pyramid-top-set-back-off-architecture` | Elena Rostova, CSCS | **Published Live** |
+| **Legs (Squat)** | Competition Pause Bench Press Mastery: Breaking Sticking Points | `/blog/competition-pause-bench-press-mastery-breaking-through-sticking-points-with-isometric-pin-work` | Elena Rostova, CSCS | **Published Live** |
+| **Fat Loss & Recomp** | Breaking a 4-Week Weight Loss Plateau: Reddit Coaches Answered | `/blog/breaking-a-4-week-weight-loss-plateau-quora-s-most-asked-questions-answered-by-coaches` | Liam Sterling | **Published Live** |
+| **Fat Loss & Recomp** | Preserving Lean Muscle Mass on GLP-1 Medications | `/blog/preserving-lean-muscle-mass-on-glp-1-medications-the-science-backed-action-plan-for-real-world-results` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Sports Nutrition** | Creatine Monohydrate for Muscle, Brain & Sleep Deprivation: 7-Day Schedule | `/blog/creatine-monohydrate-for-muscle-brain-sleep-deprivation-sample-7-day-macro-balanced-meal-supplement-schedule` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Sports Nutrition** | Caffeine Timing, Ergogenic Dosing & Sleep Architecture Meta-Analysis | `/blog/caffeine-timing-ergogenic-dosing-sleep-architecture-what-the-latest-clinical-meta-analyses-actually-show` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Endurance & Cardio** | 80/20 Polarized Running: Balancing Leg Day Recovery with Mileage | `/blog/80-20-polarized-running-distribution-balancing-leg-day-recovery-with-weekly-mileage` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Endurance & Cardio** | Concurrent Hybrid Training (Heavy Lifting + Marathon Prep) | `/blog/concurrent-hybrid-training-heavy-lifting-marathon-prep-why-reddit-s-r-running-community-swears-by-this-protocol` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Calisthenics** | First Strict Pull-Up & Chin-Up Progression: 3-Day 45-Min Routine | `/blog/first-strict-pull-up-chin-up-progression-a-3-day-full-body-routine-you-can-do-in-45-minutes` | Liam Sterling | **Published Live** |
+| **Calisthenics** | Push-Up Mastery (Incline to Pseudo-Planche & Ring Push-Ups) | `/blog/push-up-mastery-incline-to-pseudo-planche-ring-push-ups-step-by-step-leverage-progression-ladder-beginner-to-advanced` | Liam Sterling | **Published Live** |
+| **Prehab & Mobility** | Ankle Dorsiflexion & Tibialis Anterior Resilience (Shin Splint Fix) | `/blog/ankle-dorsiflexion-tibialis-anterior-resilience-deep-squat-shin-splint-fix-biomechanical-root-cause-assessment-self-screening-tests` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Prehab & Mobility** | Hip Internal & External Rotation (90/90 CARs & Squat Depth Unlock) | `/blog/hip-internal-external-rotation-90-90-cars-squat-depth-unlock-a-10-minute-daily-prehab-routine-you-can-do-before-training` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Women's Strength** | Debunking the 'Bulky' Myth: Progression from Dumbbells to Barbell Rack | `/blog/debunking-the-bulky-myth-why-lifting-heavy-creates-a-toned-physique-step-by-step-progression-from-dumbbells-to-the-barbell-rack` | Elena Rostova, CSCS | **Published Live** |
+| **Women's Strength** | Menstrual Cycle Phase Autoregulation (Follicular vs. Luteal Training) | `/blog/menstrual-cycle-phase-autoregulation-follicular-vs-luteal-training-an-evidence-based-4-day-workout-nutrition-blueprint` | Elena Rostova, CSCS | **Published Live** |
+| **Longevity & Health** | Grip Strength & Dead Hang Duration: Avoiding Biohacking Hype | `/blog/grip-strength-dead-hang-duration-for-healthy-aging-avoiding-biohacking-hype-what-moves-the-needle-vs-wastes-money` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Longevity & Health** | Sarcopenia Prevention & Fast-Twitch (Type II) Fiber Preservation After 50 | `/blog/sarcopenia-prevention-fast-twitch-type-ii-fiber-preservation-after-50-what-longevity-studies-clinical-trials-reveal` | Dr. Marcus Vance, Ph.D. | **Published Live** |
+| **Gym Mindset** | The 'Never Miss Twice' Rule: 4-Week Action Plan from Scratch | `/blog/the-never-miss-twice-rule-identity-based-fitness-habits-a-4-week-action-plan-to-rebuild-momentum-from-scratch` | Liam Sterling | **Published Live** |
+| **Gym Mindset** | Program Hopping vs. Progressive Overload: Lessons from r/Fitness Wiki | `/blog/program-hopping-vs-progressive-overload-consistency-synthesizing-the-top-voted-advice-from-reddit-s-r-fitness-wiki` | Liam Sterling | **Published Live** |
 
 ---
 

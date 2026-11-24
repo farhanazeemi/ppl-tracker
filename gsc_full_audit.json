@@ -1,0 +1,17 @@
+{
+  "total_inspected": 133,
+  "coverage_summary": {
+    "Submitted and indexed": 60,
+    "Discovered - currently not indexed": 19,
+    "URL is unknown to Google": 54
+  },
+  "rich_results_summary": {
+    "NONE": 74,
+    "PASS": 59
+  },
+  "mobile_summary": {
+    "VERDICT_UNSPECIFIED": 133
+  },
+  "issues_count": 0,
+  "issues": []
+}
