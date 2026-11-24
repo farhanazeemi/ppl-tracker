@@ -89,9 +89,20 @@ export function cleanPromptFromExcerpt(excerpt?: string, title?: string): string
 }
 
 export function resolvePostImage(p: any): { url: string; alt: string } {
+  const slug = (p.slug || p._id || '').replace(/^post-/, '').toLowerCase().trim();
+
+  // 1. Dedicated custom-generated article hero image in /public/images/articles/{slug}.jpg
+  if (slug) {
+    return {
+      url: `/images/articles/${slug}.jpg`,
+      alt: p.imageAlt || p.title || 'PPL Hypertrophy Science Journal',
+    };
+  }
+
+  // 2. Direct Sanity uploaded asset URL
   const directUrl =
     p.mainImage?.asset?.url ||
-    (typeof p.mainImage === 'string' && p.mainImage.startsWith('http') ? p.mainImage : null);
+    (typeof p.mainImage === 'string' && (p.mainImage.startsWith('http') || p.mainImage.startsWith('/')) ? p.mainImage : null);
   if (directUrl) {
     return {
       url: directUrl,
@@ -99,15 +110,16 @@ export function resolvePostImage(p: any): { url: string; alt: string } {
     };
   }
 
-  if (p.imageUrl && typeof p.imageUrl === 'string' && p.imageUrl.startsWith('http')) {
+  // 3. Explicit imageUrl from document
+  if (p.imageUrl && typeof p.imageUrl === 'string' && (p.imageUrl.startsWith('http') || p.imageUrl.startsWith('/'))) {
     return {
       url: p.imageUrl,
       alt: p.imageAlt || p.title || 'PPL Hypertrophy Science Journal',
     };
   }
 
-  const slug = (p.slug || p._id || p.title || '').toLowerCase();
-  const index = hashString(slug) % DIVERSE_FITNESS_GALLERY.length;
+  // Fallback to gallery
+  const index = hashString(slug || p.title || '') % DIVERSE_FITNESS_GALLERY.length;
   const picked = DIVERSE_FITNESS_GALLERY[index];
 
   return {
