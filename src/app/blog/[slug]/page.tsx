@@ -14,7 +14,9 @@ import {
   ChevronRight,
   Tag,
 } from 'lucide-react';
-import { getBlogPostBySlug, getRecentPosts, getAllBlogPosts } from '../../../sanity/getPosts';
+import { getBlogPostBySlug, getAllBlogPosts } from '../../../sanity/getPosts';
+import { MOCK_BLOG_POSTS } from '../../../data/mockBlogPosts';
+import { selectRelatedClusterPosts } from '../_lib/relatedArticles';
 import { getArticleSchema } from '../../../lib/schema';
 import { ShareButton } from '../../../components/ShareButton';
 import { formatPostDate } from '../../../data/mockBlogPosts';
@@ -25,6 +27,7 @@ import { FaqAccordion } from '../../../components/FaqAccordion';
 import { ArticlePortableText } from '../../../components/ArticlePortableText';
 import { ArticleComments } from '../../../components/ArticleComments';
 import { SubscribeWithGoogle } from '../../../components/SubscribeWithGoogle';
+import { RelatedToolsCard } from '../../../components/RelatedToolsCard';
 import { processArticleBody } from '../../../utils/articleContent';
 
 const baseUrl = 'https://ppltracker.web.id';
@@ -33,8 +36,13 @@ export const revalidate = 60;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const posts = await getAllBlogPosts();
-  return posts.map((post) => ({
+  const sanityPosts = await getAllBlogPosts();
+  const seen = new Set(sanityPosts.map((p) => p.slug));
+  const combined = [
+    ...sanityPosts,
+    ...MOCK_BLOG_POSTS.filter((m) => !seen.has(m.slug)),
+  ];
+  return combined.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -111,7 +119,13 @@ export default async function BlogPostDetailPage({
     notFound();
   }
 
-  const recent = await getRecentPosts(post.slug);
+  const allSanityPosts = await getAllBlogPosts();
+  const seenSlugs = new Set(allSanityPosts.map((p) => p.slug));
+  const combinedPosts = [
+    ...allSanityPosts,
+    ...MOCK_BLOG_POSTS.filter((m) => !seenSlugs.has(m.slug)),
+  ];
+  const recent = selectRelatedClusterPosts(post, combinedPosts, 6);
   const { toc, faqs, mainBlocks, keyTakeaways } = processArticleBody(post.rawBody, post.title);
   const fallbackTakeaways = (post.content?.sections || [])
     .map((s) => s.keyTakeaway)
@@ -342,15 +356,23 @@ export default async function BlogPostDetailPage({
           <ArticleComments articleSlug={post.slug} articleTitle={post.title} />
         </article>
 
+        {/* Context-Aware Calculators & Biomechanics Tools Matched to Cluster */}
+        <RelatedToolsCard
+          splitCategory={post.splitCategory}
+          title={post.title}
+          slug={post.slug}
+          excerpt={post.excerpt}
+        />
+
         {/* Action Callout for Workout Tracker per AGENTS.md Mandatory Internal Linking */}
         <section className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--accent-primary)]/35 text-[var(--text-primary)] space-y-4 shadow-xl card-bento relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--accent-primary)] uppercase relative z-10">
             <Dumbbell className="w-4 h-4" /> Integrated Overload Technology
           </div>
-          <h3 className="text-2xl font-display font-bold uppercase tracking-tight relative z-10">
+          <h2 className="text-2xl font-display font-bold uppercase tracking-tight relative z-10">
             Apply These Principles Today in Your Scheduled Workout
-          </h3>
+          </h2>
           <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed max-w-2xl relative z-10">
             Once you&apos;ve chosen your exercises and target weekly set landmarks, use the{' '}
             <Link
@@ -374,9 +396,9 @@ export default async function BlogPostDetailPage({
         {/* Related Articles with Featured Image & Post Date */}
         {recent.length > 0 && (
           <section className="space-y-4 pt-6 border-t border-[var(--border-subtle)]">
-            <h3 className="text-xl font-display font-bold uppercase tracking-tight text-[var(--text-primary)]">
+            <h2 className="text-xl font-display font-bold uppercase tracking-tight text-[var(--text-primary)]">
               Related Scientific Studies
-            </h3>
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               {recent.map((rec) => (
                 <div
@@ -419,9 +441,9 @@ export default async function BlogPostDetailPage({
                       </div>
 
                       <Link href={`/blog/${rec.slug}`}>
-                        <h4 className="text-sm font-display font-bold uppercase text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">
+                        <h3 className="text-sm font-display font-bold uppercase text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">
                           {rec.title}
-                        </h4>
+                        </h3>
                       </Link>
                       <p className="text-xs text-[var(--text-secondary)] line-clamp-2">{rec.excerpt}</p>
                     </div>

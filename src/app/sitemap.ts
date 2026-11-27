@@ -1,12 +1,19 @@
 import type { MetadataRoute } from 'next';
 import { getAllBlogPosts, getAllAuthors } from '../sanity/getPosts';
+import { MOCK_BLOG_POSTS } from '../data/mockBlogPosts';
 
 export const revalidate = 60;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://ppltracker.web.id';
 
-  const [posts, authors] = await Promise.all([getAllBlogPosts(), getAllAuthors()]);
+  const [sanityPosts, authors] = await Promise.all([getAllBlogPosts(), getAllAuthors()]);
+
+  const seenSlugs = new Set(sanityPosts.map((p) => p.slug));
+  const posts = [
+    ...sanityPosts,
+    ...MOCK_BLOG_POSTS.filter((mockPost) => !seenSlugs.has(mockPost.slug)),
+  ];
 
   // Stable reference timestamp for non-blog static foundation and tools
   const platformStableDate = new Date('2026-11-03T00:00:00Z');

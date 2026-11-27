@@ -17,7 +17,6 @@ import {
 import { generateWarmupLadder, WarmupRung } from '../../utils/warmupEngine';
 import { playClickSound, playTabSound } from '../../utils/audio';
 import { AthleteSyncBanner } from './AthleteSyncBanner';
-import { FaqAccordion } from '../FaqAccordion';
 
 interface WarmupCalculatorProps {
   soundEnabled?: boolean;
@@ -71,29 +70,6 @@ export const WarmupCalculator: React.FC<WarmupCalculatorProps> = ({
     2.5: { bg: 'bg-zinc-400', text: 'text-zinc-950' },
     1.25: { bg: 'bg-zinc-600', text: 'text-white' },
   };
-
-  const faqItems = [
-    {
-      question: 'Why not just jump straight into heavy working sets?',
-      answer:
-        'Lifting heavy loads without progressive ramping increases injury risk to tendons, ligaments, and spinal erectors. Synovial joint fluid requires progressive hydrostatic pressure to decrease viscosity. Furthermore, progressive ramp sets excite high-threshold motor units (post-activation potentiation) without exhausting the ATP-PCr phosphagen system.',
-    },
-    {
-      question: 'Do warm-up sets count towards weekly hypertrophy volume (MEV/MAV)?',
-      answer:
-        'No. True hypertrophy stimulus requires sets taken close to muscular failure (0 to 3 RIR / RPE 7 to 10). Warm-up sets terminate far from failure (typically 4 to 8 RIR) and serve strictly for neural excitation and joint lubrication rather than mechanical tension.',
-    },
-    {
-      question: 'Why do the warm-up reps decrease as the weight increases?',
-      answer:
-        'This follows the inverse rep-ramp principle used by elite strength athletes and coaches (and codified in openGym). The early bar-only sets use higher reps (10 reps) to promote blood flow. Later sets at 80% to 90% load only use 1 to 2 reps so you groove the neural bar path without producing muscle-fatiguing lactic acid.',
-    },
-    {
-      question: 'How do I log these warm-up sets in the PPL Tracker?',
-      answer:
-        'In the PPL Workout Tracker, each set can be toggled with an optional warm-up tag, which keeps your working set volume calculations accurate while preserving your complete workout logs.',
-    },
-  ];
 
   return (
     <div className="w-full space-y-10">
@@ -422,8 +398,6 @@ export const WarmupCalculator: React.FC<WarmupCalculatorProps> = ({
           </div>
         </div>
       </div>
-
-      <FaqAccordion items={faqItems} title="Warm-Up Science & Ramping FAQ" />
     </div>
   );
 };

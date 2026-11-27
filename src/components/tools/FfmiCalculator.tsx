@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { calculateFfmiMetrics } from '@/utils/helpers';
 import { useAuth } from '@/context/AuthContext';
-import { AthleteSyncBanner, updateSharedToolMetrics } from './AthleteSyncBanner';
+import { AthleteSyncBanner, getSharedToolMetrics, updateSharedToolMetrics } from './AthleteSyncBanner';
 
 export default function FfmiCalculator() {
   const { user } = useAuth();
@@ -24,11 +24,14 @@ export default function FfmiCalculator() {
   // Body fat % input
   const [bodyFatInput, setBodyFatInput] = useState<string>('14');
 
-  // Auto-sync from logged-in user's profile when in "My Profile" mode
+  // Auto-sync from logged-in user's profile or shared Body Fat Calculator metrics when in "My Profile" mode
   useEffect(() => {
-    if (!user || isForOthers) return;
-    if (user.gender) setSex(user.gender);
-    if (user.bodyFatPct) setBodyFatInput(String(user.bodyFatPct));
+    if (isForOthers) return;
+    const shared = getSharedToolMetrics();
+    if (user?.gender) setSex(user.gender);
+    if (user?.bodyFatPct) setBodyFatInput(String(user.bodyFatPct));
+    else if (shared.bodyFatPct) setBodyFatInput(String(shared.bodyFatPct));
+    if (!user) return;
     if (user.preferredUnit === 'lbs') {
       setUnitSystem('imperial');
       if (user.height) {
@@ -234,8 +237,9 @@ export default function FfmiCalculator() {
         }}
         syncedFieldsSummary={`Auto-calculating FFMI & Lean Body Mass (${displayLeanMass} @ ${safeBodyFat.toFixed(1)}% BF) and feeding Katch-McArdle BMR into the TDEE Calculator.`}
         quickLinks={[
+          { label: 'Estimate BF% (US Navy Method)', href: '/tools/body-fat-calculator' },
           { label: 'TDEE & Macro Split (Katch-McArdle)', href: '/tools/tdee-calculator' },
-          { label: 'BMI Calculator', href: '/tools/bmi-calculator' },
+          { label: 'BMI Calculator for Lifters', href: '/tools/bmi-calculator' },
         ]}
       />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -503,7 +507,12 @@ export default function FfmiCalculator() {
             <p id="ffmi-bf-hint" className="text-[11px] text-[var(--text-muted)] mt-1.5">
               {sex === 'male'
                 ? 'Men: 8–12% (visible abs), 13–17% (athletic), 18–24% (off-season/average).'
-                : 'Women: 15–19% (defined athletic), 20–24% (fit), 25–31% (average).'}
+                : 'Women: 15–19% (defined athletic), 20–24% (fit), 25–31% (average).'}{' '}
+              Don&apos;t know yours?{' '}
+              <Link href="/tools/body-fat-calculator" className="text-[var(--accent-primary)] font-bold underline">
+                Measure with US Navy BF% Calculator
+              </Link>
+              .
             </p>
             {showBfError && (
               <p id="ffmi-bf-error" role="alert" className="text-xs text-[var(--accent-danger)] mt-1 font-medium">
@@ -562,7 +571,7 @@ export default function FfmiCalculator() {
               {displayFatMass}
             </p>
             <span className="inline-block text-[11px] font-semibold text-[var(--text-muted)] mt-1 tabular-nums">
-              {safeBodyFat.toFixed(1)}% Body Fat
+              {safeBodyFat.toFixed(1)}% BF • FMI {(ffmiMetrics.fatMassKg / Math.pow(safeHeightCm / 100, 2)).toFixed(1)}
             </span>
           </div>
         </div>

@@ -77,6 +77,59 @@ export const ToolsDirectoryList: React.FC<ToolsDirectoryListProps> = ({
 
   return (
     <div className="space-y-12">
+      {/* Quick Recommended Workflow Strip */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-4 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--accent-secondary)] block">
+              Body Composition Stack
+            </span>
+            <p className="text-xs text-[var(--text-secondary)]">
+              Screen BMI, estimate tape BF%, benchmark FFMI, and set TDEE macros.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[11px] font-mono font-bold">
+            <Link href="/tools/bmi-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              BMI
+            </Link>
+            <Link href="/tools/body-fat-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              US Navy BF%
+            </Link>
+            <Link href="/tools/ffmi-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              FFMI
+            </Link>
+            <Link href="/tools/tdee-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              TDEE
+            </Link>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--accent-primary)] block">
+              Strength &amp; Programming Stack
+            </span>
+            <p className="text-xs text-[var(--text-secondary)]">
+              Score DOTS/IPF GL, swap busy equipment, and calibrate 1RM/RPE loads.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-[11px] font-mono font-bold">
+            <Link href="/tools/strength-score-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              DOTS / IPF GL
+            </Link>
+            <Link href="/tools/one-rep-max-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              1RM
+            </Link>
+            <Link href="/tools/rpe-calculator" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              RPE / RIR
+            </Link>
+            <Link href="/tools/workout-substitution-finder" className="px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] hover:text-[var(--accent-primary)] transition-colors">
+              Exercise Swaps
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* Category Filter Tabs & Instant Search */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
         <div className="flex flex-wrap items-center gap-2">

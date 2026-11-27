@@ -25,7 +25,6 @@ import {
 } from '../../utils/strengthCalculators';
 import { playClickSound, playTabSound } from '../../utils/audio';
 import { AthleteSyncBanner } from './AthleteSyncBanner';
-import { FaqAccordion } from '../FaqAccordion';
 
 interface StrengthScoreCalculatorProps {
   soundEnabled?: boolean;
@@ -136,29 +135,6 @@ export const StrengthScoreCalculator: React.FC<StrengthScoreCalculatorProps> = (
       setDeadliftInput(unit === 'kg' ? '315' : '695');
     }
   };
-
-  const faqItems = [
-    {
-      question: 'What is the difference between DOTS, Wilks, and IPF GL Points?',
-      answer:
-        'All three formulas normalize strength across different body weights to identify the best pound-for-pound lifter. The Wilks formula (1994) was historically used by the International Powerlifting Federation (IPF) but favored very light and very heavy lifters. In 2019, Tim Konertz formulated DOTS, which eliminated these polynomial distortions and is now the gold standard in USAPL, WRPF, and open-source lifting engines like openGym. In 2020, the IPF introduced IPF GL points, an exponential curve calibrated for classic raw and equipped divisions.',
-    },
-    {
-      question: 'What DOTS score is considered strong for drug-free natural lifters?',
-      answer:
-        'A DOTS score of 300 represents a solid intermediate foundation. Reaching 375 to 400 points places a lifter in the advanced regional competitor tier (top 15%). Surpassing 450 DOTS represents elite national-level raw strength, and 500+ points represents world-class international competitor status.',
-    },
-    {
-      question: 'Can I enter my gym PRs or must they be competition-standard lifts?',
-      answer:
-        'You can enter gym PRs, estimated 1-rep maxes from working sets, or official competition totals. For accurate results, ensure squats break parallel (crease of the hip below the top of the knee), bench press incorporates a brief chest pause without butt lifting, and deadlifts reach full lockout without resting the bar on the thighs.',
-    },
-    {
-      question: 'How do I use this score to progress my training volume?',
-      answer:
-        'Track your strength score progression across training microcycles. When planning your weekly workout splits and sets, you can log your progressive overload with PPL Tracker to systematically increase barbell loads, track RPE, and ensure double progression milestones are met.',
-    },
-  ];
 
   return (
     <div className="w-full space-y-10">
@@ -628,9 +604,6 @@ export const StrengthScoreCalculator: React.FC<StrengthScoreCalculatorProps> = (
           </div>
         </div>
       </div>
-
-      {/* FAQ Accordion Section */}
-      <FaqAccordion items={faqItems} title="Strength Score & Powerlifting FAQ" />
     </div>
   );
 };

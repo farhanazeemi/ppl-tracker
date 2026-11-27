@@ -15,6 +15,9 @@ import {
   ShieldCheck,
   Sparkles,
   ChevronRight,
+  Calculator,
+  Layers,
+  Users,
 } from 'lucide-react';
 import { getAuthorBySlug, getAllAuthors, getPostsByAuthor } from '@/sanity/getPosts';
 import { getAuthorProfileSchema } from '@/lib/schema';
@@ -92,8 +95,121 @@ export default async function AuthorProfilePage({
     notFound();
   }
 
-  const posts = await getPostsByAuthor(author.slug);
+  const [posts, allAuthors] = await Promise.all([
+    getPostsByAuthor(author.slug),
+    getAllAuthors(),
+  ]);
   const authorSchema = getAuthorProfileSchema(author);
+
+  const clusterCounts = new Map<string, number>();
+  posts.forEach((p) => {
+    if (p.splitCategory && p.splitCategory !== 'General') {
+      clusterCounts.set(p.splitCategory, (clusterCounts.get(p.splitCategory) || 0) + 1);
+    }
+  });
+  const topClusters = Array.from(clusterCounts.entries()).sort((a, b) => b[1] - a[1]);
+
+  const peerAuthors = allAuthors.filter((a) => a.slug !== author.slug);
+
+  const authorToolLinks: Record<string, Array<{ href: string; label: string; desc: string }>> = {
+    'elena-rostova': [
+      {
+        href: '/tools/body-fat-calculator',
+        label: 'US Navy Body Fat Calculator',
+        desc: 'Estimate body fat percentage, fat mass, and lean body mass for men and women.',
+      },
+      {
+        href: '/tools/ffmi-calculator',
+        label: 'FFMI Calculator (Male & Female)',
+        desc: 'Benchmark fat-free mass index and natural muscular development potential.',
+      },
+      {
+        href: '/tools/bmi-calculator',
+        label: 'BMI & Body Comp Calculator',
+        desc: 'Evaluate body mass index with athletic muscle-mass caveats.',
+      },
+      {
+        href: '/tools/strength-score-calculator',
+        label: 'DOTS & IPF GL Strength Score',
+        desc: 'Compare Squat, Bench, and Deadlift totals across weight classes.',
+      },
+      {
+        href: '/tools/one-rep-max-calculator',
+        label: '1RM & Training % Calculator',
+        desc: 'Calculate working percentages for DUP and linear squat progressions.',
+      },
+      {
+        href: '/tools/ppl-tracker',
+        label: 'PPL Workout Tracker',
+        desc: 'Log sets, reps, and progressive overload across periodized splits.',
+      },
+    ],
+    'liam-sterling': [
+      {
+        href: '/tools/ffmi-calculator',
+        label: 'FFMI Calculator for Men & Women',
+        desc: 'Track raw and normalized FFMI against natural physique ceilings.',
+      },
+      {
+        href: '/tools/body-fat-calculator',
+        label: 'US Navy Body Fat Calculator',
+        desc: 'Measure circumference body fat percentage during cuts and recomps.',
+      },
+      {
+        href: '/tools/tdee-calculator',
+        label: 'TDEE & Macro Split Calculator',
+        desc: 'Set daily calorie targets and 1.6–2.2g/kg protein macros.',
+      },
+      {
+        href: '/tools/rpe-calculator',
+        label: 'RPE / RIR Load Estimator',
+        desc: 'Autoregulate hypertrophy sets by daily readiness and proximity to failure.',
+      },
+      {
+        href: '/tools/workout-substitution-finder',
+        label: 'Workout Substitution Finder',
+        desc: 'Swap exercises by biomechanical resistance profile and equipment.',
+      },
+      {
+        href: '/tools/ppl-tracker',
+        label: 'PPL Workout Tracker',
+        desc: 'Automate double progression and weekly set volume tracking.',
+      },
+    ],
+  };
+
+  const recommendedTools = authorToolLinks[author.slug] || [
+    {
+      href: '/tools/body-fat-calculator',
+      label: 'US Navy Body Fat Calculator',
+      desc: 'Validate body recomposition changes beyond scale weight.',
+    },
+    {
+      href: '/tools/ffmi-calculator',
+      label: 'FFMI Calculator',
+      desc: 'Assess fat-free mass index and lean muscle gain trajectories.',
+    },
+    {
+      href: '/tools/tdee-calculator',
+      label: 'TDEE & Macro Split Calculator',
+      desc: 'Calibrate energy expenditure and ISSN protein targets.',
+    },
+    {
+      href: '/tools/rpe-calculator',
+      label: 'RPE / RIR Load Estimator',
+      desc: 'Convert submaximal effort ratings into autoregulated working loads.',
+    },
+    {
+      href: '/tools/workout-substitution-finder',
+      label: 'Workout Substitution Finder',
+      desc: 'Match biomechanically equivalent hypertrophy movements.',
+    },
+    {
+      href: '/tools/ppl-tracker',
+      label: 'PPL Workout Tracker',
+      desc: 'Execute progressive overload splits with rest timers and plate math.',
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
@@ -293,14 +409,63 @@ export default async function AuthorProfilePage({
           )}
         </section>
 
+        {/* Research Clusters & Recommended Calculators */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-5 p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] space-y-4">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-[var(--accent-primary)]">
+              <Layers className="w-4 h-4" /> Research Pillars
+            </div>
+            <h2 className="text-lg font-display font-bold uppercase tracking-tight text-[var(--text-primary)]">
+              Focus Areas &amp; Topic Clusters
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {topClusters.map(([cat, count]) => (
+                <Link
+                  key={cat}
+                  href={`/blog?category=${encodeURIComponent(cat)}`}
+                  className="px-3 py-1.5 rounded-xl bg-[var(--bg-elevated)] hover:border-[var(--accent-primary)]/40 border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  {cat} <span className="text-[var(--text-muted)]">({count})</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] space-y-4">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-[var(--accent-primary)]">
+              <Calculator className="w-4 h-4" /> Applied Science Utilities
+            </div>
+            <h2 className="text-lg font-display font-bold uppercase tracking-tight text-[var(--text-primary)]">
+              Recommended Calculators &amp; Trackers
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {recommendedTools.map((tool) => (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className="p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/40 transition-all group space-y-1"
+                >
+                  <div className="text-xs font-mono font-bold text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors flex items-center justify-between gap-2">
+                    <span>{tool.label}</span>
+                    <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-[var(--text-muted)] leading-snug">
+                    {tool.desc}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Internal Link to Workout Tracker */}
         <section className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--accent-primary)]/30 text-[var(--text-primary)] space-y-3 card-bento">
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--accent-primary)] uppercase">
             <Dumbbell className="w-4 h-4" /> Practical Hypertrophy Implementation
           </div>
-          <h3 className="text-xl font-display font-bold uppercase tracking-tight">
+          <h2 className="text-xl font-display font-bold uppercase tracking-tight">
             Put This Research to Work in the Gym
-          </h3>
+          </h2>
           <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed max-w-2xl">
             All progressive overload ceilings and biomechanics cues published by our research team are pre-programmed into the free{' '}
             <Link href="/tools/ppl-tracker" className="text-[var(--accent-primary)] underline font-semibold">
@@ -308,6 +473,35 @@ export default async function AuthorProfilePage({
             </Link>.
           </p>
         </section>
+
+        {/* Editorial Peer Review Board Cross-Links */}
+        {peerAuthors.length > 0 && (
+          <section className="p-6 rounded-3xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-[var(--accent-primary)]">
+                <Users className="w-4 h-4" /> Editorial Peer Review Team
+              </div>
+              <p className="text-xs text-[var(--text-secondary)]">
+                Explore research from our full{' '}
+                <Link href="/author" className="text-[var(--accent-primary)] underline font-semibold">
+                  Authors &amp; Editorial Board
+                </Link>
+                .
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {peerAuthors.map((peer) => (
+                <Link
+                  key={peer.slug}
+                  href={`/author/${peer.slug}`}
+                  className="px-3.5 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/40 text-xs font-mono font-bold text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  {peer.name} →
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />

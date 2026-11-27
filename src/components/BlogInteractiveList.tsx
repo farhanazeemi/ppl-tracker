@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import {
   Search,
   Clock,
@@ -13,7 +12,6 @@ import {
   ChevronRight,
   Sparkles,
   X,
-  Tag,
 } from 'lucide-react';
 import { BlogPost, formatPostDate } from '../data/mockBlogPosts';
 import { playClickSound, playTabSound } from '../utils/audio';
@@ -22,18 +20,22 @@ interface BlogInteractiveListProps {
   initialPosts: BlogPost[];
 }
 
-function BlogInteractiveListInner({ initialPosts }: BlogInteractiveListProps) {
-  const searchParams = useSearchParams();
-  const categoryParam = searchParams?.get('category') || searchParams?.get('tag');
-
+export function BlogInteractiveList({ initialPosts }: BlogInteractiveListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Read category/tag query params client-side on mount so SSR renders all article and author links without Suspense bailout
   useEffect(() => {
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-    }
-  }, [categoryParam]);
+    const syncCategoryFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const categoryParam = params.get('category') || params.get('tag');
+      setSelectedCategory(categoryParam || 'All');
+    };
+
+    syncCategoryFromUrl();
+    window.addEventListener('popstate', syncCategoryFromUrl);
+    return () => window.removeEventListener('popstate', syncCategoryFromUrl);
+  }, []);
 
   const categories = useMemo(() => {
     const catMap = new Map<string, number>();
@@ -437,19 +439,5 @@ function BlogInteractiveListInner({ initialPosts }: BlogInteractiveListProps) {
         )}
       </section>
     </div>
-  );
-}
-
-export function BlogInteractiveList(props: BlogInteractiveListProps) {
-  return (
-    <Suspense
-      fallback={
-        <div className="p-12 text-center text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-card)] rounded-3xl border border-[var(--border-subtle)]">
-          Loading scientific articles...
-        </div>
-      }
-    >
-      <BlogInteractiveListInner {...props} />
-    </Suspense>
   );
 }

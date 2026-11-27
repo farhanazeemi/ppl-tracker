@@ -1,17 +1,12 @@
 'use client';
 
-import React, { useState, useId } from 'react';
+import React, { useState, useId, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Scale,
   Activity,
-  Flame,
   ArrowRight,
   RotateCcw,
-  Sparkles,
-  Info,
-  ShieldCheck,
-  Award,
 } from 'lucide-react';
 import {
   calculateNavyBodyFat,
@@ -21,8 +16,8 @@ import {
   LB_TO_KG,
 } from '../../utils/strengthCalculators';
 import { playClickSound, playTabSound } from '../../utils/audio';
-import { AthleteSyncBanner } from './AthleteSyncBanner';
-import { FaqAccordion } from '../FaqAccordion';
+import { useAuth } from '../../context/AuthContext';
+import { AthleteSyncBanner, updateSharedToolMetrics } from './AthleteSyncBanner';
 
 interface BodyFatCalculatorProps {
   soundEnabled?: boolean;
@@ -31,6 +26,7 @@ interface BodyFatCalculatorProps {
 export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
   soundEnabled = true,
 }) => {
+  const { user } = useAuth();
   const [isForOthers, setIsForOthers] = useState<boolean>(false);
   const [sex, setSex] = useState<'male' | 'female'>('male');
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
@@ -55,6 +51,33 @@ export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
   const hipId = useId();
   const weightId = useId();
 
+  // Auto-sync user profile biometrics when in "My Profile" mode
+  useEffect(() => {
+    if (!user || isForOthers) return;
+    if (user.gender) setSex(user.gender);
+    if (user.preferredUnit === 'lbs') {
+      setUnit('imperial');
+      if (user.height) {
+        setHeightInInput((user.height / CM_PER_IN).toFixed(1));
+        setHeightCmInput(String(user.height));
+      }
+      if (user.weight) {
+        setWeightLbInput(String(user.weight));
+        setWeightKgInput((user.weight * LB_TO_KG).toFixed(1));
+      }
+    } else {
+      setUnit('metric');
+      if (user.height) {
+        setHeightCmInput(String(user.height));
+        setHeightInInput((user.height / CM_PER_IN).toFixed(1));
+      }
+      if (user.weight) {
+        setWeightKgInput(String(user.weight));
+        setWeightLbInput((user.weight * KG_TO_LB).toFixed(1));
+      }
+    }
+  }, [user, isForOthers]);
+
   // Normalized values in CM and KG
   const heightCm = unit === 'metric' ? parseFloat(heightCmInput) || 0 : (parseFloat(heightInInput) || 0) * CM_PER_IN;
   const neckCm = unit === 'metric' ? parseFloat(neckCmInput) || 0 : (parseFloat(neckInInput) || 0) * CM_PER_IN;
@@ -76,6 +99,16 @@ export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
   // Mass breakdowns
   const fatMassKg = bfPct !== null && weightKg > 0 ? (weightKg * bfPct) / 100 : null;
   const leanMassKg = bfPct !== null && weightKg > 0 && fatMassKg !== null ? weightKg - fatMassKg : null;
+
+  // Broadcast calculated body fat % and lean body mass to FFMI & TDEE calculators
+  useEffect(() => {
+    if (!isForOthers && bfPct !== null) {
+      updateSharedToolMetrics({
+        bodyFatPct: bfPct,
+        ...(leanMassKg !== null ? { leanBodyMassKg: Math.round(leanMassKg * 10) / 10 } : {}),
+      });
+    }
+  }, [bfPct, leanMassKg, isForOthers]);
 
   const displayWeightUnit = unit === 'metric' ? 'kg' : 'lbs';
   const displayFatMass = fatMassKg !== null ? (unit === 'metric' ? fatMassKg.toFixed(1) : (fatMassKg * KG_TO_LB).toFixed(1)) : '–';
@@ -100,29 +133,6 @@ export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
     setUnit(newUnit);
   };
 
-  const faqItems = [
-    {
-      question: 'How accurate is the US Navy Body Fat equation compared to DEXA?',
-      answer:
-        'The US Navy circumference equation (Hodgdon & Beckett, 1984) correlates within 3–4% of dual-energy X-ray absorptiometry (DEXA) scans. Unlike standard BMI, which penalizes muscular athletes by counting muscle as fat, the Navy method accounts for waist circumference relative to neck and height, isolating visceral and subcutaneous adiposity accurately.',
-    },
-    {
-      question: 'How should I measure my neck, waist, and hips for accurate results?',
-      answer:
-        'Measure in the morning before eating. Measure neck circumference just below the larynx (Adam’s apple) keeping shoulders relaxed. Measure waist horizontally at the narrowest point or at the navel level (do not suck in your stomach). Females should measure hips at the widest point around the buttocks.',
-    },
-    {
-      question: 'What is the optimal body fat percentage for muscle hypertrophy?',
-      answer:
-        'For males, 10% to 15% body fat provides optimal insulin sensitivity, testosterone production, and nutrient partitioning. For females, 18% to 23% is optimal. Pushing below 8% (males) or 14% (females) suppresses natural hormone production and impairs strength progression.',
-    },
-    {
-      question: 'How do I maintain my lean mass while cutting down body fat?',
-      answer:
-        'Maintain resistance training intensity (log your progressive overload with PPL Tracker), consume 1.8 to 2.2g of protein per kilogram of body weight, and maintain a moderate 300 to 500 kcal deficit rather than crash dieting.',
-    },
-  ];
-
   return (
     <div className="w-full space-y-10">
       <AthleteSyncBanner
@@ -132,13 +142,15 @@ export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
         profilePayloadToSave={{
           gender: sex,
           height: Math.round(heightCm * 10) / 10,
-          weight: Math.round(weightKg * 10) / 10,
+          weight: unit === 'metric' ? Math.round(weightKg * 10) / 10 : Math.round(weightKg * KG_TO_LB * 10) / 10,
+          ...(bfPct !== null ? { bodyFatPct: bfPct } : {}),
+          preferredUnit: unit === 'metric' ? 'kg' : 'lbs',
         }}
-        syncedFieldsSummary={`Calculated ${bfPct !== null ? `${bfPct.toFixed(1)}% body fat` : 'body composition metrics'} via the clinical US Navy circumference method.`}
+        syncedFieldsSummary={`Calculated ${bfPct !== null ? `${bfPct.toFixed(1)}% body fat` : 'body composition metrics'} via the US Navy circumference method and synced to FFMI & TDEE calculators.`}
         quickLinks={[
           { label: 'FFMI Muscular Potential', href: '/tools/ffmi-calculator' },
           { label: 'Daily Energy & TDEE', href: '/tools/tdee-calculator' },
-          { label: 'BMI Calculator', href: '/tools/bmi-calculator' },
+          { label: 'BMI Calculator for Lifters', href: '/tools/bmi-calculator' },
         ]}
       />
 
@@ -450,14 +462,18 @@ export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
                 </div>
               )}
 
-              {/* Action Banner to PPL Tracker */}
+              {/* Action Banner to PPL Tracker & FFMI */}
               <div className="p-4 rounded-xl bg-[var(--surface-sunken)] border border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="space-y-1 text-center sm:text-left">
                   <span className="text-xs font-mono font-bold text-[var(--text-primary)] block">
                     Preserve lean muscle while dropping fat
                   </span>
                   <p className="text-xs text-[var(--text-muted)]">
-                    Use our resistance training tracker to log double progression, sets, and reps during your cut.
+                    Use our resistance training tracker to log double progression, sets, and reps, or{' '}
+                    <Link href="/tools/ffmi-calculator" className="text-[var(--accent-primary)] font-bold underline">
+                      calculate your FFMI
+                    </Link>
+                    .
                   </p>
                 </div>
                 <Link
@@ -472,8 +488,6 @@ export const BodyFatCalculator: React.FC<BodyFatCalculatorProps> = ({
           </div>
         </div>
       </div>
-
-      <FaqAccordion items={faqItems} title="US Navy Body Fat Method FAQ" />
     </div>
   );
 };

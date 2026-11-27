@@ -49,16 +49,16 @@ export const FITNESS_TOOLS: FitnessTool[] = [
   },
   {
     id: 'bmi-calculator',
-    name: 'BMI Calculator',
+    name: 'BMI Calculator for Lifters',
     slug: 'bmi-calculator',
     href: '/tools/bmi-calculator',
     badge: 'Body Composition',
     category: 'Health & Body Composition',
     categorySlug: 'calculators',
     shortDescription:
-      'Body Mass Index screening tool supporting Metric (cm/kg) and Imperial (ft/in/lb) units with visual gauge.',
+      'Body Mass Index screening tool with Metric/Imperial units and lean muscle vs. body fat caveats for lifters.',
     fullDescription:
-      'Calculate Body Mass Index instantly with dual-unit support, interactive visual categorization gauge, healthy weight range target estimates, and dedicated clinical caveats for muscular athletes.',
+      'Calculate Body Mass Index instantly with dual-unit support, interactive WHO categorization gauge, healthy weight range estimates, and athlete comparisons against US Navy Body Fat % and FFMI.',
     iconName: 'Scale',
     features: [
       'Dual unit modes: Metric (cm / kg) and Imperial (ft + in / lbs)',
@@ -228,16 +228,16 @@ export const FITNESS_TOOLS: FitnessTool[] = [
   },
   {
     id: 'ffmi-calculator',
-    name: 'FFMI & Body Comp Estimator',
+    name: 'FFMI Calculator (Male & Female)',
     slug: 'ffmi-calculator',
     href: '/tools/ffmi-calculator',
     badge: 'Muscular Potential',
     category: 'Health & Body Composition',
     categorySlug: 'health',
     shortDescription:
-      'Calculate Fat-Free Mass Index (FFMI), normalized lean mass, and natural genetic muscular potential benchmarks.',
+      'Calculate Raw & Normalized FFMI, Fat-Free Mass (FFM), FMI, and male/female natural muscular potential tiers.',
     fullDescription:
-      'Unlike standard BMI, Fat-Free Mass Index (FFMI) isolates skeletal muscle and lean tissue from adipose fat. Calculate your raw FFMI, height-normalized FFMI, total lean body mass, and natural genetic potential projections at 10%, 12%, and 15% body fat.',
+      'Unlike standard BMI, Fat-Free Mass Index (FFMI) isolates skeletal muscle and lean tissue from adipose fat. Calculate raw FFMI, 1.80m height-normalized FFMI, Fat Mass Index (FMI), and natural potential projections.',
     iconName: 'Scale',
     features: [
       'Computes Total Lean Body Mass (LBM), Fat Mass, Raw FFMI, and Height-Normalized FFMI (Kouri et al., 1995)',
@@ -257,16 +257,16 @@ export const FITNESS_TOOLS: FitnessTool[] = [
   },
   {
     id: 'strength-score-calculator',
-    name: 'Powerlifting Strength Score Calculator',
+    name: 'DOTS & IPF GL Strength Calculator',
     slug: 'strength-score-calculator',
     href: '/tools/strength-score-calculator',
     badge: 'DOTS / Wilks Standard',
     category: 'Strength & Overload',
     categorySlug: 'calculators',
     shortDescription:
-      'Compare pound-for-pound strength across bodyweights using official DOTS, Wilks, and IPF GL powerlifting formulas.',
+      'Compare pound-for-pound powerlifting strength across bodyweights using official DOTS, IPF GL, and Wilks formulas.',
     fullDescription:
-      'Evaluate your 3-lift total (Squat, Bench Press, and Deadlift) against official powerlifting federation standards. Computes Tim Konertz DOTS (USAPL standard), classic Robert Wilks (1994), and IPF GoodLift points with strength classification tiers.',
+      'Evaluate your 3-lift total (Squat, Bench Press, and Deadlift) against official powerlifting federation standards. Computes Tim Konertz DOTS (USAPL standard), IPF GoodLift points, and classic Wilks with classification tiers.',
     iconName: 'Dumbbell',
     features: [
       'Computes DOTS points (Tim Konertz 2019 fourth-degree polynomial USAPL standard)',
@@ -317,7 +317,7 @@ export const FITNESS_TOOLS: FitnessTool[] = [
   },
   {
     id: 'workout-importer',
-    name: 'Workout CSV / History Importer',
+    name: 'Workout CSV Importer (Strong, Hevy, FitNotes)',
     slug: 'workout-importer',
     href: '/tools/workout-importer',
     badge: 'Data Migration',

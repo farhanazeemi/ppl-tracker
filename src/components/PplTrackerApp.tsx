@@ -77,8 +77,10 @@ import {
 
 export function PplTrackerApp({
   initialView = 'app',
+  children,
 }: {
   initialView?: 'app' | 'landing';
+  children?: React.ReactNode;
 } = {}) {
   const { user, isAuthenticated, isLoading, isPasswordRecovery, refreshProfile } = useAuth();
 
@@ -783,9 +785,9 @@ export function PplTrackerApp({
                 <div className="mt-3 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-4 shadow-xs">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" />
-                    <h4 className="text-xs font-display font-bold uppercase tracking-wider text-[var(--text-primary)]">
+                    <h2 className="text-xs font-display font-bold uppercase tracking-wider text-[var(--text-primary)]">
                       {activeDayObject.title} Focus
-                    </h4>
+                    </h2>
                   </div>
                   <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                     {activeDayObject.subtitle}
@@ -933,6 +935,8 @@ export function PplTrackerApp({
                 Reset Current Sets
               </button>
             </div>
+
+            {children}
           </main>
         </div>
       )}

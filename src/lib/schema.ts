@@ -477,6 +477,12 @@ export function getAuthorsIndexSchema(authorCount: number) {
   };
 }
 
+export interface ToolReviewer {
+  name: string;
+  slug: string;
+  jobTitle?: string;
+}
+
 /**
  * Tools Directory CollectionPage Schema with BreadcrumbList.
  */
@@ -489,9 +495,9 @@ export function getToolsIndexSchema(tools: Array<{ name: string; href: string; s
         '@type': 'CollectionPage',
         '@id': `${pageUrl}#collection`,
         url: pageUrl,
-        name: 'Free Fitness Tools & Biomechanics Calculators',
+        name: 'Free Fitness & Strength Calculators Hub',
         description:
-          'A collection of free, evidence-based workout tracking applications, body composition calculators, and exercise substitution engines.',
+          'A collection of free, evidence-based workout tracking applications, US Navy body fat & FFMI calculators, strength scorers, and exercise substitution engines.',
         isPartOf: {
           '@id': `${BASE_URL}/#website`,
         },
@@ -500,9 +506,17 @@ export function getToolsIndexSchema(tools: Array<{ name: string; href: string; s
         },
         hasPart: tools.map((tool) => ({
           '@type': 'WebApplication',
+          additionalType: 'https://schema.org/SoftwareApplication',
           name: tool.name,
           url: `${BASE_URL}${tool.href}`,
           description: tool.shortDescription,
+          applicationCategory: 'HealthApplication',
+          operatingSystem: 'All',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+          },
         })),
       },
       getBreadcrumbSchema(
@@ -521,7 +535,7 @@ export function getToolsIndexSchema(tools: Array<{ name: string; href: string; s
  */
 export function getPplTrackerToolSchema() {
   const pageUrl = `${BASE_URL}/tools/ppl-tracker`;
-  const webApp = getWebApplicationSchema();
+  const { '@context': _ignoredContext, ...webAppProps } = getWebApplicationSchema();
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -529,7 +543,7 @@ export function getPplTrackerToolSchema() {
         '@type': 'WebPage',
         '@id': `${pageUrl}#webpage`,
         url: pageUrl,
-        name: 'PPL Workout Tracker & Overload Engine',
+        name: 'Free PPL Workout Tracker — Log Sets & Overload | PPL Tracker',
         description:
           'Free 6-day Push-Pull-Legs workout app with automated rest timers, Olympic plate math, double progression ceilings, and local-first cloud synchronization.',
         isPartOf: {
@@ -537,6 +551,19 @@ export function getPplTrackerToolSchema() {
         },
         publisher: {
           '@id': `${BASE_URL}/#organization`,
+        },
+        breadcrumb: {
+          '@id': `${pageUrl}#breadcrumb`,
+        },
+        mainEntity: {
+          '@id': `${pageUrl}#webapp`,
+        },
+        reviewedBy: {
+          '@type': 'Person',
+          '@id': `${BASE_URL}/author/dr-marcus-vance#author`,
+          name: 'Dr. Marcus Vance, Ph.D.',
+          url: `${BASE_URL}/author/dr-marcus-vance`,
+          jobTitle: 'Lead Biomechanics Researcher & Exercise Physiologist',
         },
       },
       getBreadcrumbSchema(
@@ -548,10 +575,11 @@ export function getPplTrackerToolSchema() {
         `${pageUrl}#breadcrumb`
       ),
       {
-        ...webApp,
-        '@context': undefined,
+        ...webAppProps,
+        additionalType: 'https://schema.org/SoftwareApplication',
         '@id': `${pageUrl}#webapp`,
         url: pageUrl,
+        isAccessibleForFree: true,
       },
     ],
   };
@@ -560,72 +588,45 @@ export function getPplTrackerToolSchema() {
 /**
  * BMI Calculator Page Schema with WebPage, BreadcrumbList, WebApplication, and FAQPage.
  */
-export function getBmiCalculatorPageSchema(faqItems?: FaqSchemaItem[]) {
-  const pageUrl = `${BASE_URL}/tools/bmi-calculator`;
-  const graphEntities: any[] = [
-    {
-      '@type': 'WebPage',
-      '@id': `${pageUrl}#webpage`,
-      url: pageUrl,
-      name: 'Free BMI Calculator (Metric & Imperial) | PPL Tracker',
-      description:
-        'Instant Body Mass Index calculator with dual metric and imperial unit conversion, visual spectrum gauge, and resistance athlete context.',
-      isPartOf: {
-        '@id': `${BASE_URL}/#website`,
-      },
-      publisher: {
-        '@id': `${BASE_URL}/#organization`,
-      },
-    },
-    getBreadcrumbSchema(
-      [
-        { name: 'Home', url: '/' },
-        { name: 'Tools', url: '/tools' },
-        { name: 'BMI Calculator', url: '/tools/bmi-calculator' },
-      ],
-      `${pageUrl}#breadcrumb`
-    ),
-    {
-      '@type': 'WebApplication',
-      '@id': `${pageUrl}#webapp`,
-      name: 'PPL Tracker BMI Calculator',
-      applicationCategory: 'HealthApplication',
-      operatingSystem: 'All',
-      url: pageUrl,
-      image: `${BASE_URL}/icon-512.png`,
-      screenshot: `${BASE_URL}/og-image.png`,
-      description:
-        'Instant Body Mass Index calculator with dual metric and imperial unit conversion, visual spectrum gauge, and resistance athlete context.',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-      },
-    },
-  ];
-
-  if (faqItems && faqItems.length > 0) {
-    const faqEntity = getFaqPageSchema(faqItems, pageUrl);
-    if (faqEntity) {
-      graphEntities.push(faqEntity);
-    }
+export function getBmiCalculatorPageSchema(
+  faqItems?: FaqSchemaItem[],
+  reviewedBy: ToolReviewer = {
+    name: 'Dr. Marcus Vance, Ph.D.',
+    slug: 'dr-marcus-vance',
+    jobTitle: 'Lead Biomechanics Researcher & Exercise Physiologist',
   }
-
-  return {
-    '@context': 'https://schema.org',
-    '@graph': graphEntities,
-  };
+) {
+  return getCalculatorToolPageSchema({
+    name: 'BMI Calculator for Lifters',
+    pageName: 'BMI Calculator for Lifters — Fat vs Lean Mass | PPL Tracker',
+    breadcrumbName: 'BMI Calculator',
+    slug: 'bmi-calculator',
+    description:
+      'Instant Body Mass Index calculator with dual metric and imperial unit conversion, WHO categories, and lean muscle mass context vs US Navy BF% and FFMI.',
+    faqItems,
+    featureList: [
+      'Dual Metric (cm/kg) and Imperial (ft/in/lbs) BMI calculation',
+      'WHO category breakdown and healthy weight target range',
+      'Lean mass vs fat mass context comparing BMI against US Navy Body Fat % and FFMI',
+    ],
+    reviewedBy,
+  });
 }
 
 /**
  * Generic Interactive Fitness Calculator / Utility Page Schema
- * Emits WebPage, BreadcrumbList, WebApplication, and FAQPage.
+ * Emits WebPage, BreadcrumbList, WebApplication (SoftwareApplication), and FAQPage.
  */
 export function getCalculatorToolPageSchema(params: {
   name: string;
+  pageName?: string;
+  breadcrumbName?: string;
   slug: string;
   description: string;
   faqItems?: FaqSchemaItem[];
+  featureList?: string[];
+  applicationCategory?: string;
+  reviewedBy?: ToolReviewer;
 }) {
   const pageUrl = `${BASE_URL}/tools/${params.slug}`;
   const graphEntities: any[] = [
@@ -633,7 +634,7 @@ export function getCalculatorToolPageSchema(params: {
       '@type': 'WebPage',
       '@id': `${pageUrl}#webpage`,
       url: pageUrl,
-      name: `${params.name} | PPL Tracker`,
+      name: params.pageName || `${params.name} | PPL Tracker`,
       description: params.description,
       isPartOf: {
         '@id': `${BASE_URL}/#website`,
@@ -641,29 +642,59 @@ export function getCalculatorToolPageSchema(params: {
       publisher: {
         '@id': `${BASE_URL}/#organization`,
       },
+      breadcrumb: {
+        '@id': `${pageUrl}#breadcrumb`,
+      },
+      mainEntity: {
+        '@id': `${pageUrl}#webapp`,
+      },
+      ...(params.reviewedBy
+        ? {
+            reviewedBy: {
+              '@type': 'Person',
+              '@id': `${BASE_URL}/author/${params.reviewedBy.slug}#author`,
+              name: params.reviewedBy.name,
+              url: `${BASE_URL}/author/${params.reviewedBy.slug}`,
+              ...(params.reviewedBy.jobTitle ? { jobTitle: params.reviewedBy.jobTitle } : {}),
+            },
+          }
+        : {}),
     },
     getBreadcrumbSchema(
       [
         { name: 'Home', url: '/' },
         { name: 'Tools', url: '/tools' },
-        { name: params.name, url: `/tools/${params.slug}` },
+        { name: params.breadcrumbName || params.name, url: `/tools/${params.slug}` },
       ],
       `${pageUrl}#breadcrumb`
     ),
     {
       '@type': 'WebApplication',
+      additionalType: 'https://schema.org/SoftwareApplication',
       '@id': `${pageUrl}#webapp`,
       name: `PPL Tracker ${params.name}`,
-      applicationCategory: 'HealthApplication',
+      applicationCategory: params.applicationCategory || 'HealthApplication',
       operatingSystem: 'All',
+      browserRequirements: 'Requires JavaScript. Requires HTML5.',
+      isAccessibleForFree: true,
       url: pageUrl,
       image: `${BASE_URL}/icon-512.png`,
       screenshot: `${BASE_URL}/og-image.png`,
       description: params.description,
+      author: {
+        '@id': `${BASE_URL}/#organization`,
+      },
+      publisher: {
+        '@id': `${BASE_URL}/#organization`,
+      },
+      ...(params.featureList && params.featureList.length > 0
+        ? { featureList: params.featureList }
+        : {}),
       offers: {
         '@type': 'Offer',
         price: '0',
         priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
       },
     },
   ];
@@ -671,7 +702,12 @@ export function getCalculatorToolPageSchema(params: {
   if (params.faqItems && params.faqItems.length > 0) {
     const faqEntity = getFaqPageSchema(params.faqItems, pageUrl);
     if (faqEntity) {
-      graphEntities.push(faqEntity);
+      graphEntities.push({
+        ...faqEntity,
+        isPartOf: {
+          '@id': `${pageUrl}#webpage`,
+        },
+      });
     }
   }
 

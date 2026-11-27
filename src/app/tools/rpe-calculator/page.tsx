@@ -5,30 +5,31 @@ import { ChevronRight, Timer } from 'lucide-react';
 import { Navbar } from '../../../components/Navbar';
 import { Footer } from '../../../components/Footer';
 import { RpeCalculator } from '../../../components/tools/RpeCalculator';
+import { ToolCrossLinksSection } from '../../../components/tools/ToolCrossLinksSection';
 import { FaqAccordion, FaqItem } from '../../../components/FaqAccordion';
 import { getCalculatorToolPageSchema } from '../../../lib/schema';
 
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'RPE & RIR Calculator (Autoregulation Working Weight Estimator)',
+  title: 'RPE & RIR Calculator — %1RM Autoregulation',
   description:
-    'Convert Rate of Perceived Exertion (RPE 6.5–10) and Reps in Reserve (0–3.5 RIR) into recommended working weights and progressive overload targets.',
+    'Convert Rate of Perceived Exertion (RPE 6.5–10) and Reps in Reserve (0–3.5 RIR) into exact working weights, %1RM targets, and overload goals.',
   alternates: {
     canonical: '/tools/rpe-calculator',
   },
   openGraph: {
-    title: 'RPE / RIR Load Estimator & Chart | PPL Tracker',
+    title: 'RPE & RIR Calculator — %1RM Autoregulation | PPL Tracker',
     description:
-      'Convert Rate of Perceived Exertion and Reps in Reserve into recommended working weights for progressive overload.',
+      'Convert Rate of Perceived Exertion and Reps in Reserve into recommended working weights and %1RM targets for progressive overload.',
     url: `${baseUrl}/tools/rpe-calculator`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'PPL Tracker RPE Calculator' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'PPL Tracker RPE & RIR Calculator' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'RPE / RIR Load Estimator & Chart | PPL Tracker',
+    title: 'RPE & RIR Calculator — %1RM Autoregulation | PPL Tracker',
     description:
       'Convert RPE and Reps in Reserve (RIR) into exact working weights and 1RM percentages.',
     images: ['/og-image.png'],
@@ -56,10 +57,22 @@ const RPE_FAQS: FaqItem[] = [
 export default function RpeCalculatorPage() {
   const schema = getCalculatorToolPageSchema({
     name: 'RPE / RIR Load Estimator',
+    pageName: 'RPE & RIR Calculator — %1RM Autoregulation | PPL Tracker',
+    breadcrumbName: 'RPE / RIR Calculator',
     slug: 'rpe-calculator',
     description:
-      'Convert Rate of Perceived Exertion (RPE) and Reps in Reserve (RIR) into recommended working weights for progressive overload.',
+      'Convert Rate of Perceived Exertion (RPE) and Reps in Reserve (RIR) into recommended working weights and %1RM targets for progressive overload.',
     faqItems: RPE_FAQS,
+    featureList: [
+      'RPE 6.5–10.0 to RIR 0–3.5 working load conversion',
+      'Daily readiness e1RM estimation and +2.5% next-session overload target',
+      '1–12 rep RPE-to-%1RM matrix synced with 1RM & Barbell Plate Calculators',
+    ],
+    reviewedBy: {
+      name: 'Liam Sterling',
+      slug: 'liam-sterling',
+      jobTitle: 'Natural Bodybuilding Coach & Hypertrophy Specialist',
+    },
   });
 
   return (
@@ -81,10 +94,10 @@ export default function RpeCalculatorPage() {
 
         <header className="space-y-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-bold uppercase tracking-wider">
-            <Timer className="w-3.5 h-3.5" aria-hidden="true" /> Autoregulation & Proximity to Failure
+            <Timer className="w-3.5 h-3.5" aria-hidden="true" /> Autoregulation &amp; Proximity to Failure
           </div>
           <h1 className="text-3xl sm:text-5xl font-display font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
-            RPE / RIR Working Load Estimator
+            RPE &amp; RIR Working Load Calculator
           </h1>
           <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed">
             <strong>Direct Answer:</strong> In resistance training, <code>RIR = 10 − RPE</code>. Each Rep in Reserve (RIR) reduces working load by approximately <strong>2.5% to 3.2% of your 1RM</strong>. For optimal hypertrophy-to-fatigue ratio on compound lifts, target <strong>RPE 8.0 to 9.0 (1 to 2 RIR)</strong>.
@@ -92,6 +105,152 @@ export default function RpeCalculatorPage() {
         </header>
 
         <RpeCalculator />
+
+        {/* SSR Zourdos / Helms RPE-to-RIR %1RM Reference Table */}
+        <section className="space-y-6 pt-8 border-t border-[var(--border-subtle)]">
+          <div className="space-y-2 max-w-3xl">
+            <h2 className="text-2xl sm:text-3xl font-display font-black uppercase tracking-tight text-[var(--text-primary)]">
+              RPE-to-RIR &amp; %1RM Autoregulation Reference Table
+            </h2>
+            <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+              Derived from the resistance-training RIR-based RPE framework (Zourdos et al., 2016; Helms et al., 2018), each cell shows the estimated percentage of 1RM corresponding to a given rep count and exertion rating. Combine with our{' '}
+              <Link href="/tools/one-rep-max-calculator" className="text-[var(--accent-primary)] font-bold underline underline-offset-4">
+                1RM Calculator
+              </Link>{' '}
+              and{' '}
+              <Link href="/tools/strength-score-calculator" className="text-[var(--accent-primary)] font-bold underline underline-offset-4">
+                DOTS &amp; IPF GL Strength Calculator
+              </Link>
+              .
+            </p>
+          </div>
+
+          <div
+            className="table-responsive-region rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]"
+            tabIndex={0}
+            role="region"
+            aria-label="RPE and RIR percentage of 1RM reference table"
+          >
+            <table className="w-full text-left border-collapse text-xs sm:text-sm tabular-nums">
+              <caption className="visually-hidden">Percentage of 1RM across RPE 7.0 to 10.0 and 1 to 10 Repetitions</caption>
+              <thead className="bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)] text-[11px] font-mono uppercase text-[var(--text-secondary)]">
+                <tr>
+                  <th scope="col" className="py-3 px-4 font-bold text-[var(--text-primary)]">RPE (RIR)</th>
+                  <th scope="col" className="py-3 px-3 font-bold text-center text-[var(--text-primary)]">1 Rep</th>
+                  <th scope="col" className="py-3 px-3 font-bold text-center text-[var(--text-primary)]">3 Reps</th>
+                  <th scope="col" className="py-3 px-3 font-bold text-center text-[var(--text-primary)]">5 Reps</th>
+                  <th scope="col" className="py-3 px-3 font-bold text-center text-[var(--accent-primary)]">8 Reps</th>
+                  <th scope="col" className="py-3 px-3 font-bold text-center text-[var(--accent-secondary)]">10 Reps</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--border-subtle)] font-mono text-[var(--text-secondary)]">
+                <tr>
+                  <th scope="row" className="py-2.5 px-4 font-bold text-[var(--text-primary)]">RPE 10 (0 RIR)</th>
+                  <td className="py-2.5 px-3 text-center">100.0%</td>
+                  <td className="py-2.5 px-3 text-center">92.2%</td>
+                  <td className="py-2.5 px-3 text-center">86.3%</td>
+                  <td className="py-2.5 px-3 text-center">78.6%</td>
+                  <td className="py-2.5 px-3 text-center">73.9%</td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-2.5 px-4 font-bold text-[var(--text-primary)]">RPE 9.0 (1 RIR)</th>
+                  <td className="py-2.5 px-3 text-center">95.5%</td>
+                  <td className="py-2.5 px-3 text-center">89.2%</td>
+                  <td className="py-2.5 px-3 text-center">83.7%</td>
+                  <td className="py-2.5 px-3 text-center">76.2%</td>
+                  <td className="py-2.5 px-3 text-center">70.7%</td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-2.5 px-4 font-bold text-[var(--accent-primary)]">RPE 8.0 (2 RIR)</th>
+                  <td className="py-2.5 px-3 text-center">92.2%</td>
+                  <td className="py-2.5 px-3 text-center">86.3%</td>
+                  <td className="py-2.5 px-3 text-center">81.1%</td>
+                  <td className="py-2.5 px-3 text-center font-bold text-[var(--accent-primary)]">73.9%</td>
+                  <td className="py-2.5 px-3 text-center font-bold text-[var(--accent-secondary)]">68.0%</td>
+                </tr>
+                <tr>
+                  <th scope="row" className="py-2.5 px-4 font-bold text-[var(--text-primary)]">RPE 7.0 (3 RIR)</th>
+                  <td className="py-2.5 px-3 text-center">89.2%</td>
+                  <td className="py-2.5 px-3 text-center">83.7%</td>
+                  <td className="py-2.5 px-3 text-center">78.6%</td>
+                  <td className="py-2.5 px-3 text-center">70.7%</td>
+                  <td className="py-2.5 px-3 text-center">64.9%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <ToolCrossLinksSection
+          heading="Related Autoregulation Tools & Proximity-to-Failure Guides"
+          subheading="Dial in working intensity, barbell warm-ups, and recovery adjustments across every training mesocycle."
+          reviewer={{
+            name: 'Liam Sterling',
+            role: 'Natural Bodybuilding Coach & Hypertrophy Specialist',
+            href: '/author/liam-sterling',
+            note: 'Reviewed RIR-based RPE %1RM progression tables and fatigue-management thresholds.',
+          }}
+          tools={[
+            {
+              href: '/tools/one-rep-max-calculator',
+              title: '1RM & Percentage Calculator',
+              badge: 'Multi-Formula',
+              description: 'Estimate your baseline 1RM across Epley, Brzycki, Lombardi, and O’Conner equations.',
+              anchorText: 'Estimate baseline 1RM across 4 formulas',
+            },
+            {
+              href: '/tools/strength-score-calculator',
+              title: 'DOTS & IPF GL Calculator',
+              badge: 'Powerlifting',
+              description: 'Compare your Squat, Bench, and Deadlift readiness totals against federation standards.',
+              anchorText: 'Calculate DOTS & IPF GL strength score',
+            },
+            {
+              href: '/tools/warmup-calculator',
+              title: 'Barbell Warm-Up Calculator',
+              badge: 'Ramp Sets',
+              description: 'Use your final 85% warm-up speed to gauge daily RPE readiness before your top set.',
+              anchorText: 'Build neural warm-up ramp sets',
+            },
+            {
+              href: '/tools/ppl-tracker',
+              title: 'PPL Workout Tracker',
+              badge: 'Log RPE & Sets',
+              description: 'Record completed sets, reps, and RPE targets with built-in double progression tracking.',
+              anchorText: 'Log sets and RPE in PPL Tracker',
+            },
+          ]}
+          articles={[
+            {
+              href: '/blog/high-bar-front-squat-rpe-vbt-guide',
+              title: 'High-Bar & Front Squat: RPE & VBT Autoregulation Guide',
+              category: 'Legs (Squat)',
+              description: 'Pair bar speed and RIR precision to keep heavy squat sets productive without burnout.',
+              anchorText: 'Read high-bar squat RPE & velocity autoregulation guide',
+            },
+            {
+              href: '/blog/low-bar-squat-rpe-velocity-autoregulation',
+              title: 'Low-Bar Squat Autoregulation: RPE & Velocity Guide',
+              category: 'Legs (Squat)',
+              description: 'Adjust daily squat load automatically when sleep, stress, or lower-back fatigue fluctuates.',
+              anchorText: 'Read low-bar squat RPE autoregulation guide',
+            },
+            {
+              href: '/blog/upper-chest-proximity-to-failure-rir',
+              title: 'Upper Chest Training: Proximity to Failure & RIR Guide',
+              category: 'Push (Chest)',
+              description: 'Compare 0–1 RIR vs 2–3 RIR on compound presses vs isolated chest flyes.',
+              anchorText: 'Explore proximity to failure & RIR hypertrophy evidence',
+            },
+            {
+              href: '/blog/autoregulating-training-high-stress-weeks',
+              title: 'Autoregulating Training Stress During High-Work Weeks',
+              category: 'Gym Mindset',
+              description: 'Use RPE caps and volume adjustments to keep progressing during busy travel or work sprints.',
+              anchorText: 'Learn how to autoregulate training during high-stress weeks',
+            },
+          ]}
+        />
 
         <FaqAccordion items={RPE_FAQS} title="RPE & Reps in Reserve (RIR) Autoregulation FAQ" />
       </main>

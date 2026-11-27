@@ -179,17 +179,34 @@ export function processArticleBody(blocks: any, articleTitle?: string): Processe
       continue;
     }
 
-    // Check if this heading initiates the FAQ section
-    if (
+    const isMistakesHeading = /\bmistakes?\b/i.test(text);
+    const isNumberedFaqQuestion = /^faq\s*\d+\s*:/i.test(text);
+    const isExplicitQuestionH3 =
+      effectiveStyle === 'h3' && /^(?:\*\*)?Q\d+\s*:/i.test(text);
+    const isDedicatedFaqHeading =
       (effectiveStyle === 'h2' || effectiveStyle === 'h3') &&
-      /(?:frequently\s+asked\s+questions|\bfaq\b)/i.test(text)
-    ) {
+      !isMistakesHeading &&
+      !isNumberedFaqQuestion &&
+      !/\?$/.test(text) &&
+      /(?:frequently\s+asked\s+questions|\bfaqs?\b)/i.test(text);
+
+    // Only dedicated FAQ headings (not compound mistake headings or numbered FAQ items) initiate the FAQ section
+    if (isDedicatedFaqHeading) {
       inFaqSection = true;
       continue;
     }
 
-    // Check if a major non-FAQ H2 starts after FAQ section
-    if (inFaqSection && effectiveStyle === 'h2' && !/faq/i.test(text)) {
+    // Handle direct Q1:/Q2: H3 question blocks placed under a compound heading without an intermediate FAQ H3
+    if (!inFaqSection && isExplicitQuestionH3) {
+      inFaqSection = true;
+    }
+
+    // Check if a major non-FAQ H2 (or non-question mistake H3) starts after FAQ section
+    if (
+      inFaqSection &&
+      ((effectiveStyle === 'h2' && !isDedicatedFaqHeading) ||
+        (effectiveStyle === 'h3' && isMistakesHeading && !/\?$/.test(text)))
+    ) {
       if (currentQuestion && currentAnswerParts.length > 0) {
         faqs.push({
           question: cleanQuestion(currentQuestion),
@@ -230,7 +247,7 @@ export function processArticleBody(blocks: any, articleTitle?: string): Processe
       rawMainBlocks.push(sanitizedBlock);
 
       if (effectiveStyle === 'h2' || effectiveStyle === 'h3') {
-        if (!/frequently\s+asked|community\s+faq/i.test(text)) {
+        if (isMistakesHeading || !/frequently\s+asked|community\s+faq/i.test(text)) {
           toc.push({
             id: slugifyHeading(text),
             text,

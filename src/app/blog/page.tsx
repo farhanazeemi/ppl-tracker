@@ -1,8 +1,9 @@
 import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Sparkles, ArrowRight, BookOpen, Layers, Activity } from 'lucide-react';
-import { getAllBlogPosts } from '../../sanity/getPosts';
+import { Sparkles, ArrowRight, BookOpen, Layers, Activity, Users, Calculator } from 'lucide-react';
+import { getAllBlogPosts, getAllAuthors } from '../../sanity/getPosts';
+import { MOCK_BLOG_POSTS, BlogPost } from '../../data/mockBlogPosts';
 import { getBlogCollectionSchema } from '../../lib/schema';
 import { BlogInteractiveList } from '../../components/BlogInteractiveList';
 import { Navbar } from '../../components/Navbar';
@@ -45,8 +46,30 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogIndexPage() {
-  const posts = await getAllBlogPosts();
+  const [sanityPosts, authors] = await Promise.all([getAllBlogPosts(), getAllAuthors()]);
+  const seenSlugs = new Set(sanityPosts.map((p) => p.slug));
+  const posts: BlogPost[] = [
+    ...sanityPosts,
+    ...MOCK_BLOG_POSTS.filter((m) => !seenSlugs.has(m.slug)),
+  ];
   const blogJsonLd = getBlogCollectionSchema(posts.length);
+
+  // Group all posts by splitCategory for deterministic SSR cluster discovery
+  const clustersMap = new Map<string, BlogPost[]>();
+  for (const post of posts) {
+    const cluster = post.splitCategory || 'General';
+    const list = clustersMap.get(cluster) || [];
+    list.push(post);
+    clustersMap.set(cluster, list);
+  }
+  const clusterGroups = Array.from(clustersMap.entries()).sort((a, b) => b[1].length - a[1].length);
+
+  // Count authored articles per author slug for SSR Editorial Board strip
+  const authorCounts = new Map<string, number>();
+  for (const post of posts) {
+    const slug = (post.author?.slug || 'dr-marcus-vance').toLowerCase();
+    authorCounts.set(slug, (authorCounts.get(slug) || 0) + 1);
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
@@ -84,7 +107,7 @@ export default async function BlogIndexPage() {
               <div className="flex items-center gap-2">
                 <Layers className="w-4 h-4 text-[var(--accent-secondary)]" />
                 <span>
-                  <strong className="text-[var(--text-primary)] font-bold">10</strong> Biomechanical Clusters
+                  <strong className="text-[var(--text-primary)] font-bold">{clusterGroups.length}</strong> Biomechanical Clusters
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -97,8 +120,122 @@ export default async function BlogIndexPage() {
           </div>
         </section>
 
+        {/* SSR Editorial Board & Applied Calculators Strip */}
+        <section aria-label="Research Authors and Interactive Calculators" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] p-6 space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-display font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2">
+                <Users className="w-4 h-4 text-[var(--accent-primary)]" /> Scientific Editorial Board
+              </h2>
+              <Link href="/author" className="text-xs font-mono font-bold text-[var(--accent-primary)] hover:underline">
+                View All Authors →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {authors.map((author) => {
+                const count = authorCounts.get(author.slug.toLowerCase()) || 0;
+                return (
+                  <Link
+                    key={author.slug}
+                    href={`/author/${author.slug}`}
+                    className="p-3.5 rounded-2xl bg-[var(--bg-elevated)] hover:bg-[var(--bg-main)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/40 transition-all space-y-1"
+                  >
+                    <div className="text-xs font-bold text-[var(--text-primary)] line-clamp-1">{author.name}</div>
+                    <div className="text-[11px] text-[var(--text-muted)] line-clamp-1">{author.role}</div>
+                    <div className="text-[11px] font-mono text-[var(--accent-primary)] font-semibold pt-1">
+                      {count} Published Guides
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] p-6 space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-display font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center gap-2">
+                <Calculator className="w-4 h-4 text-[var(--accent-primary)]" /> Applied Fitness & Body Comp Tools
+              </h2>
+              <Link href="/tools" className="text-xs font-mono font-bold text-[var(--accent-primary)] hover:underline">
+                All 12 Calculators →
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { href: '/tools/body-fat-calculator', label: 'US Navy Body Fat Calculator' },
+                { href: '/tools/ffmi-calculator', label: 'FFMI Calculator (Men & Women)' },
+                { href: '/tools/bmi-calculator', label: 'Athletic BMI Calculator' },
+                { href: '/tools/tdee-calculator', label: 'TDEE & Macro Split Calculator' },
+                { href: '/tools/one-rep-max-calculator', label: '1RM & % Rep Calculator' },
+                { href: '/tools/rpe-calculator', label: 'RPE / RIR Load Estimator' },
+                { href: '/tools/strength-score-calculator', label: 'DOTS / IPF GL Strength Score' },
+                { href: '/tools/ppl-tracker', label: 'PPL Workout Tracker' },
+              ].map((tool) => (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className="px-3 py-1.5 rounded-xl bg-[var(--bg-elevated)] hover:bg-[var(--accent-primary)]/10 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)]/40 text-xs font-mono font-medium transition-colors"
+                >
+                  {tool.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Client Interactive Filter & Pre-rendered Article Grid */}
         <BlogInteractiveList initialPosts={posts} />
+
+        {/* Server-Rendered Topic Cluster Archive Directory (Full Crawl Equity Across All Guides) */}
+        <section
+          aria-labelledby="cluster-directory-heading"
+          className="rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] p-6 sm:p-8 space-y-6"
+        >
+          <div className="space-y-1">
+            <div className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--accent-primary)]">
+              Topic Cluster Knowledge Graph
+            </div>
+            <h2
+              id="cluster-directory-heading"
+              className="text-xl sm:text-2xl font-display font-bold uppercase tracking-tight text-[var(--text-primary)]"
+            >
+              Complete Research Directory by Training Pillar ({posts.length} Guides)
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {clusterGroups.map(([clusterName, clusterPosts]) => (
+              <div
+                key={clusterName}
+                className="p-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] space-y-3"
+              >
+                <div className="flex items-center justify-between gap-2 pb-2 border-b border-[var(--border-subtle)]">
+                  <Link
+                    href={`/blog?category=${encodeURIComponent(clusterName)}`}
+                    className="text-xs font-display font-bold uppercase tracking-wider text-[var(--accent-primary)] hover:underline"
+                  >
+                    {clusterName}
+                  </Link>
+                  <span className="text-[11px] font-mono text-[var(--text-muted)]">
+                    {clusterPosts.length} guides
+                  </span>
+                </div>
+                <ul className="space-y-1.5 text-xs">
+                  {clusterPosts.map((cp) => (
+                    <li key={cp.slug}>
+                      <Link
+                        href={`/blog/${cp.slug}`}
+                        className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors line-clamp-1 block py-0.5"
+                      >
+                        {cp.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Bottom CTA Banner */}
         <section className="rounded-3xl bg-[var(--bg-card)] border border-[var(--accent-primary)]/30 p-8 sm:p-12 text-[var(--text-primary)] flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl card-bento relative overflow-hidden">

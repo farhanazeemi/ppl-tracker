@@ -6,10 +6,9 @@ import {
   ShieldCheck,
   Award,
   BookOpen,
-  ArrowRight,
   ChevronRight,
   Sparkles,
-  GraduationCap,
+  Calculator,
 } from 'lucide-react';
 import { getAllAuthors, getAllBlogPosts } from '@/sanity/getPosts';
 import { getAuthorsIndexSchema } from '@/lib/schema';
@@ -55,11 +54,16 @@ export default async function AuthorsIndexPage() {
   const [authors, allPosts] = await Promise.all([getAllAuthors(), getAllBlogPosts()]);
   const schema = getAuthorsIndexSchema(authors.length);
 
-  // Map author post counts
+  // Map author post counts and top recent publications per author
   const postCountsByAuthor: Record<string, number> = {};
+  const postsByAuthor: Record<string, typeof allPosts> = {};
   allPosts.forEach((p) => {
     const aSlug = p.author?.slug || 'dr-marcus-vance';
     postCountsByAuthor[aSlug] = (postCountsByAuthor[aSlug] || 0) + 1;
+    if (!postsByAuthor[aSlug]) postsByAuthor[aSlug] = [];
+    if (postsByAuthor[aSlug].length < 3) {
+      postsByAuthor[aSlug].push(p);
+    }
   });
 
   return (
@@ -78,10 +82,10 @@ export default async function AuthorsIndexPage() {
 
           <div className="max-w-2xl space-y-3 relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5" /> E-E-A-T Editorial Board & Standards
+              <ShieldCheck className="w-3.5 h-3.5" /> E-E-A-T Editorial Board &amp; Standards
             </div>
             <h1 className="text-3xl sm:text-5xl font-display font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
-              Our Sports Science & Research Team
+              Our Sports Science &amp; Research Team
             </h1>
             <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed font-sans">
               All guides and biomechanical breakdowns published on PPL Tracker are produced by exercise physiologists, certified strength and conditioning coaches, and natural physique athletes.
@@ -94,6 +98,7 @@ export default async function AuthorsIndexPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {authors.map((author) => {
               const count = postCountsByAuthor[author.slug] || 0;
+              const authorPosts = postsByAuthor[author.slug] || [];
               return (
                 <div
                   key={author.slug}
@@ -101,23 +106,34 @@ export default async function AuthorsIndexPage() {
                 >
                   <div className="space-y-4">
                     <div className="flex items-center gap-4">
-                      {author.avatar ? (
-                        <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-elevated)] shrink-0">
-                          <Image
-                            src={author.avatar}
-                            alt={author.name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 rounded-2xl bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] font-display font-black text-2xl flex items-center justify-center shrink-0">
-                          {author.name.charAt(0)}
-                        </div>
-                      )}
+                      <Link
+                        href={`/author/${author.slug}`}
+                        className="shrink-0 hover:opacity-90 transition-opacity"
+                        aria-label={`View profile for ${author.name}`}
+                      >
+                        {author.avatar ? (
+                          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
+                            <Image
+                              src={author.avatar}
+                              alt={author.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-16 h-16 rounded-2xl bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] font-display font-black text-2xl flex items-center justify-center">
+                            {author.name.charAt(0)}
+                          </div>
+                        )}
+                      </Link>
                       <div>
                         <h2 className="text-base font-display font-bold uppercase text-[var(--text-primary)]">
-                          {author.name}
+                          <Link
+                            href={`/author/${author.slug}`}
+                            className="hover:text-[var(--accent-primary)] transition-colors"
+                          >
+                            {author.name}
+                          </Link>
                         </h2>
                         <p className="text-xs font-mono text-[var(--text-secondary)] line-clamp-1">
                           {author.role}
@@ -139,9 +155,29 @@ export default async function AuthorsIndexPage() {
                         </p>
                       </div>
                     )}
+
+                    {authorPosts.length > 0 && (
+                      <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1.5">
+                        <div className="text-[10px] font-mono uppercase text-[var(--text-secondary)] font-bold flex items-center gap-1">
+                          <BookOpen className="w-3 h-3 text-[var(--accent-primary)]" /> Featured Guides
+                        </div>
+                        <ul className="space-y-1">
+                          {authorPosts.map((post) => (
+                            <li key={post.slug}>
+                              <Link
+                                href={`/blog/${post.slug}`}
+                                className="text-[11px] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors line-clamp-1 block"
+                              >
+                                → {post.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                  <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2">
                     <span className="text-xs font-mono tabular-nums text-[var(--text-muted)]">
                       {count > 0 ? `${count} Articles` : 'Researcher'}
                     </span>
@@ -149,7 +185,7 @@ export default async function AuthorsIndexPage() {
                       href={`/author/${author.slug}`}
                       className="inline-flex items-center gap-1 text-xs font-mono font-bold text-[var(--accent-primary)] hover:underline"
                     >
-                      View Profile <ChevronRight className="w-3.5 h-3.5" />
+                      {author.name.split(',')[0]} Guides <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
@@ -158,14 +194,65 @@ export default async function AuthorsIndexPage() {
           </div>
         </section>
 
+        {/* Evidence-Based Calculators & Tools Strip */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] space-y-4">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-[var(--accent-primary)]">
+            <Calculator className="w-4 h-4" /> Research-Backed Assessment Utilities
+          </div>
+          <h2 className="text-xl font-display font-bold uppercase text-[var(--text-primary)]">
+            Applied Body Composition &amp; Strength Calculators
+          </h2>
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed max-w-2xl">
+            Every calculator built by our editorial and engineering team applies validated sports science formulas directly from peer-reviewed literature.
+          </p>
+          <div className="flex flex-wrap gap-2.5 pt-1">
+            <Link
+              href="/tools/body-fat-calculator"
+              className="px-3.5 py-2 rounded-xl bg-[var(--bg-elevated)] hover:border-[var(--accent-primary)]/40 border border-[var(--border-subtle)] text-xs font-mono font-bold text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors"
+            >
+              US Navy Body Fat Calculator
+            </Link>
+            <Link
+              href="/tools/ffmi-calculator"
+              className="px-3.5 py-2 rounded-xl bg-[var(--bg-elevated)] hover:border-[var(--accent-primary)]/40 border border-[var(--border-subtle)] text-xs font-mono font-bold text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors"
+            >
+              FFMI Calculator (Male &amp; Female)
+            </Link>
+            <Link
+              href="/tools/bmi-calculator"
+              className="px-3.5 py-2 rounded-xl bg-[var(--bg-elevated)] hover:border-[var(--accent-primary)]/40 border border-[var(--border-subtle)] text-xs font-mono font-bold text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors"
+            >
+              BMI &amp; Body Comp Calculator
+            </Link>
+            <Link
+              href="/tools/tdee-calculator"
+              className="px-3.5 py-2 rounded-xl bg-[var(--bg-elevated)] hover:border-[var(--accent-primary)]/40 border border-[var(--border-subtle)] text-xs font-mono font-bold text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors"
+            >
+              TDEE &amp; Macro Split Calculator
+            </Link>
+            <Link
+              href="/tools/strength-score-calculator"
+              className="px-3.5 py-2 rounded-xl bg-[var(--bg-elevated)] hover:border-[var(--accent-primary)]/40 border border-[var(--border-subtle)] text-xs font-mono font-bold text-[var(--text-primary)] hover:text-[var(--accent-primary)] transition-colors"
+            >
+              DOTS &amp; IPF GL Strength Score
+            </Link>
+            <Link
+              href="/tools/ppl-tracker"
+              className="px-3.5 py-2 rounded-xl bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/30 text-xs font-mono font-bold text-[var(--accent-primary)] hover:opacity-90 transition-opacity"
+            >
+              PPL Workout Tracker →
+            </Link>
+          </div>
+        </section>
+
         {/* Editorial Integrity & Anti-Bro-Science Standards */}
         <section className="p-6 sm:p-8 rounded-3xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] space-y-4">
           <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-[var(--accent-primary)]">
-            <Sparkles className="w-4 h-4" /> Evidence & Peer-Review Policy
+            <Sparkles className="w-4 h-4" /> Evidence &amp; Peer-Review Policy
           </div>
-          <h3 className="text-xl font-display font-bold uppercase text-[var(--text-primary)]">
+          <h2 className="text-xl font-display font-bold uppercase text-[var(--text-primary)]">
             How We Evaluate Hypertrophy Research
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-[var(--text-secondary)] leading-relaxed">
             <div className="space-y-1.5 p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
               <div className="font-bold text-[var(--text-primary)] uppercase font-mono">

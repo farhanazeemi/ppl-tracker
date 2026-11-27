@@ -12,7 +12,6 @@ import {
   ArrowRight,
   Database,
   Sparkles,
-  HelpCircle,
   Dumbbell,
   Clock,
   Layers,
@@ -22,7 +21,6 @@ import { validateAndSanitizeHistory } from '../../utils/historyValidation';
 import { LoggedWorkoutSession } from '../../types/workout';
 import { playClickSound, playSetCompleteSound } from '../../utils/audio';
 import { AthleteSyncBanner } from './AthleteSyncBanner';
-import { FaqAccordion } from '../FaqAccordion';
 
 interface WorkoutImporterProps {
   soundEnabled?: boolean;
@@ -141,29 +139,6 @@ export const WorkoutImporter: React.FC<WorkoutImporterProps> = ({
       setErrorMsg('Failed to save imported workouts to local storage: ' + err.message);
     }
   };
-
-  const faqItems = [
-    {
-      question: 'How do I export my workout data from Hevy?',
-      answer:
-        'Open the Hevy app, navigate to Profile → Settings (gear icon) → Export Data → CSV. You will receive an email with your workout history CSV file containing all sets, weights, reps, and RPE.',
-    },
-    {
-      question: 'How do I export my workouts from the Strong app?',
-      answer:
-        'In Strong, tap Profile → Settings → Export Workouts → Export as CSV. The exported file includes your workout dates, exercise names, set order, weights, and completed reps.',
-    },
-    {
-      question: 'Will importing overwrite my existing PPL Tracker history?',
-      answer:
-        'No. The importer merges incoming sessions into your current history log without overwriting existing entries. Duplicate sessions are automatically detected and omitted.',
-    },
-    {
-      question: 'Is my workout data kept private and local?',
-      answer:
-        'Yes. All CSV processing runs 100% locally in your web browser. No workout files or personal fitness logs are uploaded to third-party tracking servers.',
-    },
-  ];
 
   return (
     <div className="w-full space-y-10">
@@ -385,8 +360,6 @@ export const WorkoutImporter: React.FC<WorkoutImporterProps> = ({
           </div>
         </div>
       </div>
-
-      <FaqAccordion items={faqItems} title="Workout Import & Data Migration FAQ" />
     </div>
   );
 };

@@ -1,25 +1,27 @@
 import { safeJsonLd } from '@/lib/safeJsonLd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Sparkles } from 'lucide-react';
 import { Navbar } from '../../../components/Navbar';
 import { Footer } from '../../../components/Footer';
 import { WorkoutSubstitutionFinder } from '../../../components/tools/WorkoutSubstitutionFinder';
+import { ToolCrossLinksSection } from '../../../components/tools/ToolCrossLinksSection';
 import { FaqAccordion, FaqItem } from '../../../components/FaqAccordion';
+import { getCalculatorToolPageSchema } from '../../../lib/schema';
 
 const baseUrl = 'https://ppltracker.web.id';
 
 export const metadata: Metadata = {
-  title: 'Workout Exercise Substitution Finder',
+  title: 'Exercise Substitution & PPL Alternatives',
   description:
-    'Find instant biomechanical exercise alternatives for busy gyms or home workouts. Filter by available equipment, target muscles, and training goals free.',
+    'Find instant biomechanical exercise alternatives and Push/Pull/Legs split swaps filtered by equipment, movement pattern, and hypertrophy goals—100% free.',
   alternates: {
     canonical: '/tools/workout-substitution-finder',
   },
   openGraph: {
-    title: 'Workout Exercise Substitution Finder | PPL Tracker',
+    title: 'Exercise Substitution & PPL Alternatives | PPL Tracker',
     description:
-      'Can\'t get your preferred machine or barbell? Discover biomechanically matched exercise alternatives based on movement patterns, target muscles, and available equipment.',
+      'Discover biomechanically matched exercise alternatives and PPL split substitutes based on movement patterns, target muscles, and open gym equipment.',
     url: `${baseUrl}/tools/workout-substitution-finder`,
     siteName: 'PPL Hypertrophy Tracker',
     type: 'website',
@@ -34,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Workout Exercise Substitution Finder | PPL Tracker',
+    title: 'Exercise Substitution & PPL Alternatives | PPL Tracker',
     description:
       'Deterministic exercise substitution engine matching movement patterns, target muscles, and open gym equipment.',
     images: ['/og-image.png'],
@@ -45,98 +47,51 @@ const SUBSTITUTION_FAQS: FaqItem[] = [
   {
     question: 'Will swapping an exercise mid-workout compromise my hypertrophy or strength gains?',
     answer:
-      'No, provided the substitute preserves the same fundamental movement pattern (e.g., vertical pull to vertical pull) and works the target musculature through equivalent active ranges of motion. Mechanical tension—created through high motor unit recruitment close to muscular failure—is the primary driver of hypertrophy (Schoenfeld, 2010). Swapping a crowded lat pulldown station for assisted pull-ups or single-arm neutral cable pulldowns delivers comparable tension without stalling your session.'
+      'No, provided the substitute preserves the same fundamental movement pattern (e.g., vertical pull to vertical pull) and works the target musculature through equivalent active ranges of motion. Mechanical tension—created through high motor unit recruitment close to muscular failure—is the primary driver of hypertrophy (Schoenfeld, 2010). Swapping a crowded lat pulldown station for assisted pull-ups or single-arm neutral cable pulldowns delivers comparable tension without stalling your session.',
   },
   {
     question: 'How should I adjust my working weight when switching between barbell and dumbbells?',
     answer:
-      'Dumbbells introduce independent bilateral stabilization and freedom of wrist rotation, which elevates stabilizer muscle demand. As a practical heuristic, when substituting a barbell press for dumbbells, divide your barbell working weight by two and multiply by 0.75 to 0.85 (e.g., a 100 kg barbell bench press generally translates to approximately 35–40 kg dumbbells per hand). Always perform an initial acclimatization set to calibrate the resistance profile.'
+      'Dumbbells introduce independent bilateral stabilization and freedom of wrist rotation, which elevates stabilizer muscle demand. As a practical heuristic, when substituting a barbell press for dumbbells, divide your barbell working weight by two and multiply by 0.75 to 0.85 (e.g., a 100 kg barbell bench press generally translates to approximately 35–40 kg dumbbells per hand). Always perform an initial acclimatization set to calibrate the resistance profile.',
   },
   {
     question: 'What is the biomechanical difference between a machine press and a free-weight bench press?',
     answer:
-      'A free-weight barbell bench press features a vertical gravitational resistance curve requiring significant anterior shoulder and rotator cuff stabilization. Seated chest press machines, by contrast, utilize guided linear or converging cam tracks that eliminate horizontal stabilization demands. This allows lifters to drive sets closer to true contractile failure with minimal joint shearing, making machines exceptionally effective during high-fatigue or late-session training.'
+      'A free-weight barbell bench press features a vertical gravitational resistance curve requiring significant anterior shoulder and rotator cuff stabilization. Seated chest press machines, by contrast, utilize guided linear or converging cam tracks that eliminate horizontal stabilization demands. This allows lifters to drive sets closer to true contractile failure with minimal joint shearing, making machines exceptionally effective during high-fatigue or late-session training.',
   },
   {
     question: 'Can bodyweight pull-ups completely replace a cable lat pulldown?',
     answer:
-      'Yes. Both movements share a closed-to-open vertical pulling kinematic pattern that primarily engages the latissimus dorsi, lower trapezius, and elbow flexors. Pull-ups require greater core and scapular stabilization because your body moves around a fixed bar (closed-kinetic-chain), whereas pulldowns allow you to anchor your thighs and micro-load resistance in precise 2.5 kg increments. If bodyweight is too heavy, utilize looped resistance bands or an assisted pull-up machine.'
+      'Yes. Both movements share a closed-to-open vertical pulling kinematic pattern that primarily engages the latissimus dorsi, lower trapezius, and elbow flexors. Pull-ups require greater core and scapular stabilization because your body moves around a fixed bar (closed-kinetic-chain), whereas pulldowns allow you to anchor your thighs and micro-load resistance in precise 2.5 kg increments. If bodyweight is too heavy, utilize looped resistance bands or an assisted pull-up machine.',
   },
   {
     question: 'How do I maintain progressive overload when I frequently have to substitute exercises?',
     answer:
-      'To prevent plateauing, record each distinct movement as its own progressive overload track rather than trying to equate dumbbell numbers directly with barbell numbers. When you log your sets, reps, and RPE with the PPL Tracker tool, note whether the exercise was performed on a machine or free weights, and apply a 2-rep double progression ceiling before increasing load.'
-  }
+      'To prevent plateauing, record each distinct movement as its own progressive overload track rather than trying to equate dumbbell numbers directly with barbell numbers. When you log your sets, reps, and RPE with the PPL Tracker tool, note whether the exercise was performed on a machine or free weights, and apply a 2-rep double progression ceiling before increasing load.',
+  },
 ];
 
 export default function WorkoutSubstitutionFinderPage() {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebPage',
-        '@id': `${baseUrl}/tools/workout-substitution-finder#webpage`,
-        url: `${baseUrl}/tools/workout-substitution-finder`,
-        name: 'Workout Substitution Finder | Gym Exercise Alternatives',
-        description:
-          'Interactive exercise alternative finder matching biomechanics, movement patterns, and available gym equipment.',
-        breadcrumb: {
-          '@id': `${baseUrl}/tools/workout-substitution-finder#breadcrumb`,
-        },
-      },
-      {
-        '@type': 'BreadcrumbList',
-        '@id': `${baseUrl}/tools/workout-substitution-finder#breadcrumb`,
-        itemListElement: [
-          {
-            '@type': 'ListItem',
-            position: 1,
-            name: 'Home',
-            item: baseUrl,
-          },
-          {
-            '@type': 'ListItem',
-            position: 2,
-            name: 'Tools',
-            item: `${baseUrl}/tools`,
-          },
-          {
-            '@type': 'ListItem',
-            position: 3,
-            name: 'Workout Substitution Finder',
-            item: `${baseUrl}/tools/workout-substitution-finder`,
-          },
-        ],
-      },
-      {
-        '@type': 'WebApplication',
-        '@id': `${baseUrl}/tools/workout-substitution-finder#webapp`,
-        name: 'PPL Tracker Workout Substitution Finder',
-        applicationCategory: 'HealthApplication',
-        operatingSystem: 'All',
-        url: `${baseUrl}/tools/workout-substitution-finder`,
-        description:
-          'Free deterministic exercise replacement engine calculating muscle recruitment, joint angles, and equipment compatibility.',
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-        },
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${baseUrl}/tools/workout-substitution-finder#faq`,
-        mainEntity: SUBSTITUTION_FAQS.map((faq) => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: faq.answer,
-          },
-        })),
-      },
+  const schema = getCalculatorToolPageSchema({
+    name: 'Workout Exercise Substitution & PPL Alternatives Finder',
+    pageName: 'Exercise Substitution & PPL Alternatives | PPL Tracker',
+    breadcrumbName: 'Workout Substitution Finder',
+    slug: 'workout-substitution-finder',
+    description:
+      'Deterministic exercise substitution engine matching movement patterns, joint kinematics, target muscles, and Push/Pull/Legs alternatives by open gym equipment.',
+    faqItems: SUBSTITUTION_FAQS,
+    featureList: [
+      'Deterministic biomechanical matching across 50+ compound and isolation exercises',
+      'Equipment availability filters for dumbbells, cables, machines, barbells, and bodyweight',
+      'Push, Pull, and Legs alternative recommendations with stabilization & resistance-curve notes',
+      'Direct one-click exercise swap sync with PPL Workout Tracker',
     ],
-  };
+    reviewedBy: {
+      name: 'Liam Sterling',
+      slug: 'liam-sterling',
+      jobTitle: 'Natural Bodybuilding Coach & Hypertrophy Specialist',
+    },
+  });
 
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] transition-colors duration-200">
@@ -147,21 +102,38 @@ export default function WorkoutSubstitutionFinderPage() {
 
       <Navbar />
 
-      <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16 outline-none">
+      <main id="main-content" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-14 outline-none">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">
             Home
           </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" />
+          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" aria-hidden="true" />
           <Link href="/tools" className="hover:text-[var(--accent-primary)] transition-colors">
             Tools
           </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" />
+          <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-60" aria-hidden="true" />
           <span className="text-[var(--text-primary)] font-bold">
             Workout Substitution Finder
           </span>
         </nav>
+
+        {/* Single Page H1 + Direct Answer */}
+        <header className="space-y-4 max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-mono font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" /> Exercise Swaps &amp; PPL Alternatives
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-display font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
+            Workout Exercise Substitution &amp; PPL Alternatives Finder
+          </h1>
+          <p className="text-sm sm:text-base text-[var(--text-secondary)] font-sans leading-relaxed">
+            <strong>Direct Answer:</strong> To substitute an exercise or adapt a Push/Pull/Legs session without losing hypertrophy stimulus, match three biomechanical variables: <strong>movement pattern</strong> (e.g., vertical pull or hip hinge), <strong>joint torque angle</strong>, and <strong>lengthened-range tension</strong>. Filter by open equipment below to get ranked alternatives and sync swaps directly into{' '}
+            <Link href="/tools/ppl-tracker" className="text-[var(--accent-primary)] font-bold underline underline-offset-4">
+              PPL Tracker
+            </Link>
+            .
+          </p>
+        </header>
 
         {/* The Interactive Substitution Finder Application */}
         <WorkoutSubstitutionFinder />
@@ -286,35 +258,98 @@ export default function WorkoutSubstitutionFinderPage() {
             </div>
           </div>
 
-          {/* Section 4: Progressive Overload & Cluster Linking */}
+          {/* Section 4: Push/Pull/Legs Split Alternatives & Progressive Overload */}
           <div className="p-8 rounded-3xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/25 space-y-4">
             <h2 className="text-xl sm:text-2xl font-black uppercase text-[var(--text-primary)]">
-              How to Maintain Progressive Overload When Swapping Exercises
+              Push / Pull / Legs Alternatives &amp; Maintaining Progressive Overload
             </h2>
             <p className="text-xs sm:text-sm text-[var(--text-secondary)] font-sans leading-relaxed">
-              When substituting an exercise, never attempt to lift identical weight pound-for-pound on a new apparatus. Instead, establish a fresh baseline and use the double progression method: lock in your working weight, progress from the lower rep limit to the upper rep ceiling across all sets, and only increment resistance once every target rep is achieved with clean technical control.
+              Looking for practical <strong>PPL alternatives</strong> when equipment is occupied or your weekly schedule drops from 6 days to 3–4 days? Swap crowded barbell movements for biomechanically matched dumbbell or machine variants above, or transition into a 4-day Upper/Lower or 3-day Full Body split inside{' '}
+              <Link href="/tools/ppl-tracker" className="text-[var(--accent-primary)] font-bold underline underline-offset-4">
+                PPL Tracker
+              </Link>
+              . Track each distinct movement on its own double-progression rep track rather than equating machine loads pound-for-pound with free weights, and calibrate working intensity with our{' '}
+              <Link href="/tools/rpe-calculator" className="text-[var(--accent-primary)] font-bold underline underline-offset-4">
+                RPE / RIR Load Estimator
+              </Link>{' '}
+              and{' '}
+              <Link href="/tools/warmup-calculator" className="text-[var(--accent-primary)] font-bold underline underline-offset-4">
+                Barbell Warm-Up Calculator
+              </Link>
+              .
             </p>
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link
-                href="/tools/ppl-tracker"
-                className="px-5 py-2.5 rounded-xl bg-[var(--accent-primary)] text-black text-xs font-mono font-bold hover:bg-[var(--accent-hover)] shadow-md shadow-[var(--accent-primary)]/20 inline-flex items-center gap-1.5 transition-colors btn-tactile"
-              >
-                Launch PPL Progressive Overload Tracker →
-              </Link>
-              <Link
-                href="/blog/double-progression-protocol-hypertrophy"
-                className="text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] underline"
-              >
-                Read Double Progression Hypertrophy Guide
-              </Link>
-              <Link
-                href="/blog/scapular-plane-lateral-raise-guide"
-                className="text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-primary)] underline"
-              >
-                Read Scapular Plane Deltoid Mechanics
-              </Link>
-            </div>
           </div>
+
+          <ToolCrossLinksSection
+            heading="Related Exercise Swaps & Split Hypertrophy Guides"
+            subheading="Pair smart movement substitutions with joint-friendly biomechanics and structured progressive overload."
+            reviewer={{
+              name: 'Liam Sterling',
+              role: 'Natural Bodybuilding Coach & Hypertrophy Specialist',
+              href: '/author/liam-sterling',
+              note: 'Reviewed movement-pattern equivalence rules, stabilization trade-offs, and lengthened-range tension criteria.',
+            }}
+            tools={[
+              {
+                href: '/tools/ppl-tracker',
+                title: 'PPL Workout Tracker',
+                badge: 'Split Engine',
+                description: 'Execute 6-day PPL, 4-day Upper/Lower, 5-day Bro Split, or 3-day Full Body schedules with active swaps.',
+                anchorText: 'Launch PPL & alternative splits in PPL Tracker',
+              },
+              {
+                href: '/tools/rpe-calculator',
+                title: 'RPE / RIR Load Estimator',
+                badge: 'Autoregulation',
+                description: 'Recalibrate working weight accurately after switching between barbell, dumbbell, and machine stations.',
+                anchorText: 'Calibrate substitute load with the RPE Calculator',
+              },
+              {
+                href: '/tools/warmup-calculator',
+                title: 'Barbell Warm-Up Calculator',
+                badge: 'Joint Prep',
+                description: 'Build non-fatiguing ramp sets before compound substitutes to protect shoulders, knees, and lower back.',
+                anchorText: 'Generate compound warm-up sets',
+              },
+            ]}
+            articles={[
+              {
+                href: '/blog/upper-chest-frequency-3x-vs-bro-split',
+                title: 'Upper Chest Frequency: 3x Weekly vs Bro-Split Growth',
+                category: 'Push (Chest)',
+                description: 'Compare split frequency alternatives when adapting Push days around recovery and schedule.',
+                anchorText: 'Compare 3x weekly vs bro-split push frequency',
+              },
+              {
+                href: '/blog/lat-hypertrophy-tension-vs-metabolic-stress',
+                title: 'Lat Hypertrophy Science: Tension vs Metabolic Stress',
+                category: 'Pull (Back)',
+                description: 'Evaluate pulldown, pull-up, and row substitutions for maximizing thoracic and iliac lat tension.',
+                anchorText: 'Read lat hypertrophy science on tension vs metabolic stress',
+              },
+              {
+                href: '/blog/romanian-deadlift-hamstring-glute-guide',
+                title: 'Romanian Deadlift Biomechanics for Hamstring & Glutes',
+                category: 'Legs (Squat)',
+                description: 'Understand hip-hinge lever arms when swapping barbell RDLs for dumbbells or 45-degree extensions.',
+                anchorText: 'Read Romanian deadlift hamstring & glute mechanics',
+              },
+              {
+                href: '/blog/shoulder-impingement-biomechanical-screening',
+                title: 'Shoulder Impingement Screening & Biomechanical Tests',
+                category: 'Prehab & Mobility',
+                description: 'Identify impingement triggers and choose shoulder-friendly pressing and lateral-raise substitutes.',
+                anchorText: 'Screen shoulder impingement triggers before swapping presses',
+              },
+              {
+                href: '/blog/debunking-the-bulky-myth-why-lifting-heavy-creates-a-toned-physique-troubleshooting-plateaus-in-strength-and-body-composition',
+                title: 'Troubleshooting Plateaus in Strength and Body Composition',
+                category: "Women's Strength",
+                description: 'How smart exercise rotation and progressive tension break through stalled strength and physique plateaus.',
+                anchorText: 'Troubleshoot strength and body composition plateaus',
+              },
+            ]}
+          />
 
           {/* Section 5: Accessible Interactive FAQ Accordion */}
           <FaqAccordion

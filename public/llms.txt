@@ -3,21 +3,33 @@
 > PPL Hypertrophy Tracker (Push • Pull • Legs) is a free, evidence-based progressive overload workout application, biomechanical training operating system, and peer-reviewed sports science journal published at https://ppltracker.web.id.
 
 ## Overview
-PPL Hypertrophy Tracker provides resistance athletes with zero-latency workout tracking, automated double progression algorithms, Olympic barbell plate calculation, exercise substitution intelligence, and scientific literature on hypertrophy kinematics.
+PPL Hypertrophy Tracker provides resistance athletes with zero-latency workout tracking, automated double progression algorithms, Olympic barbell plate calculation, body composition diagnostics, exercise substitution intelligence, and 160+ peer-reviewed scientific guides on hypertrophy kinematics.
 
 - Primary Website: https://ppltracker.web.id
 - Primary Workout Application: https://ppltracker.web.id/tools/ppl-tracker
-- Tools Directory: https://ppltracker.web.id/tools
-- Biomechanics Journal: https://ppltracker.web.id/blog
+- Tools Directory (All 12 Utilities): https://ppltracker.web.id/tools
+- Biomechanics Journal (160+ Guides): https://ppltracker.web.id/blog
 - Author & Scientific Editorial Board: https://ppltracker.web.id/author
 - Full LLM Knowledge Base: https://ppltracker.web.id/llms-full.txt
 
-## Core Fitness Applications & Tools
+## Core Fitness Applications & Calculators (12 Live Tools)
 - [PPL Workout Tracker](https://ppltracker.web.id/tools/ppl-tracker): Interactive 6-day periodized hypertrophy engine featuring automated rest interval timers (60s–180s), Olympic plate math, double progression thresholds, and local-first Supabase cloud persistence.
-- [Olympic Barbell Plate Calculator](https://ppltracker.web.id/tools/ppl-tracker): Visual barbell loading calculator supporting 20kg (45lb) and 15kg (35lb) bars with standard plate denominations (1.25kg to 25kg / 2.5lb to 45lb per side).
-- [Workout Substitution Finder](https://ppltracker.web.id/tools/workout-substitution-finder): Deterministic biomechanical exercise alternative engine based on muscle resistance curves, equipment availability, and joint comfort.
-- [BMI & Body Composition Calculator](https://ppltracker.web.id/tools/bmi-calculator): Dual metric (cm/kg) and imperial (ft/in/lbs) body mass index calculator with athletic classification context.
-- [Tools Directory](https://ppltracker.web.id/tools): Comprehensive index of all free resistance training utilities and calculators.
+- [US Navy Body Fat Calculator](https://ppltracker.web.id/tools/body-fat-calculator): Clinically validated U.S. Navy circumference body fat percentage calculator (Hodgdon & Beckett, 1984) for men and women, computing fat mass, lean body mass (LBM), ACE categories, and DoD age-bracket standards.
+- [FFMI Calculator](https://ppltracker.web.id/tools/ffmi-calculator): Raw and height-normalized Fat-Free Mass Index (Kouri et al., 1995), Fat-Free Mass (FFM), and Fat Mass Index (FMI) calculator with male and female muscularity benchmarks and frame-size natural potential context.
+- [BMI & Body Composition Calculator](https://ppltracker.web.id/tools/bmi-calculator): Dual metric (cm/kg) and imperial (ft/in/lbs) Body Mass Index calculator with WHO categories and clinical lean-mass caveats for muscular lifters.
+- [TDEE & Macro Split Calculator](https://ppltracker.web.id/tools/tdee-calculator): BMR and Total Daily Energy Expenditure calculator supporting Mifflin-St Jeor and lean-mass Katch-McArdle equations with ISSN-aligned macro presets for cutting, recomposition, and lean bulking.
+- [1RM & Training % Calculator](https://ppltracker.web.id/tools/one-rep-max-calculator): Multi-formula estimated One-Rep Max calculator (Epley, Brzycki, Lombardi, O'Conner) with a 60%–100% rep-max loading chart.
+- [RPE / RIR Load Estimator](https://ppltracker.web.id/tools/rpe-calculator): Autoregulation calculator converting Rate of Perceived Exertion (RPE 6.0–10.0) and Reps in Reserve (0–4 RIR) into daily readiness e1RM and target working loads.
+- [Powerlifting Strength Score Calculator](https://ppltracker.web.id/tools/strength-score-calculator): Relative 3-lift strength evaluator using official DOTS, IPF GoodLift (IPF GL), and Wilks formulas across weight classes.
+- [Barbell Plate Loader Calculator](https://ppltracker.web.id/tools/plate-calculator): Visual per-side barbell loading breakdown supporting 20kg/45lb Olympic, 15kg/35lb Women's, 10kg/25lb EZ-Curl, and 25kg/55lb Trap bars, plus Reverse Plate Counter mode.
+- [Barbell Warm-Up Set Calculator](https://ppltracker.web.id/tools/warmup-calculator): Non-fatiguing inverse rep-ramp warm-up set planner snapped to achievable gym plate increments.
+- [Workout Substitution Finder](https://ppltracker.web.id/tools/workout-substitution-finder): Deterministic biomechanical exercise alternative engine based on target muscle recruitment, resistance curves, and available equipment.
+- [Workout CSV / History Importer](https://ppltracker.web.id/tools/workout-importer): 100% client-side workout history migration tool supporting CSV exports from Strong, Hevy, FitNotes, openGym, and custom spreadsheets.
+
+## Editorial Board & Verified Authors
+- [Dr. Marcus Vance, Ph.D.](https://ppltracker.web.id/author/dr-marcus-vance): Lead Biomechanics Researcher & Exercise Physiologist.
+- [Elena Rostova, CSCS](https://ppltracker.web.id/author/elena-rostova): Head of High-Performance Strength & Conditioning, USAW Level 2 Coach.
+- [Liam Sterling](https://ppltracker.web.id/author/liam-sterling): Natural Bodybuilding Coach & Hypertrophy Specialist.
 
 ## Resistance Training Splits Supported
 - [6-Day Push Pull Legs (PPL)](https://ppltracker.web.id/tools/ppl-tracker): Push A (Upper Chest & Front Delts), Pull A (Lat Width & Upper Back), Legs A (Quad Dominant), Push B (Shoulders & Triceps Overload), Pull B (Upper Back & Rear Delts), Legs B (Hamstrings & Posterior Chain).
@@ -31,4 +43,4 @@ PPL Hypertrophy Tracker provides resistance athletes with zero-latency workout t
 - Biomechanical Integrity: Exercise selection favors lengthened-position overload, aligned resistance profiles with anatomical muscle fiber orientation, and stable bracing mechanics.
 
 ## Optional
-- [Full Documentation (llms-full.txt)](https://ppltracker.web.id/llms-full.txt): Complete technical reference with full exercise database, progression equations, and citation guides.
+- [Full Documentation (llms-full.txt)](https://ppltracker.web.id/llms-full.txt): Complete technical reference with full exercise database, progression equations, calculator models, and citation guides.

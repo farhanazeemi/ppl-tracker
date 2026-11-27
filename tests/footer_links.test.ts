@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { MOCK_BLOG_POSTS } from '../src/data/mockBlogPosts';
+import { OLD_TO_NEW_ARTICLE_SLUGS } from '../src/data/articleRedirects';
 
 describe('BUG-05: Footer Blog Internal Links Validation', () => {
   it('ensures all footer blog links resolve to actual valid blog slugs', async () => {
@@ -10,7 +11,10 @@ describe('BUG-05: Footer Blog Internal Links Validation', () => {
     const matches = Array.from(content.matchAll(/href="(\/blog\/[^"]+)"/g)).map((m) => m[1]);
     expect(matches.length).toBeGreaterThan(0);
 
-    const validSlugs = new Set(MOCK_BLOG_POSTS.map((p) => `/blog/${p.slug}`));
+    const validSlugs = new Set([
+      ...MOCK_BLOG_POSTS.map((p) => `/blog/${p.slug}`),
+      ...Object.values(OLD_TO_NEW_ARTICLE_SLUGS).map((slug) => `/blog/${slug}`),
+    ]);
     validSlugs.add('/blog');
 
     for (const link of matches) {

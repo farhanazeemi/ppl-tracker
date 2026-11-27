@@ -259,7 +259,7 @@ export const WorkoutSubstitutionFinder: React.FC = () => {
             Biomechanical Exercise Substitution Engine
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
+          <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
             Find Your Perfect Workout Alternative
           </h2>
 

@@ -81,9 +81,9 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Column 3: Training Programs */}
           <div className="space-y-3">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
+            <p className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
               Training Splits
-            </h4>
+            </p>
             <ul className="space-y-2 text-xs font-mono text-[var(--text-secondary)]">
               <li>
                 <Link
@@ -122,9 +122,9 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Column 4: Athlete Utilities */}
           <div className="space-y-3">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
+            <p className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
               Athlete Tools
-            </h4>
+            </p>
             <ul className="space-y-2 text-xs font-mono text-[var(--text-secondary)]">
               <li>
                 <Link
@@ -133,96 +133,6 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-[#B7FF4A] transition-colors"
                 >
                   PPL Workout Tracker
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/one-rep-max-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  1RM & Training % Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/tdee-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  TDEE & Macro Split Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/plate-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  Barbell Plate Loader Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/rpe-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  RPE / RIR Load Estimator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/ffmi-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  FFMI & Body Comp Estimator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/workout-substitution-finder"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  Workout Substitution Finder
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/bmi-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  BMI & Body Comp Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/strength-score-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  Strength Score (DOTS / Wilks)
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/warmup-calculator"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  Barbell Warm-Up Calculator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/workout-importer"
-                  onClick={() => handleClick()}
-                  className="hover:text-[#B7FF4A] transition-colors"
-                >
-                  Workout CSV Importer
                 </Link>
               </li>
               <li>
@@ -236,11 +146,101 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <Link
+                  href="/tools/ffmi-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  FFMI Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/bmi-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  BMI &amp; Body Comp Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/tdee-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  TDEE &amp; Macro Split Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/one-rep-max-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  1RM &amp; Training % Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/rpe-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  RPE / RIR Load Estimator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/strength-score-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Strength Score (DOTS / IPF GL)
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/plate-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Barbell Plate Loader Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/warmup-calculator"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Barbell Warm-Up Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/workout-substitution-finder"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Workout Substitution Finder
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools/workout-importer"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Workout CSV Importer
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/tools"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors font-bold text-[#B7FF4A]"
                 >
-                  View All Tools Directory →
+                  View All 12 Tools Directory →
                 </Link>
               </li>
               {onOpenPlateCalc && (
@@ -270,9 +270,9 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Column 5: Research Journal */}
           <div className="space-y-3">
-            <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
+            <p className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
               Science Journal
-            </h4>
+            </p>
             <ul className="space-y-2 text-xs font-mono text-[var(--text-secondary)]">
               <li>
                 <Link
@@ -280,7 +280,16 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors font-bold text-[#B7FF4A]"
                 >
-                  Authors & Editorial Board →
+                  Authors &amp; Editorial Board →
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/author/elena-rostova"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors"
+                >
+                  Elena Rostova, CSCS
                 </Link>
               </li>
               <li>
@@ -289,34 +298,61 @@ export const Footer: React.FC<FooterProps> = ({
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors"
                 >
-                  All 60+ Research Guides
+                  All 160+ Research Guides
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/blog/clavicular-pectoral-upper-chest-growth"
+                  href="/blog/upper-chest-frequency-3x-vs-bro-split"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >
-                  Clavicular Chest Angles (15°-30°)
+                  Upper Chest Frequency vs Bro Split
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/blog/scapular-plane-lateral-raise-guide"
+                  href="/blog/body-recomposition-science-action-plan"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >
-                  Scapular Plane Lateral Raises
+                  Body Recomposition Science Plan
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/blog/double-progression-protocol-hypertrophy"
+                  href="/blog/optimal-protein-intake-clinical-meta-analysis"
                   onClick={() => handleClick()}
                   className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
                 >
-                  Double Progression Protocols
+                  Optimal Protein Intake Meta-Analysis
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog/low-bar-squat-rpe-velocity-autoregulation"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
+                >
+                  Low-Bar Squat RPE &amp; Autoregulation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog/lat-hypertrophy-lengthened-partials-full-rom"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
+                >
+                  Lat Hypertrophy &amp; Lengthened Partials
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog/female-hypertrophy-science-heavy-weights"
+                  onClick={() => handleClick()}
+                  className="hover:text-[#B7FF4A] transition-colors line-clamp-1"
+                >
+                  Female Hypertrophy &amp; Heavy Lifting
                 </Link>
               </li>
             </ul>
